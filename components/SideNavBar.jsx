@@ -7,6 +7,7 @@ import {
   ChevronRightIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function SideNavBar() {
   const [open, setOpen] = useState(false);
@@ -74,6 +75,30 @@ export default function SideNavBar() {
             open ? "px-24" : "px-4"
           } border-b border-white duration-300 ease-in-out`}
         />
+
+        {/* 
+        Recent Investments Sections
+         */}
+
+        <div className="w-full">
+          <span
+            className={`${open ? "inline-flex" : "hidden"} mx-5 text-nowrap`}
+          >
+            Recents:
+          </span>
+          <div className={`${open ? "mt-1" : "mt-7"}`}>
+            {[...new Array(10)].map((_item, index) => {
+              return (
+                <div key={index}>
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </nav>
     </>
   );
