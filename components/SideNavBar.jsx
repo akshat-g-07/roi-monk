@@ -56,6 +56,24 @@ export default function SideNavBar() {
             <ChevronRightIcon className="size-7 text-black" />
           )}
         </div>
+
+        {/* 
+        New Investment Button
+         */}
+        <div className="flex items-center w-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer">
+          <PlusIcon className="size-6 m-2" />
+          <span
+            className={`${open ? "inline-flex" : "hidden"} mx-5 text-nowrap`}
+          >
+            New Investment
+          </span>
+        </div>
+
+        <div
+          className={`m-4 ${
+            open ? "px-24" : "px-4"
+          } border-b border-white duration-300 ease-in-out`}
+        />
       </nav>
     </>
   );
