@@ -5,11 +5,23 @@ import { useState } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  DotsVerticalIcon,
   Pencil1Icon,
   PlusIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function SideNavBar() {
@@ -117,7 +129,38 @@ export default function SideNavBar() {
                   {open && (
                     <span className="group-hover:inline-flex hidden size-fit">
                       <Pencil1Icon className="size-5 mr-1 text-muted-foreground hover:text-foreground" />
-                      <TrashIcon className="size-5 ml-1 text-destructive hover:text-red-500" />
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <TrashIcon className="size-5 ml-1 text-destructive hover:text-red-500" />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="dark">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-foreground">
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              {/* 
+                              MARK: Change this too!
+                               */}
+                              This action cannot be undone. This will
+                              permanently delete your account and remove your
+                              data from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className={"text-white"}>
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              className={buttonVariants({
+                                variant: "destructive",
+                              })}
+                            >
+                              Continue
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </span>
                   )}
                 </div>
