@@ -6,7 +6,9 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   DotsVerticalIcon,
+  Pencil1Icon,
   PlusIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -99,7 +101,7 @@ export default function SideNavBar() {
                   key={index}
                   className={`flex items-center ${
                     open ? "justify-start" : "justify-evenly"
-                  } w-full group cursor-pointer`}
+                  } w-full group cursor-pointer my-px`}
                 >
                   <Avatar className={`m-2 ${open && "ml-3"}`}>
                     <AvatarImage src="https://github.com/shadcn.png" />
@@ -108,13 +110,14 @@ export default function SideNavBar() {
                   <span
                     className={`${
                       open ? "inline-flex" : "hidden"
-                    } mx-5 text-nowrap text-sm peer truncate`}
+                    } mx-2 text-nowrap text-sm peer truncate`}
                   >
                     Lorem ipsum dolor sit amet.
                   </span>
                   {open && (
-                    <span className="group-hover:inline-flex hidden size-fit bg-red-500">
-                      <DotsVerticalIcon className="size-5 cursor-pointer" />
+                    <span className="group-hover:inline-flex hidden size-fit">
+                      <Pencil1Icon className="size-5 mr-1 text-muted-foreground hover:text-foreground" />
+                      <TrashIcon className="size-5 ml-1 text-destructive hover:text-red-500" />
                     </span>
                   )}
                 </div>
