@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
+  DotsVerticalIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -86,14 +87,36 @@ export default function SideNavBar() {
           >
             Recents:
           </span>
-          <div className={`${open ? "mt-1" : "mt-7"}`}>
-            {[...new Array(10)].map((_item, index) => {
+          {/* 
+          MARK: Todo-> Investment List of user coming from DB
+            */}
+          <div
+            className={`${open ? "mt-1" : "mt-7"} flex flex-col items-center`}
+          >
+            {[...new Array(5)].map((_item, index) => {
               return (
-                <div key={index}>
-                  <Avatar>
+                <div
+                  key={index}
+                  className={`flex items-center ${
+                    open ? "justify-start" : "justify-evenly"
+                  } w-full group cursor-pointer`}
+                >
+                  <Avatar className={`m-2 ${open && "ml-3"}`}>
                     <AvatarImage src="https://github.com/shadcn.png" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
+                  <span
+                    className={`${
+                      open ? "inline-flex" : "hidden"
+                    } mx-5 text-nowrap text-sm peer truncate`}
+                  >
+                    Lorem ipsum dolor sit amet.
+                  </span>
+                  {open && (
+                    <span className="group-hover:inline-flex hidden size-fit bg-red-500">
+                      <DotsVerticalIcon className="size-5 cursor-pointer" />
+                    </span>
+                  )}
                 </div>
               );
             })}
