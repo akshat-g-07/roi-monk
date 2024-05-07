@@ -219,19 +219,13 @@ export default function SideNavBar() {
           </span>
         </div>
 
-        <div
-          className={`m-4 ${
-            open ? "px-24" : "px-4"
-          } border-b border-white duration-300 ease-in-out`}
-        />
-
         {/* 
         Developer's Corner
          */}
         <div
           className={`flex items-center  ${
             open ? "w-[95%]" : "w-fit"
-          } bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
+          } bg-accent mt-3 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
         >
           <Avatar className={`m-2 size-7`}>
             <AvatarImage src="/akshat-garg.png" />
