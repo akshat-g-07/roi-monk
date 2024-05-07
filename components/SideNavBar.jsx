@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { buttonVariants } from "@/components/ui/button";
+import { SignOutButton } from "@clerk/nextjs";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { buttonVariants } from "@/components/ui/button";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -206,18 +207,20 @@ export default function SideNavBar() {
             Settings
           </span>
         </div>
-        <div
-          className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
-            open ? "w-[92.5%] pl-4" : "w-fit"
-          }`}
-        >
-          <LogoutIcon sx={{ fontSize: 25 }} />
-          <span
-            className={`${open ? "inline-flex" : "hidden"} mx-4 text-nowrap`}
+        <SignOutButton redirectUrl="/">
+          <div
+            className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
+              open ? "w-[92.5%] pl-4" : "w-fit pl-3"
+            }`}
           >
-            Logout
-          </span>
-        </div>
+            <LogoutIcon sx={{ fontSize: 25 }} />
+            <span
+              className={`${open ? "inline-flex" : "hidden"} mx-4 text-nowrap`}
+            >
+              Logouta
+            </span>
+          </div>
+        </SignOutButton>
 
         {/* 
         Developer's Corner
