@@ -218,6 +218,29 @@ export default function SideNavBar() {
             Logout
           </span>
         </div>
+
+        <div
+          className={`m-4 ${
+            open ? "px-24" : "px-4"
+          } border-b border-white duration-300 ease-in-out`}
+        />
+
+        {/* 
+        Developer's Corner
+         */}
+        <div
+          className={`flex items-center  ${
+            open ? "w-[95%]" : "w-fit"
+          } bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
+        >
+          <Avatar className={`m-2 size-7`}>
+            <AvatarImage src="/akshat-garg.png" />
+            <AvatarFallback>AG</AvatarFallback>
+          </Avatar>
+          <span className={`${open ? "inline-flex" : "hidden"} text-nowrap`}>
+            Developer&apos;s Corner <ArrowTopRightIcon className="size-3" />
+          </span>
+        </div>
       </nav>
     </>
   );
