@@ -2,14 +2,19 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { buttonVariants } from "@/components/ui/button";
+import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  ArrowTopRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Pencil1Icon,
   PlusIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { buttonVariants } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,8 +26,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function SideNavBar() {
   const [open, setOpen] = useState(false);
@@ -113,7 +116,7 @@ export default function SideNavBar() {
                   key={index}
                   className={`flex items-center ${
                     open ? "justify-start" : "justify-evenly"
-                  } w-full group cursor-pointer my-px`}
+                  } w-full group cursor-pointer my-px hover:bg-accent`}
                 >
                   <Avatar className={`m-2 ${open && "ml-3"}`}>
                     <AvatarImage src="https://github.com/shadcn.png" />
@@ -167,6 +170,53 @@ export default function SideNavBar() {
               );
             })}
           </div>
+        </div>
+
+        <div
+          className={`m-4 ${
+            open ? "px-24" : "px-4"
+          } border-b border-white duration-300 ease-in-out`}
+        />
+
+        {/* 
+        Support and other buttons
+         */}
+
+        <div
+          className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
+            open ? "w-[92.5%] pl-3" : "w-fit"
+          }`}
+        >
+          <SupportAgentIcon sx={{ fontSize: 25 }} />
+          <span
+            className={`${open ? "inline-flex" : "hidden"} ml-5 text-nowrap`}
+          >
+            Support
+          </span>
+        </div>
+        <div
+          className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
+            open ? "w-[92.5%] pl-3" : "w-fit"
+          }`}
+        >
+          <SettingsIcon sx={{ fontSize: 25 }} />
+          <span
+            className={`${open ? "inline-flex" : "hidden"} mx-5 text-nowrap`}
+          >
+            Settings
+          </span>
+        </div>
+        <div
+          className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
+            open ? "w-[92.5%] pl-4" : "w-fit"
+          }`}
+        >
+          <LogoutIcon sx={{ fontSize: 25 }} />
+          <span
+            className={`${open ? "inline-flex" : "hidden"} mx-4 text-nowrap`}
+          >
+            Logout
+          </span>
         </div>
       </nav>
     </>
