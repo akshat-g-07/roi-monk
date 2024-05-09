@@ -217,7 +217,7 @@ export default function SideNavBar() {
             <span
               className={`${open ? "inline-flex" : "hidden"} mx-4 text-nowrap`}
             >
-              Logouta
+              Logout
             </span>
           </div>
         </SignOutButton>
