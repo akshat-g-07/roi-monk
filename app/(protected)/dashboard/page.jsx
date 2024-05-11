@@ -33,7 +33,7 @@ export default function Page() {
   return (
     <>
       <div className="p-8">
-        <div className="w-full flex justify-between text-lg font-bold items-center mb-4">
+        <div className="w-full flex flex-wrap justify-between text-lg font-bold items-center mb-4">
           Summary
           <div className={cn("grid gap-2")}>
             <Popover>
@@ -78,11 +78,10 @@ export default function Page() {
             </Popover>
           </div>
         </div>
-
         {/* 
         Summary Cards 
         */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-4">
           {/* 
         Total Investment Card
          */}
@@ -161,15 +160,14 @@ export default function Page() {
             </CardContent>
           </Card>
         </div>
-
         {/* 
         Charts
         */}
-        <div className="w-full my-4 grid gap-4 grid-cols-2 h-96">
-          <Card className="h-full bg-background">
+        <div className="w-full my-4 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
+          <Card className="h-full">
             <PieChartSummary />
           </Card>
-          <Card className="h-full bg-background">
+          <Card className="h-full">
             <BarChartSummary />
           </Card>
         </div>

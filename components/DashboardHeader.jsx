@@ -10,7 +10,7 @@ export default function DashboardHeader() {
 
   return (
     <header
-      className="h-[76.8px] p-2 border-b
+      className="h-[76.8px] w-full py-2 px-6 border-b
     border-white text-3xl font-bold flex items-center justify-between"
     >
       {pathname === "/dashboard" ? <OverviewHeader /> : "Something"}

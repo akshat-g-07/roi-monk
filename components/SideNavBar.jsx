@@ -36,7 +36,7 @@ export default function SideNavBar() {
       <nav
         className={`${
           open ? "w-[230px]" : "w-[70px]"
-        } min-h-full border-r-4 flex flex-col items-center duration-300 ease-in-out`}
+        } h-screen border-r-4 flex flex-col items-center duration-300 ease-in-out relative`}
       >
         {/* 
         Top Left Logo Icon 
@@ -228,7 +228,7 @@ export default function SideNavBar() {
         <div
           className={`flex items-center  ${
             open ? "w-[95%]" : "w-fit"
-          } bg-accent mt-3 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
+          } bg-accent mt-3 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer absolute bottom-5`}
         >
           <Avatar className={`m-2 size-7`}>
             <AvatarImage src="/akshat-garg.png" />
