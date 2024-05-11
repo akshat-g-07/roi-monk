@@ -183,60 +183,64 @@ export default function SideNavBar() {
         Support and other buttons
          */}
 
-        <div
-          className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
-            open ? "w-[92.5%] pl-3" : "w-fit"
-          }`}
-        >
-          <SupportAgentIcon sx={{ fontSize: 25 }} />
-          <span
-            className={`${open ? "inline-flex" : "hidden"} ml-5 text-nowrap`}
-          >
-            Support
-          </span>
-        </div>
-        <div
-          className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
-            open ? "w-[92.5%] pl-3" : "w-fit"
-          }`}
-        >
-          <SettingsIcon sx={{ fontSize: 25 }} />
-          <span
-            className={`${open ? "inline-flex" : "hidden"} mx-5 text-nowrap`}
-          >
-            Settings
-          </span>
-        </div>
-        <SignOutButton redirectUrl="/">
+        <div className="absolute bottom-5 w-full">
           <div
             className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
-              open ? "w-[92.5%] pl-4" : "w-fit pl-3"
+              open ? "w-[92.5%] pl-3" : "w-fit"
             }`}
           >
-            <LogoutIcon sx={{ fontSize: 25 }} />
+            <SupportAgentIcon sx={{ fontSize: 25 }} />
             <span
-              className={`${open ? "inline-flex" : "hidden"} mx-4 text-nowrap`}
+              className={`${open ? "inline-flex" : "hidden"} ml-5 text-nowrap`}
             >
-              Logout
+              Support
             </span>
           </div>
-        </SignOutButton>
+          <div
+            className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
+              open ? "w-[92.5%] pl-3" : "w-fit"
+            }`}
+          >
+            <SettingsIcon sx={{ fontSize: 25 }} />
+            <span
+              className={`${open ? "inline-flex" : "hidden"} mx-5 text-nowrap`}
+            >
+              Settings
+            </span>
+          </div>
+          <SignOutButton redirectUrl="/">
+            <div
+              className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
+                open ? "w-[92.5%] pl-4" : "w-fit pl-3"
+              }`}
+            >
+              <LogoutIcon sx={{ fontSize: 25 }} />
+              <span
+                className={`${
+                  open ? "inline-flex" : "hidden"
+                } mx-4 text-nowrap`}
+              >
+                Logout
+              </span>
+            </div>
+          </SignOutButton>
 
-        {/* 
+          {/* 
         Developer's Corner
          */}
-        <div
-          className={`flex items-center  ${
-            open ? "w-[95%]" : "w-fit"
-          } bg-accent mt-3 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer absolute bottom-5`}
-        >
-          <Avatar className={`m-2 size-7`}>
-            <AvatarImage src="/akshat-garg.png" />
-            <AvatarFallback>AG</AvatarFallback>
-          </Avatar>
-          <span className={`${open ? "inline-flex" : "hidden"} text-nowrap`}>
-            Developer&apos;s Corner <ArrowTopRightIcon className="size-3" />
-          </span>
+          <div
+            className={`flex items-center  ${
+              open ? "w-[95%]" : "w-fit"
+            } bg-accent mt-3 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
+          >
+            <Avatar className={`m-2 size-7`}>
+              <AvatarImage src="/akshat-garg.png" />
+              <AvatarFallback>AG</AvatarFallback>
+            </Avatar>
+            <span className={`${open ? "inline-flex" : "hidden"} text-nowrap`}>
+              Developer&apos;s Corner <ArrowTopRightIcon className="size-3" />
+            </span>
+          </div>
         </div>
       </nav>
     </>
