@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, PureComponent } from "react";
+import React, { useState } from "react";
 import {
   PieChart,
   Pie,

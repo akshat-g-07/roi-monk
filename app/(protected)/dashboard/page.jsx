@@ -165,13 +165,13 @@ export default function Page() {
         {/* 
         Charts
         */}
-        <div className="w-full flex h-96">
-          <div className="w-1/2 h-full">
+        <div className="w-full my-4 grid gap-4 grid-cols-2 h-96">
+          <Card className="h-full bg-background">
             <PieChartSummary />
-          </div>
-          <div className="w-1/2 h-full">
+          </Card>
+          <Card className="h-full bg-background">
             <BarChartSummary />
-          </div>
+          </Card>
         </div>
       </div>
     </>
