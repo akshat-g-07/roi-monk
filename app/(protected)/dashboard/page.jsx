@@ -17,6 +17,7 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
+import PieChartSummary from "@/components/pie-chart-summary";
 
 export default function Page() {
   const [date, setDate] = React.useState({
@@ -158,6 +159,15 @@ export default function Page() {
               </p>
             </CardContent>
           </Card>
+        </div>
+
+        {/* 
+        Charts
+        */}
+        <div className="w-full flex h-96">
+          <div className="w-1/2 h-full">
+            <PieChartSummary />
+          </div>
         </div>
       </div>
     </>
