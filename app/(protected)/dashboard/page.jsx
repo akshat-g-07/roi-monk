@@ -62,7 +62,7 @@ export default function Page() {
             </PopoverTrigger>
             <PopoverContent
               className="w-auto p-0 bg-background text-foreground"
-              align="start"
+              align="end"
             >
               <Calendar
                 initialFocus
@@ -71,7 +71,7 @@ export default function Page() {
                 selected={date}
                 onSelect={setDate}
                 numberOfMonths={2}
-                className="bg-background text-foreground"
+                className="bg-background dark text-foreground"
               />
             </PopoverContent>
           </Popover>
