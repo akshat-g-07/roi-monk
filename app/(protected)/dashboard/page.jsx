@@ -18,6 +18,7 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import PieChartSummary from "@/components/pie-chart-summary";
+import BarChartSummary from "@/components/bar-chart-summary";
 
 export default function Page() {
   const [date, setDate] = React.useState({
@@ -26,9 +27,9 @@ export default function Page() {
   });
 
   // Some server action to calculate these values
-  let netRevenue = Math.random();
-  let netROI = Math.random();
-  let annROI = Math.random();
+  let netRevenue = 0;
+  let netROI = 0;
+  let annROI = 0;
   return (
     <>
       <div className="p-8">
@@ -167,6 +168,9 @@ export default function Page() {
         <div className="w-full flex h-96">
           <div className="w-1/2 h-full">
             <PieChartSummary />
+          </div>
+          <div className="w-1/2 h-full">
+            <BarChartSummary />
           </div>
         </div>
       </div>
