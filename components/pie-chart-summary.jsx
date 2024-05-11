@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, PureComponent } from "react";
-import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Sector,
+  ResponsiveContainer,
+  Cell,
+  Legend,
+} from "recharts";
 
 // data from user's db
 const data = [
@@ -12,6 +19,8 @@ const data = [
   { name: "Group E", value: 100 },
   { name: "Group F", value: 600 },
 ];
+
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FFF", "#000"];
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -106,7 +115,15 @@ export default function PieChartSummary() {
             fill="#3b82f6"
             dataKey="value"
             onMouseEnter={onPieEnter}
-          />
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </>
