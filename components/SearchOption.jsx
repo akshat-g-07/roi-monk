@@ -26,7 +26,7 @@ export default function SearchOption() {
   const [inputValue, setInputValue] = useState("");
 
   return (
-    <div className="bg-yellow-500">
+    <div className="mx-2">
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
@@ -41,12 +41,27 @@ export default function SearchOption() {
           setInputValue(newInputValue);
         }}
         blurOnSelect
-        sx={{ width: "250px" }}
+        sx={{
+          width: "300px",
+          "& .MuiFormLabel-root": {
+            color: "rgba(255,255,255,0.6)",
+          },
+          "& .MuiInputBase-input": {
+            color: "rgba(255,255,255,1)",
+          },
+        }}
         autoHighlight
         options={top100Films}
         getOptionLabel={(option) => option.label}
         renderInput={(params) => (
-          <TextField {...params} label="Search" variant="filled" />
+          <TextField
+            {...params}
+            label="Search"
+            variant="filled"
+            sx={{
+              backgroundColor: "rgba(255,255,255,0.15)",
+            }}
+          />
         )}
       />
     </div>

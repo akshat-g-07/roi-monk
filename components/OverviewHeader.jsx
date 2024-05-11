@@ -1,3 +1,3 @@
 export default function OverviewHeader() {
-  return <div>Overview</div>;
+  return <span>Overview</span>;
 }
