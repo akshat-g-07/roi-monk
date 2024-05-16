@@ -28,10 +28,16 @@ export const columns = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
-          {column.getIsSorted() === "asc" ? (
-            <ArrowUpwardIcon sx={{ marginLeft: "4px", fontSize: "16px" }} />
-          ) : (
-            <ArrowDownwardIcon sx={{ marginLeft: "4px", fontSize: "16px" }} />
+          {column.getIsSorted() && (
+            <>
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUpwardIcon sx={{ marginLeft: "4px", fontSize: "16px" }} />
+              ) : (
+                <ArrowDownwardIcon
+                  sx={{ marginLeft: "4px", fontSize: "16px" }}
+                />
+              )}
+            </>
           )}
         </Button>
       );
