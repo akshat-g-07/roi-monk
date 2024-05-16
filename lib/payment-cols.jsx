@@ -3,6 +3,9 @@
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -82,16 +85,21 @@ export const columns = [
               <MoreHorizIcon sx={{ fontSize: "20px" }} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="dark">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>
+              <ArrowOutwardIcon className="mr-2 size-3.5" />
+              Open in a new tab
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <ContentCopyIcon className="mr-2 size-3.5" />
+              Make a copy
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <DeleteOutlineIcon className="mr-2 size-3.5" />
+              Move to trash
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
