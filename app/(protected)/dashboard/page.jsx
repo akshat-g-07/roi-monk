@@ -19,6 +19,7 @@ import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import PieChartSummary from "@/components/pie-chart-summary";
 import BarChartSummary from "@/components/bar-chart-summary";
+import OverviewDataTable from "@/components/overview-data-table";
 
 export default function Page() {
   const [date, setDate] = React.useState({
@@ -169,6 +170,13 @@ export default function Page() {
         <Card className="h-full">
           <BarChartSummary />
         </Card>
+      </div>
+
+      {/* 
+      Data Table Component
+       */}
+      <div className="w-full my-4 h-fit">
+        <OverviewDataTable />
       </div>
     </>
   );
