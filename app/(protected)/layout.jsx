@@ -7,7 +7,7 @@ export default function DashboardLayout({ children }) {
       <SideNavBar />
       <section className="flex flex-col h-screen grow">
         <DashboardHeader />
-        <div className="overflow-y-scroll min-h-[calc(100vh-76.8px)] p-8">
+        <div className="overflow-y-auto min-h-[calc(100vh-76.8px)] p-8">
           {children}
         </div>
       </section>
