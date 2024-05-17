@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SignOutButton } from "@clerk/nextjs";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -27,9 +28,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
 
 export default function SideNavBar() {
+  const router = useRouter();
+  const [error, setError] = useState();
   const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [portfolioName, setPortfolioName] = useState();
 
   return (
     <>
@@ -78,16 +84,75 @@ export default function SideNavBar() {
         </div>
 
         {/* 
-        New Investment Button
+        New Portfolio Button
          */}
-        <div className="flex items-center w-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer">
-          <PlusIcon className="size-6 m-2" />
-          <span
-            className={`${open ? "inline-flex" : "hidden"} mx-5 text-nowrap`}
-          >
-            New Investment
-          </span>
-        </div>
+
+        <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+          <AlertDialogTrigger>
+            <div className="flex items-center w-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer">
+              <PlusIcon className="size-6 m-2" />
+              <span
+                className={`${
+                  open ? "inline-flex" : "hidden"
+                } mx-5 text-nowrap`}
+              >
+                New Portfolio
+              </span>
+            </div>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="dark">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-foreground">
+                Enter the name of the investment portfolio.
+              </AlertDialogTitle>
+              <Input
+                autofocus
+                value={portfolioName}
+                className="text-foreground"
+                placeholder="Portfolio Name"
+                onChange={(event) => setPortfolioName(event.target.value)}
+              />
+              {error && (
+                <span className="text-rose-500 text-sm ml-2">{error}</span>
+              )}
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                className={"text-white"}
+                onClick={() => {
+                  setPortfolioName();
+                }}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <Button
+                onClick={() => {
+                  if (!portfolioName) {
+                    setError("Portfolio name can't be blank!");
+                    return;
+                  }
+
+                  const regex = /^[a-zA-Z0-9_\- ]+$/;
+
+                  if (!regex.test(portfolioName)) {
+                    setError(
+                      "Portfolio name can only have a-z, A-Z, 0-9, space, _, -"
+                    );
+                    return;
+                  }
+
+                  // if that name already exists
+                  // reroute him to the right route
+                  setPortfolioName();
+                  setOpenDialog(false);
+                  router.push(`/create-new/${portfolioName}`);
+                }}
+              >
+                Continue
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <div
           className={`m-4 ${
