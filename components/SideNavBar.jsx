@@ -248,7 +248,7 @@ export default function SideNavBar() {
         Support and other buttons
          */}
 
-        <div className="absolute bottom-5 w-full">
+        <div className="absolute bottom-5 w-full flex flex-col items-center">
           <div
             className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
               open ? "w-[92.5%] pl-3" : "w-fit"
