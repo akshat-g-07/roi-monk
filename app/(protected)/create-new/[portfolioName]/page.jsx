@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Table,
   TableBody,
@@ -16,10 +17,8 @@ import {
 } from "@/components/ui/table";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -28,11 +27,9 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import {
   Select,
@@ -62,6 +59,32 @@ export default function Page({ params }) {
 
   const onSubmit = (values) => {
     console.log("submit", values);
+    const { amount, comments, transactionDate, transactionName, type } = values;
+
+    if (!type) {
+      setError("Choose the type.");
+      return;
+    }
+
+    if (!transactionName) {
+      setError("Set a name.");
+      return;
+    }
+
+    if (!amount) {
+      setError("Put an amount.");
+      return;
+    }
+
+    if (!transactionDate) {
+      setError("Set a date.");
+      return;
+    }
+
+    if (amount <= 0) {
+      setError("Amount needs to be greater than zero.");
+      return;
+    }
   };
 
   return (
@@ -77,7 +100,6 @@ export default function Page({ params }) {
                   <TableHead className="w-[200px]">Transaction Name</TableHead>
                   <TableHead className="w-[200px]">Amount</TableHead>
                   <TableHead className="w-[200px]">Date</TableHead>
-                  <TableHead className="w-[200px]">Category</TableHead>
                   <TableHead className="w-fit">Comments</TableHead>
                   <TableHead className="w-[50px]">Actions</TableHead>
                 </TableRow>
@@ -101,7 +123,6 @@ export default function Page({ params }) {
                     </TableCell>
                     <TableCell className="w-[200px]">Amount</TableCell>
                     <TableCell className="w-[200px]">Date</TableCell>
-                    <TableCell className="w-[200px]">Category</TableCell>
                     <TableCell className="w-fit">Comments</TableCell>
                     <TableCell className="w-[50px]">Actions</TableCell>
                   </TableRow>
@@ -192,7 +213,7 @@ export default function Page({ params }) {
                     control={form.control}
                     name="transactionDate"
                     render={({ field }) => (
-                      <FormItem className="flex flex-col">
+                      <FormItem className="flex flex-col text-white">
                         <FormLabel className="text-white">
                           Transaction Date
                         </FormLabel>
@@ -235,6 +256,24 @@ export default function Page({ params }) {
                     )}
                   />
                 </div>
+                <div className="h-fit w-[425px]">
+                  <FormField
+                    control={form.control}
+                    name="comments"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Comments</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Comments about transaction"
+                            className="resize-none text-white"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 {error && (
                   <span className="text-rose-500 text-sm ml-2">{error}</span>
                 )}
@@ -250,24 +289,10 @@ export default function Page({ params }) {
                   <Button
                     type="submit"
                     onClick={() => {
-                      if (!portfolioName) {
-                        setError("Portfolio name can't be blank!");
-                        return;
-                      }
-
-                      const regex = /^[a-zA-Z0-9_\- ]+$/;
-
-                      if (!regex.test(portfolioName)) {
-                        setError(
-                          "Portfolio name can only have a-z, A-Z, 0-9, space, _, -"
-                        );
-                        return;
-                      }
-
                       // if that name already exists
                       // reroute him to the right route
                       // setPortfolioName();
-                      setOpen(false);
+                      // setOpen(false);
                     }}
                   >
                     Continue
