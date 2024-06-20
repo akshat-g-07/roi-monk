@@ -58,7 +58,6 @@ export default function Page({ params }) {
   const invoices = [];
 
   const onSubmit = (values) => {
-    console.log("submit", values);
     const { amount, comments, transactionDate, transactionName, type } = values;
 
     if (!type) {
@@ -85,6 +84,21 @@ export default function Page({ params }) {
       setError("Amount needs to be greater than zero.");
       return;
     }
+
+    const nameRegex = /^[a-zA-Z0-9\s\-_]*$/;
+    if (!nameRegex.test(transactionName)) {
+      setError("Name can only have a-z, A-Z, 0-9, space, -, _");
+      return;
+    }
+
+    const commentRegex = /^[a-zA-Z0-9\s.,!?\-_]*$/;
+    if (!commentRegex.test(comments)) {
+      setError("Comments can only have a-z, A-Z, 0-9, space, ., ,, !, ?, -, _");
+      return;
+    }
+
+    setOpen(false);
+    setError();
   };
 
   return (
@@ -115,8 +129,8 @@ export default function Page({ params }) {
                     </TableCell>
                   </TableRow>
                 )}
-                {invoices.map((invoice) => (
-                  <TableRow key={invoice.invoice}>
+                {invoices.map((invoice, index) => (
+                  <TableRow key={index}>
                     <TableCell className="w-[50px]">Type</TableCell>
                     <TableCell className="w-[200px]">
                       Transaction Name
@@ -183,7 +197,7 @@ export default function Page({ params }) {
                         <FormControl>
                           <Input
                             className="text-white"
-                            placeholder="Monday's Post"
+                            placeholder="My Transaction"
                             {...field}
                           />
                         </FormControl>
@@ -286,17 +300,7 @@ export default function Page({ params }) {
                   >
                     Cancel
                   </AlertDialogCancel>
-                  <Button
-                    type="submit"
-                    onClick={() => {
-                      // if that name already exists
-                      // reroute him to the right route
-                      // setPortfolioName();
-                      // setOpen(false);
-                    }}
-                  >
-                    Continue
-                  </Button>
+                  <Button type="submit">Continue</Button>
                 </AlertDialogFooter>
               </form>
             </Form>
