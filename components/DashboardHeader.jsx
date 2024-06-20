@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import OverviewHeader from "./OverviewHeader";
 import FeedbackButton from "./FeedbackButton";
 import SearchOption from "./SearchOption";
 
@@ -14,7 +13,11 @@ export default function DashboardHeader() {
     border-white text-3xl font-bold flex items-center justify-between"
     >
       <p className="size-fit">
-        {pathname === "/dashboard" ? <OverviewHeader /> : "Something"}
+        {pathname === "/dashboard"
+          ? "Overview"
+          : pathname.includes("/create-new/")
+          ? "Create New"
+          : "Something"}
       </p>
       <div className="flex items-center">
         <SearchOption />
