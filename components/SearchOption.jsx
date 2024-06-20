@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { Redirect } from "@/lib/redirect";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const top100Films = [
@@ -22,6 +22,7 @@ const top100Films = [
 ];
 
 export default function SearchOption() {
+  const router = useRouter();
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
 
@@ -31,10 +32,9 @@ export default function SearchOption() {
         value={value}
         onChange={(event, newValue) => {
           console.log(newValue);
-          const redirectURL = `dashboard/${newValue.label}`;
           setValue(null);
           setInputValue("");
-          Redirect(redirectURL);
+          router.push(`/${newValue.label}`);
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
