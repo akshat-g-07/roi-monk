@@ -55,7 +55,12 @@ export default function Page({ params }) {
   const form = useForm({
     defaultValues: {},
   });
-  const invoices = [];
+  const invoices = [
+    {
+      id: 1,
+    },
+    { id: 2 },
+  ];
 
   const onSubmit = (values) => {
     const { amount, comments, transactionDate, transactionName, type } = values;
@@ -144,6 +149,12 @@ export default function Page({ params }) {
               </TableBody>
             </Table>
           </Card>
+          {invoices.length > 0 && (
+            <div className="w-full flex justify-between my-5 px-5">
+              <Button variant="outline">Cancel</Button>
+              <Button>Save</Button>
+            </div>
+          )}
         </>
         <AlertDialog open={open} onOpenChange={setOpen} defaultOpen={true}>
           <AlertDialogTrigger>
