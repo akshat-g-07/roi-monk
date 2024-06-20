@@ -132,7 +132,7 @@ export default function SideNavBar() {
                     return;
                   }
 
-                  const regex = /^[a-zA-Z0-9_\- ]+$/;
+                  const regex = /^[a-zA-Z0-9_\-\s]+$/;
 
                   if (!regex.test(portfolioName)) {
                     setError(
