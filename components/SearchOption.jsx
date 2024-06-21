@@ -34,7 +34,7 @@ export default function SearchOption() {
           console.log(newValue);
           setValue(null);
           setInputValue("");
-          router.push(`/${newValue.label}`);
+          router.push(`/portfolio/${newValue.label}`);
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
