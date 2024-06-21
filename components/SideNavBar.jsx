@@ -8,9 +8,11 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Button, buttonVariants } from "@/components/ui/button";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import TextField from "@mui/material/TextField";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ArrowTopRightIcon,
+  CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Pencil1Icon,
@@ -35,6 +37,7 @@ export default function SideNavBar() {
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [portfolioNameEdit, setPortfolioNameEdit] = useState(false);
   const [portfolioName, setPortfolioName] = useState();
 
   return (
@@ -146,6 +149,7 @@ export default function SideNavBar() {
                   setPortfolioName();
                   setOpenDialog(false);
                   router.push(`/create-new/${portfolioName}`);
+                  setOpen(false);
                 }}
               >
                 Continue
@@ -184,20 +188,64 @@ export default function SideNavBar() {
                     open ? "justify-start" : "justify-evenly"
                   } w-full group cursor-pointer my-px hover:bg-accent`}
                 >
-                  <Avatar className={`m-2 ${open && "ml-3"}`}>
+                  <Avatar
+                    className={`m-2 ${open && "ml-3"}`}
+                    onClick={() => {
+                      // MARK: Update the router
+                      router.push(`/portfolio/portfolioName`);
+                      setOpen(false);
+                    }}
+                  >
                     <AvatarImage src="https://github.com/shadcn.png" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
-                  <span
-                    className={`${
-                      open ? "inline-flex" : "hidden"
-                    } mx-2 text-nowrap text-sm peer truncate`}
-                  >
-                    Lorem ipsum dolor sit amet.
-                  </span>
+                  <TextField
+                    variant="standard"
+                    sx={{
+                      display: open ? "inline-flex" : "none",
+                      margin: "0 0.5rem",
+                      whiteSpace: "nowrap",
+                      fontSize: "0.875rem",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      "& .MuiInputBase-input": {
+                        color: "white",
+                        cursor: portfolioNameEdit ? "text" : "pointer",
+                      },
+                    }}
+                    defaultValue="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum, quisquam?"
+                    InputProps={{
+                      readOnly: !portfolioNameEdit,
+                    }}
+                    onClick={() => {
+                      // MARK: Update the router
+                      {
+                        !portfolioNameEdit &&
+                          router.push(`/portfolio/portfolioName`);
+                      }
+                      {
+                        !portfolioNameEdit && setOpen(false);
+                      }
+                    }}
+                  />
                   {open && (
                     <span className="group-hover:inline-flex hidden size-fit">
-                      <Pencil1Icon className="size-5 mr-1 text-muted-foreground hover:text-foreground" />
+                      {portfolioNameEdit ? (
+                        <CheckIcon
+                          className="size-5 mr-1 text-muted-foreground hover:text-foreground"
+                          onClick={() => {
+                            setPortfolioNameEdit(false);
+                          }}
+                        />
+                      ) : (
+                        <Pencil1Icon
+                          className="size-5 mr-1 text-muted-foreground hover:text-foreground"
+                          onClick={() => {
+                            setPortfolioNameEdit(true);
+                          }}
+                        />
+                      )}
+
                       <AlertDialog>
                         <AlertDialogTrigger>
                           <TrashIcon className="size-5 ml-1 text-destructive hover:text-red-500" />
