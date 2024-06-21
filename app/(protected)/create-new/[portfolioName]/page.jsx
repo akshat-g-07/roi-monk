@@ -50,6 +50,7 @@ import { Calendar } from "@/components/ui/calendar";
 
 export default function Page({ params }) {
   const { portfolioName } = params;
+  const decodedPortfolioName = decodeURIComponent(portfolioName);
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const form = useForm({
@@ -109,7 +110,7 @@ export default function Page({ params }) {
   return (
     <>
       <div className="w-full min-h-full">
-        <p className="text-2xl font-semibold">{portfolioName}</p>
+        <p className="text-2xl font-semibold">{decodedPortfolioName}</p>
         <>
           <Card className="mt-10 p-4">
             <Table>
