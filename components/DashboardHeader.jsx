@@ -17,6 +17,8 @@ export default function DashboardHeader() {
           ? "Overview"
           : pathname.includes("/create-new/")
           ? "Create New"
+          : pathname.includes("/portfolio/")
+          ? pathname.slice(pathname.lastIndexOf("/") + 1)
           : "Something"}
       </p>
       <div className="flex items-center">
