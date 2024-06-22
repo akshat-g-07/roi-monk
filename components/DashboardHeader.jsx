@@ -21,6 +21,8 @@ export default function DashboardHeader() {
           ? pathname.slice(pathname.lastIndexOf("/") + 1)
           : pathname === "/support"
           ? "Support"
+          : pathname === "/feedback"
+          ? "Feedback"
           : "Something"}
       </p>
       <div className="flex items-center">
