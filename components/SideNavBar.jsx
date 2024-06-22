@@ -301,6 +301,10 @@ export default function SideNavBar() {
             className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
               open ? "w-[92.5%] pl-3" : "w-fit"
             }`}
+            onClick={() => {
+              router.push("/support");
+              setOpen(false);
+            }}
           >
             <SupportAgentIcon sx={{ fontSize: 25 }} />
             <span

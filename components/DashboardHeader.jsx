@@ -19,6 +19,8 @@ export default function DashboardHeader() {
           ? "Create New"
           : pathname.includes("/portfolio/")
           ? pathname.slice(pathname.lastIndexOf("/") + 1)
+          : pathname === "/support"
+          ? "Support"
           : "Something"}
       </p>
       <div className="flex items-center">
