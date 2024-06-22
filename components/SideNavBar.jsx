@@ -345,6 +345,9 @@ export default function SideNavBar() {
             className={`flex items-center  ${
               open ? "w-[95%]" : "w-fit"
             } bg-accent mt-3 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
+            onClick={() => {
+              window.open("https://akshat-garg.com");
+            }}
           >
             <Avatar className={`m-2 size-7`}>
               <AvatarImage src="/akshat-garg.png" />
