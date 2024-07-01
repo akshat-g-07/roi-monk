@@ -47,23 +47,20 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { CreatePortfolio } from "@/actions/portfolio";
 
 export default function Page({ params }) {
   const { portfolioName } = params;
   const decodedPortfolioName = decodeURIComponent(portfolioName);
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
+  const [transactions, setTransactions] = useState([]);
   const form = useForm({
     defaultValues: {},
   });
-  const invoices = [
-    {
-      id: 1,
-    },
-    { id: 2 },
-  ];
 
-  const onSubmit = (values) => {
+  const addTransaction = (values) => {
     const { amount, comments, transactionDate, transactionName, type } = values;
 
     if (!type) {
@@ -103,8 +100,26 @@ export default function Page({ params }) {
       return;
     }
 
+    setTransactions([
+      ...transactions,
+      {
+        amount,
+        comments,
+        transactionDate,
+        transactionName,
+        type,
+      },
+    ]);
+
+    form.reset();
+
     setOpen(false);
     setError();
+  };
+
+  const savePortfolio = async () => {
+    const portfolio = await CreatePortfolio(decodedPortfolioName);
+    console.log("portfolio client", portfolio);
   };
 
   return (
@@ -116,7 +131,8 @@ export default function Page({ params }) {
             <Table>
               <TableHeader className="bg-muted">
                 <TableRow>
-                  <TableHead className="w-[50px]">Type</TableHead>
+                  <TableHead className="w-[10px]"></TableHead>
+                  <TableHead className="w-[100px]">Type</TableHead>
                   <TableHead className="w-[200px]">Transaction Name</TableHead>
                   <TableHead className="w-[200px]">Amount</TableHead>
                   <TableHead className="w-[200px]">Date</TableHead>
@@ -125,35 +141,56 @@ export default function Page({ params }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.length < 1 && (
+                {transactions.length < 1 && (
                   <TableRow>
                     <TableCell
                       colSpan={7}
                       className="text-center font-semibold text-muted-foreground h-16"
                     >
-                      Click on &quot;+&quot; button to add the transaction.
+                      Click on &quot;+&quot; button to add a transaction.
                     </TableCell>
                   </TableRow>
                 )}
-                {invoices.map((invoice, index) => (
+                {transactions.map((transaction, index) => (
                   <TableRow key={index}>
-                    <TableCell className="w-[50px]">Type</TableCell>
-                    <TableCell className="w-[200px]">
-                      Transaction Name
+                    <TableCell className="w-[10px]">
+                      <ArrowDownwardIcon
+                        sx={{
+                          rotate: `${
+                            transaction.type === "Credit" ? "180deg" : "0deg"
+                          }`,
+                          color: `${
+                            transaction.type === "Credit" ? "green" : "red"
+                          }`,
+                          fontSize: "0.85rem",
+                        }}
+                      />
                     </TableCell>
-                    <TableCell className="w-[200px]">Amount</TableCell>
-                    <TableCell className="w-[200px]">Date</TableCell>
-                    <TableCell className="w-fit">Comments</TableCell>
+                    <TableCell className="w-[50px] flex items-center">
+                      {transaction.type}
+                    </TableCell>
+                    <TableCell className="w-[200px]">
+                      {transaction.transactionName}
+                    </TableCell>
+                    <TableCell className="w-[200px]">
+                      {transaction.amount}
+                    </TableCell>
+                    <TableCell className="w-[200px]">
+                      {format(transaction.transactionDate, "LLL dd, y")}
+                    </TableCell>
+                    <TableCell className="w-fit">
+                      {transaction.comments ? transaction.comments : "-"}
+                    </TableCell>
                     <TableCell className="w-[50px]">Actions</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </Card>
-          {invoices.length > 0 && (
+          {transactions.length > 0 && (
             <div className="w-full flex justify-between my-5 px-5">
               <Button variant="outline">Cancel</Button>
-              <Button>Save</Button>
+              <Button onClick={savePortfolio}>Save</Button>
             </div>
           )}
         </>
@@ -171,7 +208,7 @@ export default function Page({ params }) {
             </AlertDialogHeader>
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(addTransaction)}
                 className="space-y-8"
               >
                 <div className="flex items-center h-fit w-[425px] justify-between">
@@ -191,8 +228,8 @@ export default function Page({ params }) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark">
-                            <SelectItem value="debit">Debit</SelectItem>
-                            <SelectItem value="credit">Credit</SelectItem>
+                            <SelectItem value="Debit">Debit</SelectItem>
+                            <SelectItem value="Credit">Credit</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormItem>
@@ -307,12 +344,13 @@ export default function Page({ params }) {
                   <AlertDialogCancel
                     className={"text-white"}
                     onClick={() => {
-                      // setPortfolioName();
+                      form.reset();
+                      setError();
                     }}
                   >
                     Cancel
                   </AlertDialogCancel>
-                  <Button type="submit">Continue</Button>
+                  <Button type="submit">Add</Button>
                 </AlertDialogFooter>
               </form>
             </Form>
