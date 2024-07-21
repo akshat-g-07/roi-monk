@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
@@ -56,6 +58,8 @@ export default function Page({ params }) {
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [transactions, setTransactions] = useState([]);
+  const { toast } = useToast();
+  const router = useRouter();
   const form = useForm({
     defaultValues: {},
   });
@@ -118,8 +122,25 @@ export default function Page({ params }) {
   };
 
   const savePortfolio = async () => {
-    const portfolio = await CreatePortfolio(decodedPortfolioName);
-    console.log("portfolio client", portfolio);
+    const portfolio = await CreatePortfolio(decodedPortfolioName, transactions);
+    if (portfolio.message === "error") {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Please try again.",
+      });
+    } else if (portfolio.message === "unique error") {
+      toast({
+        variant: "destructive",
+        title: "Transaction already exists in one of your another portfolio.",
+        description: "Please try changing the transaction details.",
+      });
+    } else {
+      toast({
+        description: "Your portfolio is created successfully!",
+      });
+      router.push("/dashboard");
+    }
   };
 
   return (
