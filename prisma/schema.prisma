@@ -8,60 +8,60 @@ datasource db {
 }
 
 model User {
-  email String @id
+  email      String      @id
   portfolios Portfolio[]
-  supports Support[]
-  feedbacks Feedback[]
+  supports   Support[]
+  feedbacks  Feedback[]
 }
 
 model Portfolio {
-  id String @id @default(uuid())
-  createdDate DateTime @default(now())
-  updatedDate DateTime @updatedAt
+  id            String        @id @default(uuid())
+  createdDate   DateTime      @default(now())
+  updatedDate   DateTime      @updatedAt
   portfolioName String
-  transactions Transaction[]
-  ownerEmail String
-  owner User @relation(fields: [ownerEmail], references: [email])
+  transactions  Transaction[]
+  ownerEmail    String
+  owner         User          @relation(fields: [ownerEmail], references: [email])
 
-  @@unique([ownerEmail,portfolioName])
+  @@unique([ownerEmail, portfolioName])
 }
 
-model Transaction{
-  id String @id @default(uuid())
-  createdDate DateTime @default(now())
-  updatedDate DateTime @updatedAt
+model Transaction {
+  id              String          @id @default(uuid())
+  createdDate     DateTime        @default(now())
+  updatedDate     DateTime        @updatedAt
   transactionName String
-  type TransactionType
-  amount Int
-  date DateTime
-  comments String?
-  portfolioId String
-  portfolio Portfolio @relation(fields: [portfolioId], references: [id])
+  type            TransactionType
+  amount          Int
+  transactionDate DateTime
+  comments        String?
+  portfolioId     String
+  portfolio       Portfolio       @relation(fields: [portfolioId], references: [id])
 
-  @@unique([transactionName,type,date,amount,portfolioId])
+  @@unique([transactionName, type, transactionDate, amount, portfolioId])
 }
 
 model Support {
-  id String @id @default(uuid())
-  createdDate DateTime @default(now())
-  reason SupportReason
-  concern String
-  resolved Boolean @default(false)
-  ownerEmail String
-  owner User @relation(fields: [ownerEmail], references: [email])
+  id          String        @id @default(uuid())
+  createdDate DateTime      @default(now())
+  reason      SupportReason
+  concern     String
+  resolved    Boolean       @default(false)
+  ownerEmail  String
+  owner       User          @relation(fields: [ownerEmail], references: [email])
 
-  @@unique([ownerEmail,concern,reason])
+  @@unique([ownerEmail, concern, reason])
 }
 
 model Feedback {
-  id String @id @default(uuid())
+  id          String   @id @default(uuid())
   createdDate DateTime @default(now())
-  rating Int
-  comments String?
-  ownerEmail String
-  owner User @relation(fields: [ownerEmail], references: [email])
+  rating      Int
+  comments    String?
+  ownerEmail  String
+  owner       User     @relation(fields: [ownerEmail], references: [email])
 
-  @@unique([ownerEmail,rating,comments])
+  @@unique([ownerEmail, rating, comments])
 }
 
 enum TransactionType {
@@ -70,8 +70,8 @@ enum TransactionType {
 }
 
 enum SupportReason {
-GI
-FR
-TS
-IS
+  GI
+  FR
+  TS
+  IS
 }
