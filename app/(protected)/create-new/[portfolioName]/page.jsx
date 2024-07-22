@@ -61,7 +61,13 @@ export default function Page({ params }) {
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm({
-    defaultValues: {},
+    defaultValues: {
+      amount: "",
+      comments: "",
+      transactionDate: "",
+      transactionName: "",
+      type: "",
+    },
   });
 
   const addTransaction = (values) => {
