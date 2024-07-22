@@ -32,6 +32,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import {
   Select,
@@ -55,7 +56,6 @@ import { CreatePortfolio } from "@/actions/portfolio";
 export default function Page({ params }) {
   const { portfolioName } = params;
   const decodedPortfolioName = decodeURIComponent(portfolioName);
-  const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const { toast } = useToast();
@@ -68,63 +68,70 @@ export default function Page({ params }) {
       transactionName: "",
       type: "",
     },
+    resolver: async (values) => {
+      const errors = {};
+      const { amount, comments, transactionDate, transactionName, type } =
+        values;
+
+      if (!type) {
+        errors.type = {
+          type: "required",
+          message: "Type is required.",
+        };
+      }
+
+      const nameRegex = /^[a-zA-Z0-9\s\-_]*$/;
+      if (!transactionName) {
+        errors.transactionName = {
+          type: "required",
+          message: "Name is required.",
+        };
+      } else if (!nameRegex.test(transactionName)) {
+        errors.transactionName = {
+          type: "validation",
+          message: "Name can only have a-z, A-Z, 0-9, space, -, _.",
+        };
+      }
+
+      if (!amount) {
+        errors.amount = {
+          type: "required",
+          message: "Amount is required.",
+        };
+      } else if (amount <= 0) {
+        errors.amount = {
+          type: "validation",
+          message: "Amount should be a postive number.",
+        };
+      }
+
+      if (!transactionDate) {
+        errors.transactionDate = {
+          type: "required",
+          message: "Date is required.",
+        };
+      }
+
+      const commentRegex = /^[a-zA-Z0-9\s.,!?\-_]*$/;
+      if (!commentRegex.test(comments)) {
+        errors.comments = {
+          type: "validation",
+          message:
+            "Comments can only have a-z, A-Z, 0-9, space, ., ,, !, ?, -, _.",
+        };
+      }
+
+      return {
+        errors: errors,
+        values: values,
+      };
+    },
   });
 
   const addTransaction = (values) => {
-    const { amount, comments, transactionDate, transactionName, type } = values;
-
-    if (!type) {
-      setError("Choose the type.");
-      return;
-    }
-
-    if (!transactionName) {
-      setError("Set a name.");
-      return;
-    }
-
-    if (!amount) {
-      setError("Put an amount.");
-      return;
-    }
-
-    if (!transactionDate) {
-      setError("Set a date.");
-      return;
-    }
-
-    if (amount <= 0) {
-      setError("Amount needs to be greater than zero.");
-      return;
-    }
-
-    const nameRegex = /^[a-zA-Z0-9\s\-_]*$/;
-    if (!nameRegex.test(transactionName)) {
-      setError("Name can only have a-z, A-Z, 0-9, space, -, _");
-      return;
-    }
-
-    const commentRegex = /^[a-zA-Z0-9\s.,!?\-_]*$/;
-    if (!commentRegex.test(comments)) {
-      setError("Comments can only have a-z, A-Z, 0-9, space, ., ,, !, ?, -, _");
-      return;
-    }
-
-    setTransactions([
-      ...transactions,
-      {
-        amount,
-        comments,
-        transactionDate,
-        transactionName,
-        type,
-      },
-    ]);
-
+    setTransactions([...transactions, values]);
     form.reset();
-
     setOpen(false);
-    setError();
   };
 
   const savePortfolio = async () => {
@@ -259,6 +266,7 @@ export default function Page({ params }) {
                             <SelectItem value="Credit">Credit</SelectItem>
                           </SelectContent>
                         </Select>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -277,6 +285,7 @@ export default function Page({ params }) {
                             {...field}
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -296,6 +305,7 @@ export default function Page({ params }) {
                             type="number"
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -342,6 +352,7 @@ export default function Page({ params }) {
                             />
                           </PopoverContent>
                         </Popover>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -360,19 +371,16 @@ export default function Page({ params }) {
                             {...field}
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
-                {error && (
-                  <span className="text-rose-500 text-sm ml-2">{error}</span>
-                )}
                 <AlertDialogFooter>
                   <AlertDialogCancel
                     className={"text-white"}
                     onClick={() => {
                       form.reset();
-                      setError();
                     }}
                   >
                     Cancel
