@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useToast } from "@/components/ui/use-toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Card } from "@/components/ui/card";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
@@ -58,7 +59,6 @@ export default function Page({ params }) {
   const decodedPortfolioName = decodeURIComponent(portfolioName);
   const [open, setOpen] = useState(false);
   const [transactions, setTransactions] = useState([]);
-  const { toast } = useToast();
   const router = useRouter();
   const form = useForm({
     defaultValues: {
@@ -137,21 +137,14 @@ export default function Page({ params }) {
   const savePortfolio = async () => {
     const portfolio = await CreatePortfolio(decodedPortfolioName, transactions);
     if (portfolio.message === "error") {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Please try again.",
-      });
+      toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
     } else if (portfolio.message === "unique error") {
-      toast({
-        variant: "destructive",
-        title: "Transaction already exists in one of your another portfolio.",
-        description: "Please try changing the transaction details.",
-      });
+      toast.error(
+        `Transaction duplicate found.\nPlease try changing the transaction details.`
+      );
     } else {
-      toast({
-        description: "Your portfolio is created successfully!",
-      });
+      toast.success("Your portfolio is created successfully!!");
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       router.push("/dashboard");
     }
   };
@@ -392,6 +385,19 @@ export default function Page({ params }) {
           </AlertDialogContent>
         </AlertDialog>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition="Bounce"
+      />
     </>
   );
 }
