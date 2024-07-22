@@ -245,12 +245,12 @@ export default function Page({ params }) {
                 onSubmit={form.handleSubmit(addTransaction)}
                 className="space-y-8"
               >
-                <div className="flex items-center h-fit w-[425px] justify-between">
+                <div className="flex items-start h-fit w-[500px] justify-between">
                   <FormField
                     control={form.control}
                     name="type"
                     render={({ field }) => (
-                      <FormItem className="w-[100px]">
+                      <FormItem className="w-[175px]">
                         <FormLabel className="text-white">Type</FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -290,12 +290,12 @@ export default function Page({ params }) {
                     )}
                   />
                 </div>
-                <div className="flex items-end h-fit w-[425px] justify-between">
+                <div className="flex items-start h-fit w-[500px] justify-between">
                   <FormField
                     control={form.control}
                     name="amount"
                     render={({ field }) => (
-                      <FormItem className="w-[100px]">
+                      <FormItem className="w-[175px]">
                         <FormLabel className="text-white">Amount</FormLabel>
                         <FormControl>
                           <Input
@@ -314,7 +314,7 @@ export default function Page({ params }) {
                     name="transactionDate"
                     render={({ field }) => (
                       <FormItem className="flex flex-col text-white">
-                        <FormLabel className="text-white">
+                        <FormLabel className="text-white my-[5px]">
                           Transaction Date
                         </FormLabel>
                         <Popover>
@@ -357,7 +357,7 @@ export default function Page({ params }) {
                     )}
                   />
                 </div>
-                <div className="h-fit w-[425px]">
+                <div className="h-fit w-[500px]">
                   <FormField
                     control={form.control}
                     name="comments"
