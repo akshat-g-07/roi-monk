@@ -253,7 +253,14 @@ export default function Page({ params }) {
           </Card>
           {transactions.length > 0 && (
             <div className="w-full flex justify-between my-5 px-5">
-              <Button variant="outline">Cancel</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  router.push("/dashboard");
+                }}
+              >
+                Cancel
+              </Button>
               <Button onClick={savePortfolio}>Save</Button>
             </div>
           )}
