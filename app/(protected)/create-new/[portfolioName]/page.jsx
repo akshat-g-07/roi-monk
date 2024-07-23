@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Card } from "@/components/ui/card";
-import { PlusIcon } from "@radix-ui/react-icons";
+import { Pencil1Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -59,6 +59,8 @@ export default function Page({ params }) {
   const decodedPortfolioName = decodeURIComponent(portfolioName);
   const [open, setOpen] = useState(false);
   const [transactions, setTransactions] = useState([]);
+  // the number saves the index of transactions[] for which edit is called, might be 0 as well, -1 indicates none.
+  const [editAction, setEditAction] = useState(-1);
   const router = useRouter();
   const form = useForm({
     defaultValues: {
@@ -112,12 +114,11 @@ export default function Page({ params }) {
         };
       }
 
-      const commentRegex = /^[a-zA-Z0-9\s.,!?\-_]*$/;
+      const commentRegex = /^[a-zA-Z0-9\s.'"&,!?\-_]*$/;
       if (!commentRegex.test(comments)) {
         errors.comments = {
           type: "validation",
-          message:
-            "Comments can only have a-z, A-Z, 0-9, space, ., ,, !, ?, -, _.",
+          message: `Comments can only have a-z, A-Z, 0-9, space, ., ', ", &, !, ?, -, _.`,
         };
       }
 
@@ -129,7 +130,11 @@ export default function Page({ params }) {
   });
 
   const addTransaction = (values) => {
-    setTransactions([...transactions, values]);
+    if (editAction === -1) setTransactions([...transactions, values]);
+    else {
+      transactions[editAction] = values;
+      setEditAction(-1);
+    }
     form.reset();
     setOpen(false);
   };
@@ -149,6 +154,17 @@ export default function Page({ params }) {
     }
   };
 
+  const handleEditButton = (index) => {
+    let tempTransaction = transactions[index];
+    form.setValue("amount", tempTransaction.amount);
+    form.setValue("comments", tempTransaction.comments);
+    form.setValue("transactionName", tempTransaction.transactionName);
+    form.setValue("type", tempTransaction.type);
+    form.setValue("transactionDate", tempTransaction.transactionDate);
+    setEditAction(index);
+    setOpen(true);
+  };
+
   return (
     <>
       <div className="w-full min-h-full">
@@ -164,7 +180,7 @@ export default function Page({ params }) {
                   <TableHead className="w-[200px]">Amount</TableHead>
                   <TableHead className="w-[200px]">Date</TableHead>
                   <TableHead className="w-fit">Comments</TableHead>
-                  <TableHead className="w-[50px]">Actions</TableHead>
+                  <TableHead className="w-[100px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -193,7 +209,7 @@ export default function Page({ params }) {
                         }}
                       />
                     </TableCell>
-                    <TableCell className="w-[50px] flex items-center">
+                    <TableCell className="w-[50px]">
                       {transaction.type}
                     </TableCell>
                     <TableCell className="w-[200px]">
@@ -208,7 +224,18 @@ export default function Page({ params }) {
                     <TableCell className="w-fit">
                       {transaction.comments ? transaction.comments : "-"}
                     </TableCell>
-                    <TableCell className="w-[50px]">Actions</TableCell>
+                    <TableCell className="w-[100px] flex">
+                      <Pencil1Icon
+                        className="size-5 mr-[5px] text-muted-foreground hover:text-foreground cursor-pointer"
+                        onClick={() => {
+                          handleEditButton(index);
+                        }}
+                      />
+                      <TrashIcon
+                        className="size-5 ml-[5px] text-destructive hover:text-red-500 cursor-pointer"
+                        onClick={() => {}}
+                      />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
