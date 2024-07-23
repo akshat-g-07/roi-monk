@@ -22,6 +22,7 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -268,6 +269,9 @@ export default function Page({ params }) {
               <AlertDialogTitle className="text-foreground">
                 Enter transaction details
               </AlertDialogTitle>
+              <AlertDialogDescription className="text-foreground/50">
+                Please enter the transaction details for this portfolio.
+              </AlertDialogDescription>
             </AlertDialogHeader>
             <Form {...form}>
               <form
