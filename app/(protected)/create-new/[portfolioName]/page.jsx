@@ -165,6 +165,11 @@ export default function Page({ params }) {
     setOpen(true);
   };
 
+  const handleDeleteButton = (indx) => {
+    let tempTransactions = transactions.filter((item, index) => index !== indx);
+    setTransactions(tempTransactions);
+  };
+
   return (
     <>
       <div className="w-full min-h-full">
@@ -224,17 +229,21 @@ export default function Page({ params }) {
                     <TableCell className="w-fit">
                       {transaction.comments ? transaction.comments : "-"}
                     </TableCell>
-                    <TableCell className="w-[100px] flex">
-                      <Pencil1Icon
-                        className="size-5 mr-[5px] text-muted-foreground hover:text-foreground cursor-pointer"
-                        onClick={() => {
-                          handleEditButton(index);
-                        }}
-                      />
-                      <TrashIcon
-                        className="size-5 ml-[5px] text-destructive hover:text-red-500 cursor-pointer"
-                        onClick={() => {}}
-                      />
+                    <TableCell className="w-[100px]">
+                      <div className="flex">
+                        <Pencil1Icon
+                          className="size-5 mr-[5px] text-muted-foreground hover:text-foreground cursor-pointer"
+                          onClick={() => {
+                            handleEditButton(index);
+                          }}
+                        />
+                        <TrashIcon
+                          className="size-5 ml-[5px] text-destructive hover:text-red-500 cursor-pointer"
+                          onClick={() => {
+                            handleDeleteButton(index);
+                          }}
+                        />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -286,7 +295,7 @@ export default function Page({ params }) {
                             <SelectItem value="Credit">Credit</SelectItem>
                           </SelectContent>
                         </Select>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
@@ -305,7 +314,7 @@ export default function Page({ params }) {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
@@ -325,7 +334,7 @@ export default function Page({ params }) {
                             type="number"
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
@@ -372,7 +381,7 @@ export default function Page({ params }) {
                             />
                           </PopoverContent>
                         </Popover>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
@@ -391,7 +400,7 @@ export default function Page({ params }) {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
