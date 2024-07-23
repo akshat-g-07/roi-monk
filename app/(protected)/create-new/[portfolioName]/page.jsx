@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Card } from "@/components/ui/card";
 import { PlusIcon } from "@radix-ui/react-icons";
@@ -396,7 +396,7 @@ export default function Page({ params }) {
         draggable
         pauseOnHover
         theme="colored"
-        transition="Bounce"
+        transition={Bounce}
       />
     </>
   );
