@@ -50,3 +50,24 @@ export async function GetPortfolioByName(portfolioName) {
     return { message: "error" };
   }
 }
+
+export async function GetRecentPortfolios(amount = 5) {
+  const userEmail = await getUserEmail();
+
+  try {
+    const portfolios = await db.Portfolio.findMany({
+      where: {
+        ownerEmail: userEmail,
+      },
+      orderBy: {
+        updatedDate: "desc",
+      },
+      take: amount,
+    });
+    if (portfolios) return { data: portfolios };
+    else return { message: "empty" };
+  } catch (error) {
+    console.log(error);
+    return { message: "error" };
+  }
+}
