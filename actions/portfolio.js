@@ -32,3 +32,21 @@ export async function CreatePortfolio(portfolioName, transactions) {
     return { message: "error" };
   }
 }
+
+export async function GetPortfolioByName(portfolioName) {
+  const userEmail = await getUserEmail();
+
+  try {
+    const portfolio = await db.Portfolio.findFirst({
+      where: {
+        ownerEmail: userEmail,
+        portfolioName: portfolioName,
+      },
+    });
+    if (portfolio) return { message: "exists" };
+    else return { message: "unique" };
+  } catch (error) {
+    console.log(error);
+    return { message: "error" };
+  }
+}

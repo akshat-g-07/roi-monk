@@ -9,6 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ArrowTopRightIcon,
@@ -31,6 +32,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
+import { GetPortfolioByName } from "@/actions/portfolio";
 
 export default function SideNavBar() {
   const router = useRouter();
@@ -39,6 +41,7 @@ export default function SideNavBar() {
   const [openDialog, setOpenDialog] = useState(false);
   const [portfolioNameEdit, setPortfolioNameEdit] = useState(false);
   const [portfolioName, setPortfolioName] = useState();
+  const [loadingResponse, setLoadingResponse] = useState(false);
 
   return (
     <>
@@ -103,13 +106,17 @@ export default function SideNavBar() {
               </span>
             </div>
           </AlertDialogTrigger>
-          <AlertDialogContent className="dark">
+          <AlertDialogContent className="dark w-[500px]">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-foreground">
-                Enter the name of the investment portfolio.
+                Name of Portfolio.
               </AlertDialogTitle>
+              <AlertDialogDescription>
+                Enter the name of the investment portfolio.
+              </AlertDialogDescription>
               <Input
                 autofocus
+                disabled={loadingResponse}
                 value={portfolioName}
                 className="text-foreground"
                 placeholder="Portfolio Name"
@@ -121,38 +128,69 @@ export default function SideNavBar() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel
-                className={"text-white"}
+                disabled={loadingResponse}
+                className={` text-white`}
                 onClick={() => {
                   setPortfolioName();
+                  setError();
                 }}
               >
                 Cancel
               </AlertDialogCancel>
               <Button
-                onClick={() => {
+                disabled={loadingResponse}
+                className={`${loadingResponse && "bg-slate-700"} w-[90px]`}
+                onClick={async () => {
+                  setLoadingResponse(true);
                   if (!portfolioName) {
                     setError("Portfolio name can't be blank!");
+                    setLoadingResponse(false);
                     return;
                   }
 
                   const regex = /^[a-zA-Z0-9_\-\s]+$/;
-
                   if (!regex.test(portfolioName)) {
                     setError(
                       "Portfolio name can only have a-z, A-Z, 0-9, space, _, -"
                     );
+                    setLoadingResponse(false);
                     return;
                   }
 
-                  // if that name already exists
-                  // reroute him to the right route
-                  setPortfolioName();
-                  setOpenDialog(false);
-                  router.push(`/create-new/${portfolioName}`);
-                  setOpen(false);
+                  const response = await GetPortfolioByName(portfolioName);
+                  if (response.message === "unique") {
+                    setPortfolioName();
+                    setOpenDialog(false);
+                    setLoadingResponse(false);
+                    router.push(`/create-new/${portfolioName}`);
+                    setOpen(false);
+                  } else if (response.message === "exists") {
+                    setError(
+                      "Portfolio name already exists. Please choose unique name."
+                    );
+                    setLoadingResponse(false);
+                    return;
+                  } else {
+                    setError(
+                      "Something went wrong. Please try again in sometime."
+                    );
+                    setLoadingResponse(false);
+                    return;
+                  }
                 }}
               >
-                Continue
+                {loadingResponse ? (
+                  <>
+                    <CircularProgress
+                      size={20}
+                      sx={{
+                        color: "#29b6f6",
+                      }}
+                    />
+                  </>
+                ) : (
+                  "Continue"
+                )}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
