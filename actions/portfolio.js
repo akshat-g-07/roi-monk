@@ -71,3 +71,24 @@ export async function GetRecentPortfolios(amount = 5) {
     return { message: "error" };
   }
 }
+
+export async function UpdatePortfolioName(portfolioId, portfolioNewName) {
+  try {
+    await prisma.Portfolio.update({
+      where: {
+        id: portfolioId,
+      },
+      data: {
+        portfolioName: portfolioNewName,
+      },
+    });
+    return { message: "success" };
+  } catch (error) {
+    console.log(error);
+    if (error.code === "P2002") {
+      return { message: "exists" };
+    } else {
+      return { message: "error" };
+    }
+  }
+}
