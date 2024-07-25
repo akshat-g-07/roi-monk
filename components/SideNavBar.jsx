@@ -15,7 +15,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ArrowTopRightIcon,
-  CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Pencil1Icon,
