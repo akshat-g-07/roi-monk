@@ -1,8 +1,10 @@
 "use client";
 
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SignOutButton } from "@clerk/nextjs";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -32,16 +34,44 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { GetPortfolioByName } from "@/actions/portfolio";
+import {
+  GetPortfolioByName,
+  GetRecentPortfolios,
+  UpdatePortfolioName,
+} from "@/actions/portfolio";
 
 export default function SideNavBar() {
   const router = useRouter();
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [portfolioNameEdit, setPortfolioNameEdit] = useState(false);
   const [portfolioName, setPortfolioName] = useState();
   const [loadingResponse, setLoadingResponse] = useState(false);
+  const [recentPortfolios, setRecentPortfolios] = useState([]);
+
+  const handlePortfolioNameSave = (indx) => {};
+  const handlePortfolioNameEdit = async (indx) => {
+    const response = await UpdatePortfolioName(
+      recentPortfolios[indx].id,
+      portfolioName
+    );
+    if (response.message === "success") {
+      toast.success("Name edited successfully!!");
+      RecentPortfolios();
+    } else if (response.message === "exists")
+      toast.error(`Portfolio name already exists.\nPlease choose unique name.`);
+    else toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
+    setPortfolioName();
+  };
+
+  async function RecentPortfolios() {
+    let response = await GetRecentPortfolios();
+    if (response.data) setRecentPortfolios(response.data);
+  }
+
+  useEffect(() => {
+    RecentPortfolios();
+  }, []);
 
   return (
     <>
@@ -114,18 +144,18 @@ export default function SideNavBar() {
               <AlertDialogDescription>
                 Enter the name of the investment portfolio.
               </AlertDialogDescription>
-              <Input
-                autofocus
-                disabled={loadingResponse}
-                value={portfolioName}
-                className="text-foreground"
-                placeholder="Portfolio Name"
-                onChange={(event) => setPortfolioName(event.target.value)}
-              />
-              {error && (
-                <span className="text-rose-500 text-sm ml-2">{error}</span>
-              )}
             </AlertDialogHeader>
+            <Input
+              autoFocus
+              disabled={loadingResponse}
+              value={portfolioName}
+              className="text-foreground"
+              placeholder="Portfolio Name"
+              onChange={(event) => setPortfolioName(event.target.value)}
+            />
+            {error && (
+              <span className="text-rose-500 text-sm ml-2">{error}</span>
+            )}
             <AlertDialogFooter>
               <AlertDialogCancel
                 disabled={loadingResponse}
@@ -218,22 +248,19 @@ export default function SideNavBar() {
           <div
             className={`${open ? "mt-1" : "mt-7"} flex flex-col items-center`}
           >
-            {[...new Array(5)].map((_item, index) => {
+            {recentPortfolios.map((portfolio, index) => {
               return (
                 <div
                   key={index}
                   className={`flex items-center ${
                     open ? "justify-start" : "justify-evenly"
                   } w-full group cursor-pointer my-px hover:bg-accent`}
+                  onClick={() => {
+                    // router.push(`/portfolio/${portfolio.portfolioName}`);
+                    // setOpen(false);
+                  }}
                 >
-                  <Avatar
-                    className={`m-2 ${open && "ml-3"}`}
-                    onClick={() => {
-                      // MARK: Update the router
-                      router.push(`/portfolio/portfolioName`);
-                      setOpen(false);
-                    }}
-                  >
+                  <Avatar className={`m-2 ${open && "ml-3"}`}>
                     <AvatarImage src="https://github.com/shadcn.png" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
@@ -248,45 +275,77 @@ export default function SideNavBar() {
                       textOverflow: "ellipsis",
                       "& .MuiInputBase-input": {
                         color: "white",
-                        cursor: portfolioNameEdit ? "text" : "pointer",
+                        cursor: "pointer",
                       },
                     }}
-                    defaultValue="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum, quisquam?"
+                    value={portfolio.portfolioName}
                     InputProps={{
-                      readOnly: !portfolioNameEdit,
+                      readOnly: true,
                     }}
-                    onClick={() => {
-                      // MARK: Update the router
-                      {
-                        !portfolioNameEdit &&
-                          router.push(`/portfolio/portfolioName`);
-                      }
-                      {
-                        !portfolioNameEdit && setOpen(false);
-                      }
-                    }}
+                    // onClick={(e) => {
+                    //   if (portfolioNameEdit[index]["edit"]) e.stopPropagation();
+                    // }}
                   />
                   {open && (
                     <span className="group-hover:inline-flex hidden size-fit">
-                      {portfolioNameEdit ? (
-                        <CheckIcon
-                          className="size-5 mr-1 text-muted-foreground hover:text-foreground"
-                          onClick={() => {
-                            setPortfolioNameEdit(false);
-                          }}
-                        />
-                      ) : (
-                        <Pencil1Icon
-                          className="size-5 mr-1 text-muted-foreground hover:text-foreground"
-                          onClick={() => {
-                            setPortfolioNameEdit(true);
-                          }}
-                        />
-                      )}
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <Pencil1Icon
+                            className="size-5 mr-1 text-muted-foreground hover:text-foreground"
+                            onClick={(e) => {
+                              // e.stopPropagation();
+                              // handlePortfolioNameEdit(index);
+                            }}
+                          />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="dark w-[500px]">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-foreground">
+                              Edit
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Enter the new name of portfolio.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <Input
+                            autoFocus
+                            value={portfolioName}
+                            className="text-foreground"
+                            placeholder="Portfolio Name"
+                            onChange={(event) =>
+                              setPortfolioName(event.target.value)
+                            }
+                          />
+
+                          <AlertDialogFooter>
+                            <AlertDialogCancel
+                              className={"text-white"}
+                              onClick={() => {
+                                setPortfolioName();
+                              }}
+                            >
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              className={`w-[90px]`}
+                              onClick={() => {
+                                handlePortfolioNameEdit(index);
+                              }}
+                            >
+                              Save
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
 
                       <AlertDialog>
                         <AlertDialogTrigger>
-                          <TrashIcon className="size-5 ml-1 text-destructive hover:text-red-500" />
+                          <TrashIcon
+                            className="size-5 ml-1 text-destructive hover:text-red-500"
+                            onClick={(e) => {
+                              // e.stopPropagation();
+                            }}
+                          />
                         </AlertDialogTrigger>
                         <AlertDialogContent className="dark">
                           <AlertDialogHeader>
@@ -401,6 +460,19 @@ export default function SideNavBar() {
           </div>
         </div>
       </nav>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
     </>
   );
 }
