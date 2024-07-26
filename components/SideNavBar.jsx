@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import {
   GetPortfolioByName,
   GetRecentPortfolios,
-  UpdatePortfolioName,
+  UpdatePortfolioNameById,
 } from "@/actions/portfolio";
 
 export default function SideNavBar() {
@@ -50,7 +50,7 @@ export default function SideNavBar() {
 
   const handlePortfolioNameSave = (indx) => {};
   const handlePortfolioNameEdit = async (indx) => {
-    const response = await UpdatePortfolioName(
+    const response = await UpdatePortfolioNameById(
       recentPortfolios[indx].id,
       portfolioName
     );
