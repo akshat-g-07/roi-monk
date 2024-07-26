@@ -72,11 +72,40 @@ export async function GetRecentPortfolios(amount = 5) {
   }
 }
 
-export async function UpdatePortfolioName(portfolioId, portfolioNewName) {
+export async function UpdatePortfolioNameById(portfolioId, portfolioNewName) {
   try {
     await prisma.Portfolio.update({
       where: {
         id: portfolioId,
+      },
+      data: {
+        portfolioName: portfolioNewName,
+      },
+    });
+    return { message: "success" };
+  } catch (error) {
+    console.log(error);
+    if (error.code === "P2002") {
+      return { message: "exists" };
+    } else {
+      return { message: "error" };
+    }
+  }
+}
+
+export async function UpdatePortfolioNameByName(
+  portfolioOldName,
+  portfolioNewName
+) {
+  const userEmail = await getUserEmail();
+
+  try {
+    await prisma.Portfolio.update({
+      where: {
+        ownerEmail_portfolioName: {
+          ownerEmail: userEmail,
+          portfolioName: portfolioOldName,
+        },
       },
       data: {
         portfolioName: portfolioNewName,
