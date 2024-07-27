@@ -43,7 +43,7 @@ export async function GetPortfolioByName(portfolioName) {
         portfolioName: portfolioName,
       },
     });
-    if (portfolio) return { message: "exists" };
+    if (portfolio) return { data: portfolio };
     else return { message: "unique" };
   } catch (error) {
     console.log(error);
