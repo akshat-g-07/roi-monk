@@ -193,7 +193,7 @@ export default function SideNavBar() {
                     setLoadingResponse(false);
                     router.push(`/create-new/${portfolioName}`);
                     setOpen(false);
-                  } else if (response.message === "exists") {
+                  } else if (response.data) {
                     setError(
                       "Portfolio name already exists. Please choose unique name."
                     );
