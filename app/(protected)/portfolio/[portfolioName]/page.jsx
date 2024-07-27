@@ -4,14 +4,17 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
-import { payments } from "@/data/payments";
 import { columns } from "@/lib/payment-cols";
 import { DataTable } from "@/components/data-table";
+import { GetTransactionsByPortfolioName } from "@/actions/transaction";
 
-export default function Page() {
+export default async function Page({ params }) {
+  const { portfolioName } = params;
+  const transactions = await GetTransactionsByPortfolioName(portfolioName);
   let netRevenue = 0;
   let netROI = 0;
   let annROI = 0;
+  console.log("transactions", transactions);
 
   return (
     <>
@@ -94,7 +97,9 @@ export default function Page() {
           </CardContent>
         </Card>
       </div>
-      <DataTable columns={columns} data={payments} />
+      {transactions && transactions.data && (
+        <DataTable columns={columns} data={transactions.data} />
+      )}
     </>
   );
 }
