@@ -86,7 +86,7 @@ export default function PortfolioHeader({ portfolioName }) {
       </div>
       <ToastContainer
         position="top-right"
-        autoClose={false}
+        autoClose={2000}
         hideProgressBar
         newestOnTop={false}
         closeOnClick

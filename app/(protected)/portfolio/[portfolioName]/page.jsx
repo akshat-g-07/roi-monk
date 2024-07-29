@@ -14,7 +14,6 @@ export default async function Page({ params }) {
   let netRevenue = 0;
   let netROI = 0;
   let annROI = 0;
-  console.log("transactions", transactions);
 
   return (
     <>
