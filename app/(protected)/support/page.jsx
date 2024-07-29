@@ -7,7 +7,7 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { Button } from "@/components/ui/button";
 
-export default function Preason() {
+export default function Page() {
   const [reason, setReason] = useState("");
 
   const handleChange = (event) => {
