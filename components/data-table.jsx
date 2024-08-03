@@ -56,6 +56,15 @@ export function DataTable({ columns, data }) {
           }
           className="max-w-sm"
         />
+        <Button
+          onClick={() => {
+            table.getFilteredSelectedRowModel().rows.forEach((row) => {
+              console.log(row.original.id);
+            });
+          }}
+        >
+          Delete
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>
