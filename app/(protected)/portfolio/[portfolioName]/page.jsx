@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
@@ -7,13 +9,51 @@ import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import { columns } from "@/lib/payment-cols";
 import { DataTable } from "@/components/data-table";
 import { GetTransactionsByPortfolioName } from "@/actions/transaction";
+import { useEffect, useMemo, useState } from "react";
 
-export default async function Page({ params }) {
+export default function Page({ params }) {
   const { portfolioName } = params;
-  const transactions = await GetTransactionsByPortfolioName(portfolioName);
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    async function getTransactions() {
+      const transactionsData = await GetTransactionsByPortfolioName(
+        portfolioName
+      );
+      if (transactionsData.data) setTransactions(transactionsData.data);
+    }
+
+    getTransactions();
+  }, [portfolioName]);
   let netRevenue = 0;
   let netROI = 0;
   let annROI = 0;
+
+  const handleCopyOperation = (transactionId) => {
+    let tempTransactions = [];
+    transactions.forEach((item) => {
+      tempTransactions.push(item);
+
+      if (item.id === transactionId) {
+        tempTransactions.push(item);
+      }
+    });
+
+    setTransactions(tempTransactions);
+  };
+
+  const handleDeleteOperation = (transactionId) => {
+    let tempTransactions = transactions.filter(
+      (item) => item.id !== transactionId
+    );
+
+    setTransactions(tempTransactions);
+  };
+
+  const columnsWithDelete = useMemo(
+    () => columns(handleCopyOperation, handleDeleteOperation),
+    [handleCopyOperation, handleDeleteOperation]
+  );
 
   return (
     <>
@@ -96,8 +136,8 @@ export default async function Page({ params }) {
           </CardContent>
         </Card>
       </div>
-      {transactions && transactions.data && (
-        <DataTable columns={columns} data={transactions.data} />
+      {transactions && (
+        <DataTable columns={columnsWithDelete} data={transactions} />
       )}
     </>
   );

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 
-export const columns = [
+export const columns = (handleCopyOperation, handleDeleteOperation) => [
   {
     id: "select",
     header: ({ table }) => (
@@ -170,7 +170,7 @@ export const columns = [
   {
     id: "actions",
     header: "Actions",
-    cell: () => {
+    cell: ({ row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -183,11 +183,17 @@ export const columns = [
               <EditIcon className="mr-2 size-3.5" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => handleCopyOperation(row.original.id)}
+            >
               <ContentCopyIcon className="mr-2 size-3.5" />
               Make a copy
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => handleDeleteOperation(row.original.id)}
+            >
               <DeleteOutlineIcon className="mr-2 size-3.5" />
               Move to trash
             </DropdownMenuItem>
