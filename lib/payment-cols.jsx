@@ -179,15 +179,15 @@ export const columns = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="dark">
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer hover:bg-primary/90">
               <EditIcon className="mr-2 size-3.5" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <ContentCopyIcon className="mr-2 size-3.5" />
               Make a copy
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <DeleteOutlineIcon className="mr-2 size-3.5" />
               Move to trash
             </DropdownMenuItem>
