@@ -49,7 +49,9 @@ export default function Page({ params }) {
       tempTransactions.push(item);
 
       if (item.id === transactionId) {
-        tempTransactions.push(item);
+        let tempItem = { ...item };
+        tempItem.id = tempItem.id + JSON.stringify(new Date()) + "_copy";
+        tempTransactions.push(tempItem);
       }
     });
 
