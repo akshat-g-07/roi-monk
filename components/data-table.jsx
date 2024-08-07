@@ -45,7 +45,7 @@ export function DataTable({ columns, data, handleBulkDeleteOperation }) {
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Search Transaction Name..."
           value={table.getColumn("transactionName")?.getFilterValue() || ""}
