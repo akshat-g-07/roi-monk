@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export function DataTable({ columns, data }) {
+export function DataTable({ columns, data, handleBulkDeleteOperation }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -58,9 +58,7 @@ export function DataTable({ columns, data }) {
         />
         <Button
           onClick={() => {
-            table.getFilteredSelectedRowModel().rows.forEach((row) => {
-              console.log(row.original.id);
-            });
+            handleBulkDeleteOperation(table.getFilteredSelectedRowModel().rows);
           }}
         >
           Delete

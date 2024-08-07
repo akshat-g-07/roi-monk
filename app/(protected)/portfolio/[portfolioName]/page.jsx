@@ -64,6 +64,17 @@ export default function Page({ params }) {
     setTransactions(tempTransactions);
   };
 
+  const handleBulkDeleteOperation = (transactionsToDelete) => {
+    const idsToRemove = new Set(
+      transactionsToDelete.map((item) => item.original.id)
+    );
+    let tempTransactions = transactions.filter(
+      (item) => !idsToRemove.has(item.id)
+    );
+
+    setTransactions(tempTransactions);
+  };
+
   const columnsWithDelete = useMemo(
     () =>
       columns(handleEditOperation, handleCopyOperation, handleDeleteOperation),
@@ -152,7 +163,11 @@ export default function Page({ params }) {
         </Card>
       </div>
       {transactions && (
-        <DataTable columns={columnsWithDelete} data={transactions} />
+        <DataTable
+          columns={columnsWithDelete}
+          data={transactions}
+          handleBulkDeleteOperation={handleBulkDeleteOperation}
+        />
       )}
     </>
   );
