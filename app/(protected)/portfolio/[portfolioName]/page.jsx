@@ -29,6 +29,20 @@ export default function Page({ params }) {
   let netROI = 0;
   let annROI = 0;
 
+  const handleEditOperation = (transactionId, transactionValues) => {
+    let tempTransactions = transactions.map((transaction) => {
+      if (transaction.id === transactionId) {
+        transaction.amount = transactionValues.amount;
+        transaction.comments = transactionValues.comments;
+        transaction.transactionDate = transactionValues.transactionDate;
+        transaction.transactionName = transactionValues.transactionName;
+        transaction.type = transactionValues.type;
+      }
+      return transaction;
+    });
+    setTransactions(tempTransactions);
+  };
+
   const handleCopyOperation = (transactionId) => {
     let tempTransactions = [];
     transactions.forEach((item) => {
@@ -51,8 +65,9 @@ export default function Page({ params }) {
   };
 
   const columnsWithDelete = useMemo(
-    () => columns(handleCopyOperation, handleDeleteOperation),
-    [handleCopyOperation, handleDeleteOperation]
+    () =>
+      columns(handleEditOperation, handleCopyOperation, handleDeleteOperation),
+    [handleEditOperation, handleCopyOperation, handleDeleteOperation]
   );
 
   return (

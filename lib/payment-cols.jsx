@@ -15,8 +15,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import TransactionForm from "@/components/transaction-form";
+import { useState } from "react";
 
-export const columns = (handleCopyOperation, handleDeleteOperation) => [
+export const columns = (
+  handleEditOperation,
+  handleCopyOperation,
+  handleDeleteOperation
+) => [
   {
     id: "select",
     header: ({ table }) => (
@@ -172,33 +188,51 @@ export const columns = (handleCopyOperation, handleDeleteOperation) => [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizIcon sx={{ fontSize: "20px" }} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="dark">
-            <DropdownMenuItem className="cursor-pointer hover:bg-primary/90">
-              <EditIcon className="mr-2 size-3.5" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => handleCopyOperation(row.original.id)}
-            >
-              <ContentCopyIcon className="mr-2 size-3.5" />
-              Make a copy
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => handleDeleteOperation(row.original.id)}
-            >
-              <DeleteOutlineIcon className="mr-2 size-3.5" />
-              Move to trash
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <AlertDialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizIcon sx={{ fontSize: "20px" }} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="dark">
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem className="cursor-pointer hover:bg-primary/90">
+                  <EditIcon className="mr-2 size-3.5" />
+                  Edit
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleCopyOperation(row.original.id)}
+              >
+                <ContentCopyIcon className="mr-2 size-3.5" />
+                Make a copy
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleDeleteOperation(row.original.id)}
+              >
+                <DeleteOutlineIcon className="mr-2 size-3.5" />
+                Move to trash
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AlertDialogContent className="dark">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-foreground">
+                Enter transaction details
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-foreground/50">
+                Please enter the transaction details for this portfolio.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <TransactionForm
+              transactionValues={row.original}
+              handleEditOperation={handleEditOperation}
+            />
+          </AlertDialogContent>
+        </AlertDialog>
       );
     },
   },
