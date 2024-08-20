@@ -10,10 +10,19 @@ import { columns } from "@/lib/payment-cols";
 import { DataTable } from "@/components/data-table";
 import { GetTransactionsByPortfolioName } from "@/actions/transaction";
 import { useEffect, useMemo, useState } from "react";
+import {
+  NetRevenue,
+  NetROI,
+  TotalInvestment,
+} from "@/utils/portfolio-calculations";
 
 export default function Page({ params }) {
   const { portfolioName } = params;
+  // const totalInvestment = 0;
   const [transactions, setTransactions] = useState([]);
+  const totalInvestment = TotalInvestment(transactions);
+  const netRevenue = NetRevenue(transactions);
+  const netROI = NetROI(transactions);
 
   useEffect(() => {
     async function getTransactions() {
@@ -25,9 +34,6 @@ export default function Page({ params }) {
 
     getTransactions();
   }, [portfolioName]);
-  let netRevenue = 0;
-  let netROI = 0;
-  let annROI = 0;
 
   const handleEditOperation = (transactionId, transactionValues) => {
     let tempTransactions = transactions.map((transaction) => {
@@ -85,7 +91,7 @@ export default function Page({ params }) {
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
         {/* 
         Total Investment Card
          */}
@@ -97,7 +103,7 @@ export default function Page({ params }) {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ Card Content</p>
+            <p>$ {totalInvestment}</p>
           </CardContent>
         </Card>
         {/* 
@@ -113,10 +119,12 @@ export default function Page({ params }) {
           <CardContent className="flex justify-between text-xl font-semibold items-center">
             <p>$ {netRevenue}</p>
             <p>
-              {netRevenue >= 0.5 ? (
+              {netRevenue > 0 ? (
                 <TriangleUpIcon className="text-emerald-500 size-7" />
               ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
+                netRevenue < 0 && (
+                  <TriangleDownIcon className="text-red-500 size-7" />
+                )
               )}
             </p>
           </CardContent>
@@ -134,31 +142,12 @@ export default function Page({ params }) {
           <CardContent className="flex justify-between text-xl font-semibold items-center">
             <p>{netROI} %</p>
             <p>
-              {netROI >= 0.5 ? (
+              {netROI > 0 ? (
                 <TriangleUpIcon className="text-emerald-500 size-7" />
               ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
-              )}
-            </p>
-          </CardContent>
-        </Card>
-        {/* 
-        Annualized ROI Card
-         */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Annualized ROI
-              <RequestQuoteIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>{annROI} %</p>
-            <p>
-              {annROI >= 0.5 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
+                netROI < 0 && (
+                  <TriangleDownIcon className="text-red-500 size-7" />
+                )
               )}
             </p>
           </CardContent>
