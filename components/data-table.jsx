@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export function DataTable({ columns, data }) {
+export function DataTable({ columns, data, handleBulkDeleteOperation }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -45,15 +45,24 @@ export function DataTable({ columns, data }) {
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
-          placeholder="Filter emails..."
-          value={table.getColumn("email")?.getFilterValue() || ""}
+          placeholder="Search Transaction Name..."
+          value={table.getColumn("transactionName")?.getFilterValue() || ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table
+              .getColumn("transactionName")
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
+        <Button
+          onClick={() => {
+            handleBulkDeleteOperation(table.getFilteredSelectedRowModel().rows);
+          }}
+        >
+          Delete
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>

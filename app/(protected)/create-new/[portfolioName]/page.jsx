@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Card } from "@/components/ui/card";
-import { PlusIcon } from "@radix-ui/react-icons";
+import { Pencil1Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +22,7 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -30,6 +34,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import {
   Select,
@@ -47,64 +52,123 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { CreatePortfolio } from "@/actions/portfolio";
 
 export default function Page({ params }) {
   const { portfolioName } = params;
   const decodedPortfolioName = decodeURIComponent(portfolioName);
-  const [error, setError] = useState();
   const [open, setOpen] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+  // the number saves the index of transactions[] for which edit is called, might be 0 as well, -1 indicates none.
+  const [editAction, setEditAction] = useState(-1);
+  const router = useRouter();
   const form = useForm({
-    defaultValues: {},
-  });
-  const invoices = [
-    {
-      id: 1,
+    defaultValues: {
+      amount: "",
+      comments: "",
+      transactionDate: "",
+      transactionName: "",
+      type: "",
     },
-    { id: 2 },
-  ];
+    resolver: async (values) => {
+      const errors = {};
+      const { amount, comments, transactionDate, transactionName, type } =
+        values;
 
-  const onSubmit = (values) => {
-    const { amount, comments, transactionDate, transactionName, type } = values;
+      if (!type) {
+        errors.type = {
+          type: "required",
+          message: "Type is required.",
+        };
+      }
 
-    if (!type) {
-      setError("Choose the type.");
-      return;
+      const nameRegex = /^[a-zA-Z0-9\s\-_]*$/;
+      if (!transactionName) {
+        errors.transactionName = {
+          type: "required",
+          message: "Name is required.",
+        };
+      } else if (!nameRegex.test(transactionName)) {
+        errors.transactionName = {
+          type: "validation",
+          message: "Name can only have a-z, A-Z, 0-9, space, -, _.",
+        };
+      }
+
+      if (!amount) {
+        errors.amount = {
+          type: "required",
+          message: "Amount is required.",
+        };
+      } else if (amount <= 0) {
+        errors.amount = {
+          type: "validation",
+          message: "Amount should be a postive number.",
+        };
+      }
+
+      if (!transactionDate) {
+        errors.transactionDate = {
+          type: "required",
+          message: "Date is required.",
+        };
+      }
+
+      const commentRegex = /^[a-zA-Z0-9\s.'"&,!?\-_]*$/;
+      if (!commentRegex.test(comments)) {
+        errors.comments = {
+          type: "validation",
+          message: `Comments can only have a-z, A-Z, 0-9, space, ., ', ", &, !, ?, -, _.`,
+        };
+      }
+
+      return {
+        errors: errors,
+        values: values,
+      };
+    },
+  });
+
+  const addTransaction = (values) => {
+    if (editAction === -1) setTransactions([...transactions, values]);
+    else {
+      transactions[editAction] = values;
+      setEditAction(-1);
     }
-
-    if (!transactionName) {
-      setError("Set a name.");
-      return;
-    }
-
-    if (!amount) {
-      setError("Put an amount.");
-      return;
-    }
-
-    if (!transactionDate) {
-      setError("Set a date.");
-      return;
-    }
-
-    if (amount <= 0) {
-      setError("Amount needs to be greater than zero.");
-      return;
-    }
-
-    const nameRegex = /^[a-zA-Z0-9\s\-_]*$/;
-    if (!nameRegex.test(transactionName)) {
-      setError("Name can only have a-z, A-Z, 0-9, space, -, _");
-      return;
-    }
-
-    const commentRegex = /^[a-zA-Z0-9\s.,!?\-_]*$/;
-    if (!commentRegex.test(comments)) {
-      setError("Comments can only have a-z, A-Z, 0-9, space, ., ,, !, ?, -, _");
-      return;
-    }
-
+    form.reset();
     setOpen(false);
-    setError();
+  };
+
+  const savePortfolio = async () => {
+    const portfolio = await CreatePortfolio(decodedPortfolioName, transactions);
+    if (portfolio.message === "error") {
+      toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
+    } else if (portfolio.message === "unique error") {
+      toast.error(
+        `Transaction duplicate found.\nPlease try changing the transaction details.`
+      );
+    } else {
+      toast.success("Your portfolio is created successfully!!");
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      router.push("/dashboard");
+    }
+  };
+
+  const handleEditButton = (index) => {
+    let tempTransaction = transactions[index];
+    form.setValue("amount", tempTransaction.amount);
+    form.setValue("comments", tempTransaction.comments);
+    form.setValue("transactionName", tempTransaction.transactionName);
+    form.setValue("type", tempTransaction.type);
+    form.setValue("transactionDate", tempTransaction.transactionDate);
+    setEditAction(index);
+    setOpen(true);
+  };
+
+  const handleDeleteButton = (indx) => {
+    let tempTransactions = transactions.filter((item, index) => index !== indx);
+    setTransactions(tempTransactions);
   };
 
   return (
@@ -116,44 +180,88 @@ export default function Page({ params }) {
             <Table>
               <TableHeader className="bg-muted">
                 <TableRow>
-                  <TableHead className="w-[50px]">Type</TableHead>
+                  <TableHead className="w-[10px]"></TableHead>
+                  <TableHead className="w-[100px]">Type</TableHead>
                   <TableHead className="w-[200px]">Transaction Name</TableHead>
                   <TableHead className="w-[200px]">Amount</TableHead>
                   <TableHead className="w-[200px]">Date</TableHead>
                   <TableHead className="w-fit">Comments</TableHead>
-                  <TableHead className="w-[50px]">Actions</TableHead>
+                  <TableHead className="w-[100px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.length < 1 && (
+                {transactions.length < 1 && (
                   <TableRow>
                     <TableCell
                       colSpan={7}
                       className="text-center font-semibold text-muted-foreground h-16"
                     >
-                      Click on &quot;+&quot; button to add the transaction.
+                      Click on &quot;+&quot; button to add a transaction.
                     </TableCell>
                   </TableRow>
                 )}
-                {invoices.map((invoice, index) => (
+                {transactions.map((transaction, index) => (
                   <TableRow key={index}>
-                    <TableCell className="w-[50px]">Type</TableCell>
-                    <TableCell className="w-[200px]">
-                      Transaction Name
+                    <TableCell className="w-[10px]">
+                      <ArrowDownwardIcon
+                        sx={{
+                          rotate: `${
+                            transaction.type === "Credit" ? "180deg" : "0deg"
+                          }`,
+                          color: `${
+                            transaction.type === "Credit" ? "green" : "red"
+                          }`,
+                          fontSize: "0.85rem",
+                        }}
+                      />
                     </TableCell>
-                    <TableCell className="w-[200px]">Amount</TableCell>
-                    <TableCell className="w-[200px]">Date</TableCell>
-                    <TableCell className="w-fit">Comments</TableCell>
-                    <TableCell className="w-[50px]">Actions</TableCell>
+                    <TableCell className="w-[50px]">
+                      {transaction.type}
+                    </TableCell>
+                    <TableCell className="w-[200px]">
+                      {transaction.transactionName}
+                    </TableCell>
+                    <TableCell className="w-[200px]">
+                      {transaction.amount}
+                    </TableCell>
+                    <TableCell className="w-[200px]">
+                      {format(transaction.transactionDate, "LLL dd, y")}
+                    </TableCell>
+                    <TableCell className="w-fit">
+                      {transaction.comments ? transaction.comments : "-"}
+                    </TableCell>
+                    <TableCell className="w-[100px]">
+                      <div className="flex">
+                        <Pencil1Icon
+                          className="size-5 mr-[5px] text-muted-foreground hover:text-foreground cursor-pointer"
+                          onClick={() => {
+                            handleEditButton(index);
+                          }}
+                        />
+                        <TrashIcon
+                          className="size-5 ml-[5px] text-destructive hover:text-red-500 cursor-pointer"
+                          onClick={() => {
+                            handleDeleteButton(index);
+                          }}
+                        />
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </Card>
-          {invoices.length > 0 && (
+          {transactions.length > 0 && (
             <div className="w-full flex justify-between my-5 px-5">
-              <Button variant="outline">Cancel</Button>
-              <Button>Save</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  router.push("/dashboard");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onClick={savePortfolio}>Save</Button>
             </div>
           )}
         </>
@@ -168,18 +276,21 @@ export default function Page({ params }) {
               <AlertDialogTitle className="text-foreground">
                 Enter transaction details
               </AlertDialogTitle>
+              <AlertDialogDescription className="text-foreground/50">
+                Please enter the transaction details for this portfolio.
+              </AlertDialogDescription>
             </AlertDialogHeader>
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(addTransaction)}
                 className="space-y-8"
               >
-                <div className="flex items-center h-fit w-[425px] justify-between">
+                <div className="flex items-start h-fit w-[500px] justify-between">
                   <FormField
                     control={form.control}
                     name="type"
                     render={({ field }) => (
-                      <FormItem className="w-[100px]">
+                      <FormItem className="w-[175px]">
                         <FormLabel className="text-white">Type</FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -191,10 +302,11 @@ export default function Page({ params }) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="dark">
-                            <SelectItem value="debit">Debit</SelectItem>
-                            <SelectItem value="credit">Credit</SelectItem>
+                            <SelectItem value="Debit">Debit</SelectItem>
+                            <SelectItem value="Credit">Credit</SelectItem>
                           </SelectContent>
                         </Select>
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
@@ -213,16 +325,17 @@ export default function Page({ params }) {
                             {...field}
                           />
                         </FormControl>
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
                 </div>
-                <div className="flex items-end h-fit w-[425px] justify-between">
+                <div className="flex items-start h-fit w-[500px] justify-between">
                   <FormField
                     control={form.control}
                     name="amount"
                     render={({ field }) => (
-                      <FormItem className="w-[100px]">
+                      <FormItem className="w-[175px]">
                         <FormLabel className="text-white">Amount</FormLabel>
                         <FormControl>
                           <Input
@@ -232,6 +345,7 @@ export default function Page({ params }) {
                             type="number"
                           />
                         </FormControl>
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
@@ -240,7 +354,7 @@ export default function Page({ params }) {
                     name="transactionDate"
                     render={({ field }) => (
                       <FormItem className="flex flex-col text-white">
-                        <FormLabel className="text-white">
+                        <FormLabel className="text-white my-[5px]">
                           Transaction Date
                         </FormLabel>
                         <Popover>
@@ -278,11 +392,12 @@ export default function Page({ params }) {
                             />
                           </PopoverContent>
                         </Popover>
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
                 </div>
-                <div className="h-fit w-[425px]">
+                <div className="h-fit w-[500px]">
                   <FormField
                     control={form.control}
                     name="comments"
@@ -296,29 +411,40 @@ export default function Page({ params }) {
                             {...field}
                           />
                         </FormControl>
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />
                 </div>
-                {error && (
-                  <span className="text-rose-500 text-sm ml-2">{error}</span>
-                )}
                 <AlertDialogFooter>
                   <AlertDialogCancel
                     className={"text-white"}
                     onClick={() => {
-                      // setPortfolioName();
+                      form.reset();
                     }}
                   >
                     Cancel
                   </AlertDialogCancel>
-                  <Button type="submit">Continue</Button>
+                  <Button type="submit">Add</Button>
                 </AlertDialogFooter>
               </form>
             </Form>
           </AlertDialogContent>
         </AlertDialog>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
     </>
   );
 }
