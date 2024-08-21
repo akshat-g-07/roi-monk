@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import FeedbackButton from "./FeedbackButton";
-import SearchOption from "./SearchOption";
+import FeedbackButton from "./feedback-button";
+import SearchOption from "./search-option";
 import PortfolioHeader from "./portfolio-header";
 
 export default function DashboardHeader() {
