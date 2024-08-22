@@ -20,9 +20,9 @@ import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import TableChartIcon from "@mui/icons-material/TableChart";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
-import PieChartSummary from "@/components/pie-chart-summary";
-import BarChartSummary from "@/components/bar-chart-summary";
-import OverviewDataTable from "@/components/overview-data-table";
+import PieChartSummary from "@/components/dashboard/pie-chart-summary";
+import BarChartSummary from "@/components/dashboard/bar-chart-summary";
+import OverviewDataTable from "@/components/dashboard/overview-data-table";
 
 export default function Page() {
   const [date, setDate] = React.useState({

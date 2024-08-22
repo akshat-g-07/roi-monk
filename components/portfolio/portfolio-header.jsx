@@ -4,7 +4,6 @@ import { CheckIcon, Pencil1Icon, SymbolIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ToastContainer, toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export default function PortfolioHeader({ portfolioName }) {
   const router = useRouter();

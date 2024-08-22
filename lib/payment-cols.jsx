@@ -17,16 +17,13 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   AlertDialog,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import TransactionForm from "@/components/transaction-form";
-import { useState } from "react";
+import TransactionForm from "@/components/portfolio/transaction-form";
 
 export const columns = (
   handleEditOperation,

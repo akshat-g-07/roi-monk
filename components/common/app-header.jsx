@@ -1,11 +1,11 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import FeedbackButton from "./feedback-button";
-import SearchOption from "./search-option";
-import PortfolioHeader from "./portfolio-header";
+import FeedbackButton from "@/components/common/feedback-button";
+import SearchOption from "@/components/common/search-option";
+import PortfolioHeader from "@/components/portfolio/portfolio-header";
 
-export default function DashboardHeader() {
+export default function AppHeader() {
   const pathname = usePathname();
 
   return (
