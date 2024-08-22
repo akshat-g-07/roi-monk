@@ -4,10 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import { columns } from "@/lib/payment-cols";
-import { DataTable } from "@/components/portfolio/data-table";
+import DataTable from "@/components/portfolio/data-table";
 import { GetTransactionsByPortfolioName } from "@/actions/transaction";
 import { useEffect, useMemo, useState } from "react";
 import {

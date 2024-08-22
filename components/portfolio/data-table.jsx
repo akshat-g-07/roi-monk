@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   flexRender,
   getCoreRowModel,
@@ -12,7 +11,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -22,7 +20,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export function DataTable({ columns, data, handleBulkDeleteOperation }) {
+export default function DataTable({
+  columns,
+  data,
+  handleBulkDeleteOperation,
+}) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
