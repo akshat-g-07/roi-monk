@@ -5,8 +5,8 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
-import { columns } from "@/lib/payment-cols";
-import DataTable from "@/components/portfolio/data-table";
+import { PortfolioColumns } from "@/components/portfolio/portfolio-cols";
+import PortfolioTable from "@/components/portfolio/portfolio-table";
 import { GetTransactionsByPortfolioName } from "@/actions/transaction";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import {
@@ -17,7 +17,6 @@ import {
 
 export default function Page({ params }) {
   const { portfolioName } = params;
-  // const totalInvestment = 0;
   const [transactions, setTransactions] = useState([]);
   const totalInvestment = TotalInvestment(transactions);
   const netRevenue = NetRevenue(transactions);
@@ -80,9 +79,13 @@ export default function Page({ params }) {
     setTransactions(tempTransactions);
   };
 
-  const columnsWithDelete = useMemo(
+  const PortfolioColumnsWithOperations = useMemo(
     () =>
-      columns(handleEditOperation, handleCopyOperation, handleDeleteOperation),
+      PortfolioColumns(
+        handleEditOperation,
+        handleCopyOperation,
+        handleDeleteOperation
+      ),
     [handleEditOperation, handleCopyOperation, handleDeleteOperation]
   );
 
@@ -151,8 +154,8 @@ export default function Page({ params }) {
         </Card>
       </div>
       {transactions && (
-        <DataTable
-          columns={columnsWithDelete}
+        <PortfolioTable
+          columns={PortfolioColumnsWithOperations}
           data={transactions}
           handleBulkDeleteOperation={handleBulkDeleteOperation}
         />

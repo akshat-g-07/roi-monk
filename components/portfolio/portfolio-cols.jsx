@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import TransactionForm from "@/components/portfolio/transaction-form";
 
-export const columns = (
+export const PortfolioColumns = (
   handleEditOperation,
   handleCopyOperation,
   handleDeleteOperation

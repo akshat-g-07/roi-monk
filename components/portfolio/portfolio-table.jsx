@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function DataTable({
+export default function PortfolioTable({
   columns,
   data,
   handleBulkDeleteOperation,
