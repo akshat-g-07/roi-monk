@@ -13,7 +13,7 @@ import {
   NetRevenue,
   NetROI,
   TotalInvestment,
-} from "@/utils/portfolio-calculations";
+} from "@/data/portfolio-calculations";
 
 export default function Page({ params }) {
   const { portfolioName } = params;
