@@ -8,7 +8,7 @@ import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import { columns } from "@/lib/payment-cols";
 import DataTable from "@/components/portfolio/data-table";
 import { GetTransactionsByPortfolioName } from "@/actions/transaction";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import {
   NetRevenue,
   NetROI,
@@ -34,42 +34,40 @@ export default function Page({ params }) {
     getTransactions();
   }, [portfolioName]);
 
-  const handleEditOperation = (transactionId, transactionValues) => {
-    let tempTransactions = transactions.map((transaction) => {
-      if (transaction.id === transactionId) {
-        transaction.amount = transactionValues.amount;
-        transaction.comments = transactionValues.comments;
-        transaction.transactionDate = transactionValues.transactionDate;
-        transaction.transactionName = transactionValues.transactionName;
-        transaction.type = transactionValues.type;
-      }
-      return transaction;
+  const handleEditOperation = useCallback(
+    (transactionId, transactionValues) => {
+      setTransactions((prevTransactions) =>
+        prevTransactions.map((transaction) =>
+          transaction.id === transactionId
+            ? { ...transaction, ...transactionValues }
+            : transaction
+        )
+      );
+    },
+    []
+  );
+
+  const handleCopyOperation = useCallback((transactionId) => {
+    setTransactions((prevTransactions) => {
+      const transactionToCopy = prevTransactions.find(
+        (item) => item.id === transactionId
+      );
+      if (!transactionToCopy) return prevTransactions;
+
+      const newTransaction = {
+        ...transactionToCopy,
+        id: `${transactionId}_${Date.now()}_copy`,
+      };
+
+      return [...prevTransactions, newTransaction];
     });
-    setTransactions(tempTransactions);
-  };
+  }, []);
 
-  const handleCopyOperation = (transactionId) => {
-    let tempTransactions = [];
-    transactions.forEach((item) => {
-      tempTransactions.push(item);
-
-      if (item.id === transactionId) {
-        let tempItem = { ...item };
-        tempItem.id = tempItem.id + JSON.stringify(new Date()) + "_copy";
-        tempTransactions.push(tempItem);
-      }
-    });
-
-    setTransactions(tempTransactions);
-  };
-
-  const handleDeleteOperation = (transactionId) => {
-    let tempTransactions = transactions.filter(
-      (item) => item.id !== transactionId
+  const handleDeleteOperation = useCallback((transactionId) => {
+    setTransactions((prevTransactions) =>
+      prevTransactions.filter((item) => item.id !== transactionId)
     );
-
-    setTransactions(tempTransactions);
-  };
+  }, []);
 
   const handleBulkDeleteOperation = (transactionsToDelete) => {
     const idsToRemove = new Set(
