@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast, Bounce } from "react-toastify";
+import { toast } from "react-toastify";
 import { Card } from "@/components/ui/card";
 import { Pencil1Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
@@ -243,19 +243,6 @@ export default function Page({ params }) {
           />
         </AlertDialog>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        transition={Bounce}
-      />
     </>
   );
 }
