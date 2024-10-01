@@ -11,18 +11,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
-import TimelineIcon from "@mui/icons-material/Timeline";
-import TableChartIcon from "@mui/icons-material/TableChart";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
-import PieChartSummary from "@/components/pie-chart-summary";
-import BarChartSummary from "@/components/bar-chart-summary";
-import OverviewDataTable from "@/components/overview-data-table";
+import PieChartSummary from "@/components/dashboard/pie-chart-summary";
+import BarChartSummary from "@/components/dashboard/bar-chart-summary";
 
 export default function Page() {
   const [date, setDate] = React.useState({
@@ -168,41 +164,14 @@ export default function Page() {
       Tabs between graphical summary and tabular summary
        */}
 
-      <Tabs defaultValue="graphical" className="w-full mt-5">
-        <div className="w-full flex items-center justify-between">
-          <div className="w-[45%] h-px bg-white/50" />
-          <TabsList className="">
-            <TabsTrigger value="graphical">
-              <TimelineIcon />
-            </TabsTrigger>
-            <TabsTrigger value="tabular">
-              <TableChartIcon />
-            </TabsTrigger>
-          </TabsList>
-          <div className="w-[45%] h-px bg-white/50" />
-        </div>
-        <TabsContent value="graphical">
-          {/* 
-        Charts
-        */}
-          <div className="w-full my-4 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
-            <Card className="h-full">
-              <PieChartSummary />
-            </Card>
-            <Card className="h-full">
-              <BarChartSummary />
-            </Card>
-          </div>
-        </TabsContent>
-        <TabsContent value="tabular">
-          {/* 
-      Data Table Component
-       */}
-          <div className="w-full my-4 h-fit">
-            <OverviewDataTable />
-          </div>
-        </TabsContent>
-      </Tabs>
+      <div className="w-full my-2 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
+        <Card className="h-full">
+          <PieChartSummary />
+        </Card>
+        <Card className="h-full">
+          <BarChartSummary />
+        </Card>
+      </div>
     </>
   );
 }

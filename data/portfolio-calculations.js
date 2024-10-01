@@ -21,7 +21,7 @@ export function NetRevenue(transactions) {
 export function NetROI(transactions) {
   let netRevenue = NetRevenue(transactions);
   let totalInvestment = TotalInvestment(transactions);
-  let netROI = ((netRevenue - totalInvestment) / totalInvestment) * 100;
+  let netROI = ((netRevenue - totalInvestment) / totalInvestment) * 100 || 0;
 
   return netROI;
 }

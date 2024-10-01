@@ -4,21 +4,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
-import { columns } from "@/lib/payment-cols";
-import { DataTable } from "@/components/data-table";
+import { PortfolioColumns } from "@/components/portfolio/portfolio-cols";
+import PortfolioTable from "@/components/portfolio/portfolio-table";
 import { GetTransactionsByPortfolioName } from "@/actions/transaction";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import {
   NetRevenue,
   NetROI,
   TotalInvestment,
-} from "@/utils/portfolio-calculations";
+} from "@/data/portfolio-calculations";
 
 export default function Page({ params }) {
   const { portfolioName } = params;
-  // const totalInvestment = 0;
   const [transactions, setTransactions] = useState([]);
   const totalInvestment = TotalInvestment(transactions);
   const netRevenue = NetRevenue(transactions);
@@ -35,42 +33,40 @@ export default function Page({ params }) {
     getTransactions();
   }, [portfolioName]);
 
-  const handleEditOperation = (transactionId, transactionValues) => {
-    let tempTransactions = transactions.map((transaction) => {
-      if (transaction.id === transactionId) {
-        transaction.amount = transactionValues.amount;
-        transaction.comments = transactionValues.comments;
-        transaction.transactionDate = transactionValues.transactionDate;
-        transaction.transactionName = transactionValues.transactionName;
-        transaction.type = transactionValues.type;
-      }
-      return transaction;
+  const handleEditOperation = useCallback(
+    (transactionId, transactionValues) => {
+      setTransactions((prevTransactions) =>
+        prevTransactions.map((transaction) =>
+          transaction.id === transactionId
+            ? { ...transaction, ...transactionValues }
+            : transaction
+        )
+      );
+    },
+    []
+  );
+
+  const handleCopyOperation = useCallback((transactionId) => {
+    setTransactions((prevTransactions) => {
+      const transactionToCopy = prevTransactions.find(
+        (item) => item.id === transactionId
+      );
+      if (!transactionToCopy) return prevTransactions;
+
+      const newTransaction = {
+        ...transactionToCopy,
+        id: `${transactionId}_${Date.now()}_copy`,
+      };
+
+      return [...prevTransactions, newTransaction];
     });
-    setTransactions(tempTransactions);
-  };
+  }, []);
 
-  const handleCopyOperation = (transactionId) => {
-    let tempTransactions = [];
-    transactions.forEach((item) => {
-      tempTransactions.push(item);
-
-      if (item.id === transactionId) {
-        let tempItem = { ...item };
-        tempItem.id = tempItem.id + JSON.stringify(new Date()) + "_copy";
-        tempTransactions.push(tempItem);
-      }
-    });
-
-    setTransactions(tempTransactions);
-  };
-
-  const handleDeleteOperation = (transactionId) => {
-    let tempTransactions = transactions.filter(
-      (item) => item.id !== transactionId
+  const handleDeleteOperation = useCallback((transactionId) => {
+    setTransactions((prevTransactions) =>
+      prevTransactions.filter((item) => item.id !== transactionId)
     );
-
-    setTransactions(tempTransactions);
-  };
+  }, []);
 
   const handleBulkDeleteOperation = (transactionsToDelete) => {
     const idsToRemove = new Set(
@@ -83,9 +79,13 @@ export default function Page({ params }) {
     setTransactions(tempTransactions);
   };
 
-  const columnsWithDelete = useMemo(
+  const PortfolioColumnsWithOperations = useMemo(
     () =>
-      columns(handleEditOperation, handleCopyOperation, handleDeleteOperation),
+      PortfolioColumns(
+        handleEditOperation,
+        handleCopyOperation,
+        handleDeleteOperation
+      ),
     [handleEditOperation, handleCopyOperation, handleDeleteOperation]
   );
 
@@ -154,8 +154,8 @@ export default function Page({ params }) {
         </Card>
       </div>
       {transactions && (
-        <DataTable
-          columns={columnsWithDelete}
+        <PortfolioTable
+          columns={PortfolioColumnsWithOperations}
           data={transactions}
           handleBulkDeleteOperation={handleBulkDeleteOperation}
         />
