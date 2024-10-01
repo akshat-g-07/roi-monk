@@ -146,16 +146,6 @@ export default function Page({ params }) {
     setTransactions(tempTransactions);
   };
 
-  const PortfolioColumnsWithOperations = useMemo(
-    () =>
-      PortfolioColumns(
-        handleEditOperation,
-        handleCopyOperation,
-        handleDeleteOperation
-      ),
-    [handleEditOperation, handleCopyOperation, handleDeleteOperation]
-  );
-
   const handleAddTransaction = (values) => {
     let tempValues = {
       ...values,
@@ -166,6 +156,16 @@ export default function Page({ params }) {
     setTransactions(tempTransactions);
     form.reset();
   };
+
+  const PortfolioColumnsWithOperations = useMemo(
+    () =>
+      PortfolioColumns(
+        handleEditOperation,
+        handleCopyOperation,
+        handleDeleteOperation
+      ),
+    [handleEditOperation, handleCopyOperation, handleDeleteOperation]
+  );
 
   return (
     <>
