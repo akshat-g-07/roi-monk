@@ -157,7 +157,10 @@ export default function Page({ params }) {
   );
 
   const handleAddTransaction = (values) => {
-    let tempValues = { ...values, type: "Credit" ? "CR" : "DR" };
+    let tempValues = {
+      ...values,
+      type: values.type === "Credit" ? "CR" : "DR",
+    };
     let tempTransactions = [tempValues, ...transactions];
     setTransactions(tempTransactions);
     form.reset();
