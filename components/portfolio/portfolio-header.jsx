@@ -3,8 +3,7 @@ import TextField from "@mui/material/TextField";
 import { CheckIcon, Pencil1Icon, SymbolIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ToastContainer, toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export default function PortfolioHeader({ portfolioName }) {
   const router = useRouter();
@@ -84,24 +83,6 @@ export default function PortfolioHeader({ portfolioName }) {
           </>
         )}
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        transition={Bounce}
-        style={{
-          fontSize: "1rem",
-          lineHeight: "1.5rem",
-          fontWeight: "400",
-        }}
-      />
     </>
   );
 }

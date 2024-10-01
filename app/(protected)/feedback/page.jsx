@@ -1,14 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { Button } from "@/components/ui/button";
 import Rating from "@mui/material/Rating";
 
-export default function Preason() {
+export default function Page() {
   const [rating, setRating] = useState(0);
 
   return (
