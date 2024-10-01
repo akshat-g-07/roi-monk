@@ -159,6 +159,7 @@ export default function Page({ params }) {
   const handleAddTransaction = (values) => {
     let tempValues = {
       ...values,
+      id: transactions.length + 1,
       type: values.type === "Credit" ? "CR" : "DR",
     };
     let tempTransactions = [tempValues, ...transactions];

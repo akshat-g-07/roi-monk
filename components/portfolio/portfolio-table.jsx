@@ -66,16 +66,7 @@ export default function PortfolioTable({
         <div className="flex gap-x-4">
           <AlertDialog open={open} onOpenChange={setOpen} defaultOpen={true}>
             <AlertDialogTrigger asChild>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  handleBulkDeleteOperation(
-                    table.getFilteredSelectedRowModel().rows
-                  );
-                }}
-              >
-                Add
-              </Button>
+              <Button variant="secondary">Add</Button>
             </AlertDialogTrigger>
             <AddTransactionDialogContent
               form={form}
@@ -86,21 +77,14 @@ export default function PortfolioTable({
             />
           </AlertDialog>
 
-          <Button
-            onClick={() => {
-              handleBulkDeleteOperation(
-                table.getFilteredSelectedRowModel().rows
-              );
-            }}
-          >
-            Save
-          </Button>
+          <Button onClick={() => {}}>Save</Button>
           <Button
             variant="destructive"
             onClick={() => {
               handleBulkDeleteOperation(
                 table.getFilteredSelectedRowModel().rows
               );
+              setRowSelection({});
             }}
           >
             Delete
