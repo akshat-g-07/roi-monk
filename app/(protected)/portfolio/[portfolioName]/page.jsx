@@ -14,8 +14,75 @@ import {
   NetROI,
   TotalInvestment,
 } from "@/data/portfolio-calculations";
+import { useForm } from "react-hook-form";
 
 export default function Page({ params }) {
+  const form = useForm({
+    defaultValues: {
+      amount: "",
+      comments: "",
+      transactionDate: "",
+      transactionName: "",
+      type: "",
+    },
+    resolver: async (values) => {
+      const errors = {};
+      const { amount, comments, transactionDate, transactionName, type } =
+        values;
+
+      if (!type) {
+        errors.type = {
+          type: "required",
+          message: "Type is required.",
+        };
+      }
+
+      const nameRegex = /^[a-zA-Z0-9\s\-_]*$/;
+      if (!transactionName) {
+        errors.transactionName = {
+          type: "required",
+          message: "Name is required.",
+        };
+      } else if (!nameRegex.test(transactionName)) {
+        errors.transactionName = {
+          type: "validation",
+          message: "Name can only have a-z, A-Z, 0-9, space, -, _.",
+        };
+      }
+
+      if (!amount) {
+        errors.amount = {
+          type: "required",
+          message: "Amount is required.",
+        };
+      } else if (amount <= 0) {
+        errors.amount = {
+          type: "validation",
+          message: "Amount should be a postive number.",
+        };
+      }
+
+      if (!transactionDate) {
+        errors.transactionDate = {
+          type: "required",
+          message: "Date is required.",
+        };
+      }
+
+      const commentRegex = /^[a-zA-Z0-9\s.'"&,!?\-_]*$/;
+      if (!commentRegex.test(comments)) {
+        errors.comments = {
+          type: "validation",
+          message: `Comments can only have a-z, A-Z, 0-9, space, ., ', ", &, !, ?, -, _.`,
+        };
+      }
+
+      return {
+        errors: errors,
+        values: values,
+      };
+    },
+  });
   const { portfolioName } = params;
   const [transactions, setTransactions] = useState([]);
   const totalInvestment = TotalInvestment(transactions);
@@ -89,6 +156,13 @@ export default function Page({ params }) {
     [handleEditOperation, handleCopyOperation, handleDeleteOperation]
   );
 
+  const handleAddTransaction = (values) => {
+    let tempValues = { ...values, type: "Credit" ? "CR" : "DR" };
+    let tempTransactions = [tempValues, ...transactions];
+    setTransactions(tempTransactions);
+    form.reset();
+  };
+
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
@@ -158,6 +232,8 @@ export default function Page({ params }) {
           columns={PortfolioColumnsWithOperations}
           data={transactions}
           handleBulkDeleteOperation={handleBulkDeleteOperation}
+          form={form}
+          handleAddTransaction={handleAddTransaction}
         />
       )}
     </>
