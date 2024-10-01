@@ -80,6 +80,7 @@ export default function PortfolioTable({
           <Button onClick={() => {}}>Save</Button>
           <Button
             variant="destructive"
+            disabled={!table.getFilteredSelectedRowModel().rows.length}
             onClick={() => {
               handleBulkDeleteOperation(
                 table.getFilteredSelectedRowModel().rows
