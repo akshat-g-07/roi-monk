@@ -24,6 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import TransactionForm from "@/components/portfolio/transaction-form";
+import { useState } from "react";
 
 export const PortfolioColumns = (
   handleEditOperation,
@@ -184,8 +185,9 @@ export const PortfolioColumns = (
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
+      const [open, setOpen] = useState(false);
       return (
-        <AlertDialog>
+        <AlertDialog open={open}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -194,7 +196,12 @@ export const PortfolioColumns = (
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="dark">
               <AlertDialogTrigger asChild>
-                <DropdownMenuItem className="cursor-pointer hover:bg-primary/90">
+                <DropdownMenuItem
+                  className="cursor-pointer hover:bg-primary/90"
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
                   <EditIcon className="mr-2 size-3.5" />
                   Edit
                 </DropdownMenuItem>
@@ -226,7 +233,10 @@ export const PortfolioColumns = (
             </AlertDialogHeader>
             <TransactionForm
               transactionValues={row.original}
-              handleEditOperation={handleEditOperation}
+              handleEditOperation={(id, values) => {
+                handleEditOperation(id, values);
+                setOpen(false);
+              }}
             />
           </AlertDialogContent>
         </AlertDialog>

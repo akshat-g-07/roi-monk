@@ -103,7 +103,7 @@ export default function TransactionForm({
     },
   });
 
-  const addTransaction = (values) => {
+  const editTransaction = (values) => {
     handleEditOperation(transactionValues.id, values);
     form.reset();
   };
@@ -112,7 +112,7 @@ export default function TransactionForm({
     <>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(addTransaction)}
+          onSubmit={form.handleSubmit(editTransaction)}
           className="space-y-8"
         >
           <div className="flex items-start h-fit w-[500px] justify-between">
