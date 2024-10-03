@@ -136,19 +136,20 @@ export default function Page({ params }) {
 
   const handleDeleteOperation = useCallback((transactionId) => {
     setTransactions((prevTransactions) =>
-      prevTransactions.filter((item) => item.id !== transactionId)
+      prevTransactions.map((item) =>
+        item.id === transactionId ? { ...item, status: "DELETE" } : item
+      )
     );
   }, []);
 
   const handleBulkDeleteOperation = (transactionsToDelete) => {
-    const idsToRemove = new Set(
-      transactionsToDelete.map((item) => item.original.id)
-    );
-    let tempTransactions = transactions.filter(
-      (item) => !idsToRemove.has(item.id)
-    );
+    const idsToRemove = transactionsToDelete.map((item) => item.original.id);
 
-    setTransactions(tempTransactions);
+    setTransactions((prevTransactions) =>
+      prevTransactions.map((item) =>
+        idsToRemove.includes(item.id) ? { ...item, status: "DELETE" } : item
+      )
+    );
   };
 
   const handleAddTransaction = (values) => {
@@ -251,7 +252,9 @@ export default function Page({ params }) {
       {transactions && (
         <PortfolioTable
           columns={PortfolioColumnsWithOperations}
-          data={transactions}
+          data={transactions.filter(
+            (transaction) => transaction.status !== "DELETE"
+          )}
           handleBulkDeleteOperation={handleBulkDeleteOperation}
           form={form}
           handleAddTransaction={handleAddTransaction}

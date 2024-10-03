@@ -25,6 +25,18 @@ export async function GetTransactionsByPortfolioName(portfolioName) {
   }
 }
 
+async function DeleteTransaction(transactionId) {
+  try {
+    const result = await db.Transaction.deleteMany({
+      where: {
+        id: transactionId,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function UpdateTransactions(portfolioName, transactions) {
   try {
     const portfolio = await GetPortfolioByName(portfolioName);
@@ -35,30 +47,34 @@ export async function UpdateTransactions(portfolioName, transactions) {
       };
 
     const upsertTransactions = transactions.map((transaction) => {
-      return db.Transaction.upsert({
-        where: {
-          id: transaction.id,
-        },
-        update: {
-          transactionName: transaction.transactionName,
-          type: transaction.type,
-          amount: parseInt(transaction.amount),
-          transactionDate: transaction.transactionDate,
-          comments: transaction.comments,
-        },
-        create: {
-          transactionName: transaction.transactionName,
-          type: transaction.type,
-          amount: parseInt(transaction.amount),
-          transactionDate: transaction.transactionDate,
-          comments: transaction.comments,
-          portfolio: {
-            connect: {
-              id: portfolio.data.id,
+      if (transaction.status === "DELETE") {
+        return DeleteTransaction(transaction.id);
+      } else {
+        return db.Transaction.upsert({
+          where: {
+            id: transaction.id,
+          },
+          update: {
+            transactionName: transaction.transactionName,
+            type: transaction.type,
+            amount: parseInt(transaction.amount),
+            transactionDate: transaction.transactionDate,
+            comments: transaction.comments,
+          },
+          create: {
+            transactionName: transaction.transactionName,
+            type: transaction.type,
+            amount: parseInt(transaction.amount),
+            transactionDate: transaction.transactionDate,
+            comments: transaction.comments,
+            portfolio: {
+              connect: {
+                id: portfolio.data.id,
+              },
             },
           },
-        },
-      });
+        });
+      }
     });
 
     await Promise.all(upsertTransactions);
