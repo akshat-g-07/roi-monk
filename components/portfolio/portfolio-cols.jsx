@@ -186,6 +186,10 @@ export const PortfolioColumns = (
     header: "Actions",
     cell: ({ row }) => {
       const [open, setOpen] = useState(false);
+      const handleCloseDialog = () => {
+        setOpen(false);
+      };
+
       return (
         <AlertDialog open={open}>
           <DropdownMenu>
@@ -233,10 +237,8 @@ export const PortfolioColumns = (
             </AlertDialogHeader>
             <TransactionForm
               transactionValues={row.original}
-              handleEditOperation={(id, values) => {
-                handleEditOperation(id, values);
-                setOpen(false);
-              }}
+              handleCloseDialog={handleCloseDialog}
+              handleEditOperation={handleEditOperation}
             />
           </AlertDialogContent>
         </AlertDialog>

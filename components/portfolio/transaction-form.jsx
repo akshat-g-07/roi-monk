@@ -34,6 +34,7 @@ import { Button } from "@/components/ui/button";
 
 export default function TransactionForm({
   transactionValues,
+  handleCloseDialog,
   handleEditOperation,
 }) {
   const form = useForm({
@@ -105,6 +106,7 @@ export default function TransactionForm({
 
   const editTransaction = (values) => {
     handleEditOperation(transactionValues.id, values);
+    handleCloseDialog();
     form.reset();
   };
 
@@ -244,6 +246,7 @@ export default function TransactionForm({
             <AlertDialogCancel
               className={"text-white"}
               onClick={() => {
+                handleCloseDialog();
                 form.reset();
               }}
             >
