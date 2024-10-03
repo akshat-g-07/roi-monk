@@ -1,5 +1,6 @@
 "use client";
 
+import _ from "lodash";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
@@ -89,6 +90,8 @@ export default function Page({ params }) {
   });
   const { portfolioName } = params;
   const [transactions, setTransactions] = useState([]);
+  const [originalTransactions, setOriginalTransactions] = useState([]);
+  const [hasChanges, setHasChanges] = useState(true);
   const totalInvestment = TotalInvestment(transactions);
   const netRevenue = NetRevenue(transactions);
   const netROI = NetROI(transactions);
@@ -98,11 +101,18 @@ export default function Page({ params }) {
       const transactionsData = await GetTransactionsByPortfolioName(
         portfolioName
       );
-      if (transactionsData.data) setTransactions(transactionsData.data);
+      if (transactionsData.data) {
+        setTransactions(transactionsData.data);
+        setOriginalTransactions(transactionsData.data);
+      }
     }
 
     getTransactions();
   }, [portfolioName]);
+
+  useEffect(() => {
+    setHasChanges(_.isEqual(transactions, originalTransactions));
+  }, [transactions]);
 
   const handleEditOperation = useCallback(
     (transactionId, transactionValues) => {
@@ -136,9 +146,7 @@ export default function Page({ params }) {
 
   const handleDeleteOperation = useCallback((transactionId) => {
     setTransactions((prevTransactions) =>
-      prevTransactions.map((item) =>
-        item.id === transactionId ? { ...item, status: "DELETE" } : item
-      )
+      prevTransactions.filter((item) => item.id !== transactionId)
     );
   }, []);
 
@@ -146,9 +154,7 @@ export default function Page({ params }) {
     const idsToRemove = transactionsToDelete.map((item) => item.original.id);
 
     setTransactions((prevTransactions) =>
-      prevTransactions.map((item) =>
-        idsToRemove.includes(item.id) ? { ...item, status: "DELETE" } : item
-      )
+      prevTransactions.filter((item) => !idsToRemove.includes(item.id))
     );
   };
 
@@ -171,7 +177,10 @@ export default function Page({ params }) {
       const updatedTransactions = await GetTransactionsByPortfolioName(
         portfolioName
       );
-      if (updatedTransactions.data) setTransactions(updatedTransactions.data);
+      if (updatedTransactions.data) {
+        setTransactions(updatedTransactions.data);
+        setOriginalTransactions(updatedTransactions.data);
+      }
     } else if (result.message === "error") {
       toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
     } else {
@@ -256,13 +265,12 @@ export default function Page({ params }) {
       {transactions && (
         <PortfolioTable
           columns={PortfolioColumnsWithOperations}
-          data={transactions.filter(
-            (transaction) => transaction.status !== "DELETE"
-          )}
+          data={transactions}
           handleBulkDeleteOperation={handleBulkDeleteOperation}
           form={form}
           handleAddTransaction={handleAddTransaction}
           handleSaveOperation={handleSaveOperation}
+          hasChanges={hasChanges}
         />
       )}
     </>

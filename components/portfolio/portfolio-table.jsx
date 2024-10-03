@@ -29,6 +29,7 @@ export default function PortfolioTable({
   form,
   handleAddTransaction,
   handleSaveOperation,
+  hasChanges,
 }) {
   const [open, setOpen] = React.useState(false);
   const [sorting, setSorting] = React.useState([]);
@@ -78,7 +79,9 @@ export default function PortfolioTable({
             />
           </AlertDialog>
 
-          <Button onClick={handleSaveOperation}>Save</Button>
+          <Button onClick={handleSaveOperation} disabled={hasChanges}>
+            Save
+          </Button>
           <Button
             variant="destructive"
             disabled={!table.getFilteredSelectedRowModel().rows.length}
