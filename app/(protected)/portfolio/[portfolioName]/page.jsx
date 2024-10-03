@@ -168,6 +168,10 @@ export default function Page({ params }) {
 
     if (result.message === "success") {
       toast.success("Successfully Updated");
+      const updatedTransactions = await GetTransactionsByPortfolioName(
+        portfolioName
+      );
+      if (updatedTransactions.data) setTransactions(updatedTransactions.data);
     } else if (result.message === "error") {
       toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
     } else {
