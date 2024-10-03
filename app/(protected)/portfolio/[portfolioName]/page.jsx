@@ -7,7 +7,10 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import { PortfolioColumns } from "@/components/portfolio/portfolio-cols";
 import PortfolioTable from "@/components/portfolio/portfolio-table";
-import { GetTransactionsByPortfolioName } from "@/actions/transaction";
+import {
+  GetTransactionsByPortfolioName,
+  UpdateTransactions,
+} from "@/actions/transaction";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import {
   NetRevenue,
@@ -15,6 +18,7 @@ import {
   TotalInvestment,
 } from "@/data/portfolio-calculations";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function Page({ params }) {
   const form = useForm({
@@ -123,6 +127,7 @@ export default function Page({ params }) {
       const newTransaction = {
         ...transactionToCopy,
         id: `${transactionId}_${Date.now()}_copy`,
+        transactionName: transactionToCopy.transactionName + " copy",
       };
 
       return [...prevTransactions, newTransaction];
@@ -149,12 +154,24 @@ export default function Page({ params }) {
   const handleAddTransaction = (values) => {
     let tempValues = {
       ...values,
-      id: transactions.length + 1,
+      id: Date.now() + "",
       type: values.type === "Credit" ? "CR" : "DR",
     };
     let tempTransactions = [tempValues, ...transactions];
     setTransactions(tempTransactions);
     form.reset();
+  };
+
+  const handleSaveOperation = async () => {
+    const result = await UpdateTransactions(portfolioName, transactions);
+
+    if (result.message === "success") {
+      toast.success("Successfully Updated");
+    } else if (result.message === "error") {
+      toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
+    } else {
+      toast.error(`Portfolio doesn't exist.`);
+    }
   };
 
   const PortfolioColumnsWithOperations = useMemo(
@@ -238,6 +255,7 @@ export default function Page({ params }) {
           handleBulkDeleteOperation={handleBulkDeleteOperation}
           form={form}
           handleAddTransaction={handleAddTransaction}
+          handleSaveOperation={handleSaveOperation}
         />
       )}
     </>
