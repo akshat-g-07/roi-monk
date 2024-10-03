@@ -9,6 +9,7 @@ import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import { PortfolioColumns } from "@/components/portfolio/portfolio-cols";
 import PortfolioTable from "@/components/portfolio/portfolio-table";
 import {
+  DeleteTransaction,
   GetTransactionsByPortfolioName,
   UpdateTransactions,
 } from "@/actions/transaction";
@@ -140,7 +141,7 @@ export default function Page({ params }) {
         transactionName: transactionToCopy.transactionName + " copy",
       };
 
-      return [...prevTransactions, newTransaction];
+      return [newTransaction, ...prevTransactions];
     });
   }, []);
 
@@ -170,22 +171,46 @@ export default function Page({ params }) {
   };
 
   const handleSaveOperation = async () => {
-    const result = await UpdateTransactions(portfolioName, transactions);
+    const deleteTransactions = originalTransactions.filter(
+      (originalTransaction) =>
+        !transactions
+          .map((transaction) => transaction.id)
+          .includes(originalTransaction.id)
+    );
 
-    if (result.message === "success") {
-      toast.success("Successfully Updated");
-      const updatedTransactions = await GetTransactionsByPortfolioName(
-        portfolioName
-      );
-      if (updatedTransactions.data) {
-        setTransactions(updatedTransactions.data);
-        setOriginalTransactions(updatedTransactions.data);
+    const upsertTransactions = transactions.filter(
+      (transaction) =>
+        !originalTransactions.find((originalTransaction) =>
+          _.isEqual(originalTransaction, transaction)
+        )
+    );
+
+    const deleteResult =
+      deleteTransactions.length > 0
+        ? DeleteTransaction(deleteTransactions.map((item) => item.id))
+        : Promise.resolve({ message: "success" });
+
+    const upsertResult =
+      upsertTransactions.length > 0
+        ? UpdateTransactions(portfolioName, upsertTransactions)
+        : Promise.resolve({ message: "success" });
+
+    await Promise.all([deleteResult, upsertResult]).then(async (values) => {
+      if (values[0].message === "success" && values[1].message === "success") {
+        toast.success("Successfully Updated");
+        const updatedTransactions = await GetTransactionsByPortfolioName(
+          portfolioName
+        );
+        if (updatedTransactions.data) {
+          setTransactions(updatedTransactions.data);
+          setOriginalTransactions(updatedTransactions.data);
+        }
+      } else if (values[1].message === "Portfolio Not Found") {
+        toast.error(`Portfolio doesn't exist.`);
+      } else {
+        toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
       }
-    } else if (result.message === "error") {
-      toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
-    } else {
-      toast.error(`Portfolio doesn't exist.`);
-    }
+    });
   };
 
   const PortfolioColumnsWithOperations = useMemo(
