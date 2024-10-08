@@ -66,6 +66,11 @@ export default function Page({ params }) {
           type: "validation",
           message: "Amount should be a postive number.",
         };
+      } else if (amount.toString().split(".")[1].length > 2) {
+        errors.amount = {
+          type: "validation",
+          message: "Amount should have only two decimal values.",
+        };
       }
 
       if (!transactionDate) {
@@ -82,6 +87,8 @@ export default function Page({ params }) {
           message: `Comments can only have a-z, A-Z, 0-9, space, ., ', ", &, !, ?, -, _.`,
         };
       }
+
+      values.amount = parseFloat(values.amount);
 
       return {
         errors: errors,
