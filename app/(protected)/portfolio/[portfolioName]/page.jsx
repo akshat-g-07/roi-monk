@@ -107,7 +107,7 @@ export default function Page({ params }) {
   useEffect(() => {
     async function getTransactions() {
       const transactionsData = await GetTransactionsByPortfolioName(
-        portfolioName
+        decodeURI(portfolioName)
       );
       if (transactionsData.data) {
         setTransactions(transactionsData.data);
