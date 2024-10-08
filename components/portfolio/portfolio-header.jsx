@@ -9,7 +9,7 @@ export default function PortfolioHeader({ portfolioName }) {
   const router = useRouter();
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState(portfolioName);
+  const [value, setValue] = useState(decodeURI(portfolioName));
   return (
     <>
       <div className="flex items-end">
