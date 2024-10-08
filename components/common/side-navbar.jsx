@@ -1,6 +1,6 @@
 "use client";
 
-import { ToastContainer, toast, Bounce } from "react-toastify";
+import { toast } from "react-toastify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -9,20 +9,16 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Button, buttonVariants } from "@/components/ui/button";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ArrowTopRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  Pencil1Icon,
   PlusIcon,
-  TrashIcon,
 } from "@radix-ui/react-icons";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -46,21 +42,6 @@ export default function SideNavBar() {
   const [portfolioName, setPortfolioName] = useState();
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [recentPortfolios, setRecentPortfolios] = useState([]);
-
-  const handlePortfolioNameSave = (indx) => {};
-  const handlePortfolioNameEdit = async (indx) => {
-    const response = await UpdatePortfolioNameById(
-      recentPortfolios[indx].id,
-      portfolioName
-    );
-    if (response.message === "success") {
-      toast.success("Name edited successfully!!");
-      RecentPortfolios();
-    } else if (response.message === "exists")
-      toast.error(`Portfolio name already exists.\nPlease choose unique name.`);
-    else toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
-    setPortfolioName();
-  };
 
   async function RecentPortfolios() {
     let response = await GetRecentPortfolios();
@@ -240,9 +221,6 @@ export default function SideNavBar() {
           >
             Recents:
           </span>
-          {/* 
-          MARK: Todo-> Investment List of user coming from DB
-            */}
           <div
             className={`${open ? "mt-1" : "mt-7"} flex flex-col items-center`}
           >
@@ -254,127 +232,30 @@ export default function SideNavBar() {
                     open ? "justify-start" : "justify-evenly"
                   } w-full group cursor-pointer my-px hover:bg-accent`}
                   onClick={() => {
-                    // router.push(`/portfolio/${portfolio.portfolioName}`);
-                    // setOpen(false);
+                    router.push(`/portfolio/${portfolio.portfolioName}`);
+                    setOpen(false);
                   }}
                 >
                   <Avatar className={`m-2 ${open && "ml-3"}`}>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>
+                      {portfolio.portfolioName.substring(0, 1)}
+                    </AvatarFallback>
                   </Avatar>
-                  <TextField
-                    variant="standard"
-                    sx={{
+                  <span
+                    style={{
                       display: open ? "inline-flex" : "none",
                       margin: "0 0.5rem",
                       whiteSpace: "nowrap",
                       fontSize: "0.875rem",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      "& .MuiInputBase-input": {
-                        color: "white",
-                        cursor: "pointer",
-                      },
+                      color: "white",
+                      cursor: "pointer",
+                      width: "100%",
                     }}
-                    value={portfolio.portfolioName}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    // onClick={(e) => {
-                    //   if (portfolioNameEdit[index]["edit"]) e.stopPropagation();
-                    // }}
-                  />
-                  {open && (
-                    <span className="group-hover:inline-flex hidden size-fit">
-                      <AlertDialog>
-                        <AlertDialogTrigger>
-                          <Pencil1Icon
-                            className="size-5 mr-1 text-muted-foreground hover:text-foreground"
-                            onClick={(e) => {
-                              // e.stopPropagation();
-                              // handlePortfolioNameEdit(index);
-                            }}
-                          />
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="dark w-[500px]">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="text-foreground">
-                              Edit
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Enter the new name of portfolio.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <Input
-                            autoFocus
-                            value={portfolioName}
-                            className="text-foreground"
-                            placeholder="Portfolio Name"
-                            onChange={(event) =>
-                              setPortfolioName(event.target.value)
-                            }
-                          />
-
-                          <AlertDialogFooter>
-                            <AlertDialogCancel
-                              className={"text-white"}
-                              onClick={() => {
-                                setPortfolioName();
-                              }}
-                            >
-                              Cancel
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                              className={`w-[90px]`}
-                              onClick={() => {
-                                handlePortfolioNameEdit(index);
-                              }}
-                            >
-                              Save
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger>
-                          <TrashIcon
-                            className="size-5 ml-1 text-destructive hover:text-red-500"
-                            onClick={(e) => {
-                              // e.stopPropagation();
-                            }}
-                          />
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="dark">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="text-foreground">
-                              Are you absolutely sure?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {/* 
-                              MARK: Change this too!
-                               */}
-                              This action cannot be undone. This will
-                              permanently delete your account and remove your
-                              data from our servers.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className={"text-white"}>
-                              Cancel
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                              className={buttonVariants({
-                                variant: "destructive",
-                              })}
-                            >
-                              Continue
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </span>
-                  )}
+                  >
+                    {portfolio.portfolioName}
+                  </span>
                 </div>
               );
             })}
