@@ -1,74 +1,72 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-const top100Films = [
-  { label: "TheShawshankRedemption" },
-  { label: "TheGodfather" },
-  { label: "TheGodfather:PartII" },
-  { label: "TheDarkKnight" },
-  { label: "12AngryMen" },
-  { label: "Schindler'sList" },
-  { label: "PulpFiction" },
-  {
-    label: "TheLordoftheRings:TheReturnoftheKing",
-  },
-  { label: "TheGood,theBadandtheUgly" },
-  { label: "FightClub" },
-  {
-    label: "TheLordoftheRings:TheFellowshipoftheRing",
-  },
-];
+import { useState, useEffect } from "react";
+import { GetAllPortfolioNames } from "@/actions/portfolio";
 
 export default function SearchOption() {
   const router = useRouter();
   const [value, setValue] = useState(null);
+  const [portfolioNames, setPortfolioNames] = useState(null);
   const [inputValue, setInputValue] = useState("");
 
+  useEffect(() => {
+    async function PortfolioNames() {
+      const portfolioNamesData = await GetAllPortfolioNames();
+
+      if (portfolioNamesData.data) setPortfolioNames(portfolioNamesData.data);
+      else if (portfolioNamesData.message === "empty") setPortfolioNames([]);
+    }
+
+    PortfolioNames();
+  }, []);
+
   return (
-    <div className="mx-2">
-      <Autocomplete
-        value={value}
-        onChange={(event, newValue) => {
-          console.log(newValue);
-          setValue(null);
-          setInputValue("");
-          router.push(`/portfolio/${newValue.label}`);
-        }}
-        inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        blurOnSelect
-        sx={{
-          width: "300px",
-          "& .MuiFormLabel-root": {
-            color: "rgba(255,255,255,0.6)",
-          },
-          "& .MuiInputBase-input": {
-            color: "rgba(255,255,255,1)",
-          },
-        }}
-        PaperComponent={PaperComp}
-        renderOption={(props, option) => (
-          <CustomListItem props={props} option={option} />
-        )}
-        autoHighlight
-        options={top100Films}
-        getOptionLabel={(option) => option.label}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search"
-            variant="filled"
-            sx={{
-              backgroundColor: "rgba(255,255,255,0.15)",
+    <>
+      {portfolioNames && (
+        <div className="mx-2">
+          <Autocomplete
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(null);
+              setInputValue("");
+              router.push(`/portfolio/${newValue.portfolioName}`);
             }}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            blurOnSelect
+            sx={{
+              width: "300px",
+              "& .MuiFormLabel-root": {
+                color: "rgba(255,255,255,0.6)",
+              },
+              "& .MuiInputBase-input": {
+                color: "rgba(255,255,255,1)",
+              },
+            }}
+            PaperComponent={PaperComp}
+            renderOption={(props, option) => (
+              <CustomListItem key={option.id} props={props} option={option} />
+            )}
+            autoHighlight
+            options={portfolioNames}
+            getOptionLabel={(option) => option.portfolioName}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search"
+                variant="filled"
+                sx={{
+                  backgroundColor: "rgba(255,255,255,0.15)",
+                }}
+              />
+            )}
           />
-        )}
-      />
-    </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -78,6 +76,7 @@ const CustomListItem = ({ props, option }) => {
   return (
     <li
       {...props}
+      key={option.id}
       style={{
         backgroundColor: isHovered ? "black" : "inherit",
         color: "inherit",
@@ -85,13 +84,12 @@ const CustomListItem = ({ props, option }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {option.label}
+      {option.portfolioName}
     </li>
   );
 };
 
 const PaperComp = (props) => {
-  console.log(props);
   return (
     <div
       style={{

@@ -33,6 +33,23 @@ export async function CreatePortfolio(portfolioName, transactions) {
   }
 }
 
+export async function GetAllPortfolioNames() {
+  const userEmail = await getUserEmail();
+
+  try {
+    const portfolioNames = await db.Portfolio.findMany({
+      where: {
+        ownerEmail: userEmail,
+      },
+    });
+    if (portfolioNames) return { data: portfolioNames };
+    else return { message: "empty" };
+  } catch (error) {
+    console.log(error);
+    return { message: "error" };
+  }
+}
+
 export async function GetPortfolioByName(portfolioName) {
   const userEmail = await getUserEmail();
 
