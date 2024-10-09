@@ -37,43 +37,52 @@ export default function Page() {
     getPortfolios();
   }, [date]);
 
-  const { totalInvestment, netRevenue, netROI } = useMemo(() => {
-    let totalInv = 0;
-    let netRev = 0;
+  const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
+    useMemo(() => {
+      if (!portfolios || portfolios.length === 0)
+        return {
+          totalInvestment: 0,
+          netRevenue: 0,
+          netROI: 0,
+          pieChartData: [],
+          barChartData: [],
+        };
 
-    if (portfolios.length > 0)
+      let totalInv = 0;
+      let netRev = 0;
+
+      const pieData = [];
+      const barData = [];
+
       portfolios.forEach((portfolio) => {
-        totalInv += TotalInvestment(portfolio.transactions);
-        netRev += NetRevenue(portfolio.transactions);
+        const tempTotalInv = TotalInvestment(portfolio.transactions);
+        const tempNetRev = NetRevenue(portfolio.transactions);
+
+        totalInv += tempTotalInv;
+        netRev += tempNetRev;
+
+        pieData.push({
+          name: portfolio.portfolioName,
+          value: tempTotalInv,
+        });
+
+        barData.push({
+          name: portfolio.portfolioName,
+          Investment: tempTotalInv,
+          Revenue: tempNetRev,
+        });
       });
 
-    let roi = ((netRev - totalInv) / totalInv) * 100 || 0;
+      let roi = ((netRev - totalInv) / totalInv) * 100 || 0;
 
-    return {
-      totalInvestment: totalInv,
-      netRevenue: netRev,
-      netROI: roi === 0 ? 0 : parseFloat(roi).toFixed(2),
-    };
-  }, [portfolios]);
-
-  const pieChartData = useMemo(() => {
-    if (!portfolios || portfolios.length === 0) return [];
-
-    return portfolios.map((portfolio) => ({
-      name: portfolio.portfolioName,
-      value: TotalInvestment(portfolio.transactions),
-    }));
-  }, [portfolios]);
-
-  const barChartData = useMemo(() => {
-    if (!portfolios || portfolios.length === 0) return [];
-
-    return portfolios.map((portfolio) => ({
-      name: portfolio.portfolioName,
-      Investment: TotalInvestment(portfolio.transactions),
-      Revenue: NetRevenue(portfolio.transactions),
-    }));
-  }, [portfolios]);
+      return {
+        totalInvestment: totalInv,
+        netRevenue: netRev,
+        netROI: roi === 0 ? 0 : parseFloat(roi).toFixed(2),
+        pieChartData: pieData,
+        barChartData: barData,
+      };
+    }, [portfolios]);
 
   return (
     <>
