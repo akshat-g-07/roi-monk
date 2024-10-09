@@ -15,7 +15,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import PieChartSummary from "@/components/dashboard/pie-chart-summary";
 import BarChartSummary from "@/components/dashboard/bar-chart-summary";
@@ -29,7 +28,7 @@ export default function Page() {
   // Some server action to calculate these values
   let netRevenue = 0;
   let netROI = 0;
-  let annROI = 0;
+  let totalInvestment = 0;
   return (
     <>
       <div className="w-full flex flex-wrap justify-between text-lg font-bold items-center mb-4">
@@ -80,7 +79,7 @@ export default function Page() {
       {/* 
         Summary Cards 
         */}
-      <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3">
         {/* 
         Total Investment Card
          */}
@@ -92,7 +91,7 @@ export default function Page() {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ Card Content</p>
+            <p>$ {totalInvestment}</p>
           </CardContent>
         </Card>
         {/* 
@@ -130,27 +129,6 @@ export default function Page() {
             <p>{netROI} %</p>
             <p>
               {netROI >= 0.5 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
-              )}
-            </p>
-          </CardContent>
-        </Card>
-        {/* 
-        Annualized ROI Card
-         */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Annualized ROI
-              <RequestQuoteIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>{annROI} %</p>
-            <p>
-              {annROI >= 0.5 ? (
                 <TriangleUpIcon className="text-emerald-500 size-7" />
               ) : (
                 <TriangleDownIcon className="text-red-500 size-7" />
