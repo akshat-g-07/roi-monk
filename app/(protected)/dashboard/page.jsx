@@ -65,6 +65,16 @@ export default function Page() {
     }));
   }, [portfolios]);
 
+  const barChartData = useMemo(() => {
+    if (!portfolios || portfolios.length === 0) return [];
+
+    return portfolios.map((portfolio) => ({
+      name: portfolio.portfolioName,
+      Investment: TotalInvestment(portfolio.transactions),
+      Revenue: NetRevenue(portfolio.transactions),
+    }));
+  }, [portfolios]);
+
   return (
     <>
       <div className="w-full flex flex-wrap justify-between text-lg font-bold items-center mb-4">
@@ -177,7 +187,7 @@ export default function Page() {
           <PieChartSummary data={pieChartData} />
         </Card>
         <Card className="h-full min-h-80">
-          <BarChartSummary />
+          <BarChartSummary data={barChartData} />
         </Card>
       </div>
     </>
