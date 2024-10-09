@@ -21,8 +21,8 @@ import BarChartSummary from "@/components/dashboard/bar-chart-summary";
 
 export default function Page() {
   const [date, setDate] = React.useState({
-    from: new Date(),
-    to: addDays(new Date(), 20),
+    from: addDays(new Date(), -30),
+    to: new Date(),
   });
 
   // Some server action to calculate these values
@@ -71,6 +71,9 @@ export default function Page() {
                 onSelect={setDate}
                 numberOfMonths={2}
                 className="bg-background dark text-foreground"
+                disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+                }
               />
             </PopoverContent>
           </Popover>
