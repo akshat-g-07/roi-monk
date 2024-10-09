@@ -66,7 +66,7 @@ export default function Page({ params }) {
           type: "validation",
           message: "Amount should be a postive number.",
         };
-      } else if (amount.toString().split(".")[1].length > 2) {
+      } else if (amount.toString().split(".")[1]?.length > 2) {
         errors.amount = {
           type: "validation",
           message: "Amount should have only two decimal values.",
