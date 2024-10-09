@@ -84,7 +84,7 @@ export default function Page() {
         {/* 
         Total Investment Card
          */}
-        <Card>
+        <Card className="min-h-36">
           <CardHeader>
             <CardTitle className="flex justify-between text-base font-normal items-center">
               Total Investment
@@ -98,7 +98,7 @@ export default function Page() {
         {/* 
         Revenue Card
          */}
-        <Card>
+        <Card className="min-h-36">
           <CardHeader>
             <CardTitle className="flex justify-between text-base font-normal items-center">
               Net Revenue
@@ -119,7 +119,7 @@ export default function Page() {
         {/* 
         Net ROI Card
          */}
-        <Card>
+        <Card className="min-h-36">
           <CardHeader>
             <CardTitle className="flex justify-between text-base font-normal items-center">
               Net ROI
@@ -165,10 +165,10 @@ export default function Page() {
        */}
 
       <div className="w-full my-2 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
-        <Card className="h-full">
+        <Card className="h-full min-h-80">
           <PieChartSummary />
         </Card>
-        <Card className="h-full">
+        <Card className="h-full min-h-80">
           <BarChartSummary />
         </Card>
       </div>
