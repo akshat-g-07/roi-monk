@@ -68,6 +68,39 @@ export async function GetPortfolioByName(portfolioName) {
   }
 }
 
+export async function GetPortfoliosWithinDateRange(dateRange) {
+  const userEmail = await getUserEmail();
+
+  try {
+    const portfolios = await db.Portfolio.findMany({
+      include: { transactions: true },
+      where: {
+        ownerEmail: userEmail,
+        OR: [
+          {
+            createdDate: {
+              gte: new Date(dateRange.from),
+              lte: new Date(dateRange.to),
+            },
+          },
+          {
+            updatedDate: {
+              gte: new Date(dateRange.from),
+              lte: new Date(dateRange.to),
+            },
+          },
+        ],
+      },
+    });
+
+    if (portfolios.length > 0) return { data: portfolios };
+    else return { message: "null" };
+  } catch (error) {
+    console.log(error);
+    return { message: "error" };
+  }
+}
+
 export async function GetRecentPortfolios(amount = 5) {
   const userEmail = await getUserEmail();
 
