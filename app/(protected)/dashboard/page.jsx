@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -18,17 +18,44 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import PieChartSummary from "@/components/dashboard/pie-chart-summary";
 import BarChartSummary from "@/components/dashboard/bar-chart-summary";
+import { GetPortfoliosWithinDateRange } from "@/actions/portfolio";
+import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
 
 export default function Page() {
-  const [date, setDate] = React.useState({
+  const [portfolios, setPortfolios] = useState([]);
+  const [date, setDate] = useState({
     from: addDays(new Date(), -30),
     to: new Date(),
   });
 
-  // Some server action to calculate these values
-  let netRevenue = 0;
-  let netROI = 0;
-  let totalInvestment = 0;
+  useEffect(() => {
+    async function getPortfolios() {
+      const portfoliosResponse = await GetPortfoliosWithinDateRange(date);
+      if (portfoliosResponse.data) setPortfolios(portfoliosResponse.data);
+    }
+
+    getPortfolios();
+  }, [date]);
+
+  const { totalInvestment, netRevenue, netROI } = useMemo(() => {
+    let totalInv = 0;
+    let netRev = 0;
+
+    if (portfolios.length > 0)
+      portfolios.forEach((portfolio) => {
+        totalInv += TotalInvestment(portfolio.transactions);
+        netRev += NetRevenue(portfolio.transactions);
+      });
+
+    let roi = ((netRev - totalInv) / totalInv) * 100 || 0;
+
+    return {
+      totalInvestment: totalInv,
+      netRevenue: netRev,
+      netROI: roi === 0 ? 0 : parseFloat(roi).toFixed(2),
+    };
+  }, [portfolios]);
+
   return (
     <>
       <div className="w-full flex flex-wrap justify-between text-lg font-bold items-center mb-4">
@@ -109,13 +136,6 @@ export default function Page() {
           </CardHeader>
           <CardContent className="flex justify-between text-xl font-semibold items-center">
             <p>$ {netRevenue}</p>
-            <p>
-              {netRevenue >= 0.5 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
-              )}
-            </p>
           </CardContent>
         </Card>
         {/* 
@@ -131,19 +151,17 @@ export default function Page() {
           <CardContent className="flex justify-between text-xl font-semibold items-center">
             <p>{netROI} %</p>
             <p>
-              {netROI >= 0.5 ? (
+              {netROI > 0 ? (
                 <TriangleUpIcon className="text-emerald-500 size-7" />
               ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
+                netROI < 0 && (
+                  <TriangleDownIcon className="text-red-500 size-7" />
+                )
               )}
             </p>
           </CardContent>
         </Card>
       </div>
-
-      {/* 
-      Tabs between graphical summary and tabular summary
-       */}
 
       <div className="w-full my-2 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
         <Card className="h-full min-h-80">
