@@ -56,6 +56,15 @@ export default function Page() {
     };
   }, [portfolios]);
 
+  const pieChartData = useMemo(() => {
+    if (!portfolios || portfolios.length === 0) return [];
+
+    return portfolios.map((portfolio) => ({
+      name: portfolio.portfolioName,
+      value: TotalInvestment(portfolio.transactions),
+    }));
+  }, [portfolios]);
+
   return (
     <>
       <div className="w-full flex flex-wrap justify-between text-lg font-bold items-center mb-4">
@@ -165,7 +174,7 @@ export default function Page() {
 
       <div className="w-full my-2 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
         <Card className="h-full min-h-80">
-          <PieChartSummary />
+          <PieChartSummary data={pieChartData} />
         </Card>
         <Card className="h-full min-h-80">
           <BarChartSummary />

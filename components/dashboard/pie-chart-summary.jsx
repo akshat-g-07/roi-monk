@@ -10,17 +10,7 @@ import {
   Legend,
 } from "recharts";
 
-// data from user's db
-const data = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
-  { name: "Group E", value: 100 },
-  { name: "Group F", value: 600 },
-];
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FFF", "#000"];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FFF"];
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -49,8 +39,8 @@ const renderActiveShape = (props) => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
+      <text x={cx} y={cy} dy={8} textAnchor="middle" fill="#999">
+        {`${(percent * 100).toFixed(2)}%`}
       </text>
       <Sector
         cx={cx}
@@ -80,22 +70,25 @@ const renderActiveShape = (props) => {
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
         textAnchor={textAnchor}
-        fill="#333"
-      >{`PV ${value}`}</text>
+        fill={fill}
+      >
+        {payload.name}
+      </text>
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
         dy={18}
         textAnchor={textAnchor}
-        fill="#999"
+        fill={fill}
+        opacity={0.8}
       >
-        {`(Rate ${(percent * 100).toFixed(2)}%)`}
+        $ {value}
       </text>
     </g>
   );
 };
 
-export default function PieChartSummary() {
+export default function PieChartSummary({ data }) {
   const [activeIndx, setActiveIndx] = useState(0);
   const onPieEnter = (_, index) => {
     setActiveIndx(index);
