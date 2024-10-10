@@ -20,6 +20,7 @@ import PieChartSummary from "@/components/dashboard/pie-chart-summary";
 import BarChartSummary from "@/components/dashboard/bar-chart-summary";
 import { GetPortfoliosWithinDateRange } from "@/actions/portfolio";
 import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
+import CreateFirstPortfolio from "@/components/dashboard/create-first-portfolio";
 
 export default function Page() {
   const [portfolios, setPortfolios] = useState([]);
@@ -37,17 +38,11 @@ export default function Page() {
     getPortfolios();
   }, [date]);
 
+  if (portfolios.length === 0) return <CreateFirstPortfolio />;
+
   const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
     useMemo(() => {
-      if (!portfolios || portfolios.length === 0)
-        return {
-          totalInvestment: 0,
-          netRevenue: 0,
-          netROI: 0,
-          pieChartData: [],
-          barChartData: [],
-        };
-
+      console.log("calculation");
       let totalInv = 0;
       let netRev = 0;
 
