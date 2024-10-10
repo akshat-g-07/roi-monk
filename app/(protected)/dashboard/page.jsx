@@ -42,7 +42,6 @@ export default function Page() {
 
   const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
     useMemo(() => {
-      console.log("calculation");
       let totalInv = 0;
       let netRev = 0;
 
