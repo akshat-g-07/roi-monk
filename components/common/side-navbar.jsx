@@ -1,15 +1,12 @@
 "use client";
 
-import { toast } from "react-toastify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { SignOutButton } from "@clerk/nextjs";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Button, buttonVariants } from "@/components/ui/button";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import CircularProgress from "@mui/material/CircularProgress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ArrowTopRightIcon,
@@ -17,30 +14,14 @@ import {
   ChevronRightIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Input } from "@/components/ui/input";
-import {
-  GetPortfolioByName,
-  GetRecentPortfolios,
-  UpdatePortfolioNameById,
-} from "@/actions/portfolio";
+import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { GetRecentPortfolios } from "@/actions/portfolio";
+import NewPortfolioDialogContent from "./new-portfolio-dialog-content";
 
 export default function SideNavBar() {
   const router = useRouter();
-  const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [portfolioName, setPortfolioName] = useState();
-  const [loadingResponse, setLoadingResponse] = useState(false);
   const [recentPortfolios, setRecentPortfolios] = useState([]);
 
   async function RecentPortfolios() {
@@ -51,6 +32,11 @@ export default function SideNavBar() {
   useEffect(() => {
     RecentPortfolios();
   }, []);
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setOpen(false);
+  };
 
   return (
     <>
@@ -115,94 +101,7 @@ export default function SideNavBar() {
               </span>
             </div>
           </AlertDialogTrigger>
-          <AlertDialogContent className="dark w-[500px]">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-foreground">
-                Name of Portfolio.
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Enter the name of the investment portfolio.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <Input
-              autoFocus
-              disabled={loadingResponse}
-              value={portfolioName}
-              className="text-foreground"
-              placeholder="Portfolio Name"
-              onChange={(event) => setPortfolioName(event.target.value)}
-            />
-            {error && (
-              <span className="text-rose-500 text-sm ml-2">{error}</span>
-            )}
-            <AlertDialogFooter>
-              <AlertDialogCancel
-                disabled={loadingResponse}
-                className={` text-white`}
-                onClick={() => {
-                  setPortfolioName();
-                  setError();
-                }}
-              >
-                Cancel
-              </AlertDialogCancel>
-              <Button
-                disabled={loadingResponse}
-                className={`${loadingResponse && "bg-slate-700"} w-[90px]`}
-                onClick={async () => {
-                  setLoadingResponse(true);
-                  if (!portfolioName) {
-                    setError("Portfolio name can't be blank!");
-                    setLoadingResponse(false);
-                    return;
-                  }
-
-                  const regex = /^[a-zA-Z0-9_\-\s]+$/;
-                  if (!regex.test(portfolioName)) {
-                    setError(
-                      "Portfolio name can only have a-z, A-Z, 0-9, space, _, -"
-                    );
-                    setLoadingResponse(false);
-                    return;
-                  }
-
-                  const response = await GetPortfolioByName(portfolioName);
-                  if (response.message === "unique") {
-                    setPortfolioName();
-                    setOpenDialog(false);
-                    setLoadingResponse(false);
-                    router.push(`/create-new/${portfolioName}`);
-                    setOpen(false);
-                  } else if (response.data) {
-                    setError(
-                      "Portfolio name already exists. Please choose unique name."
-                    );
-                    setLoadingResponse(false);
-                    return;
-                  } else {
-                    setError(
-                      "Something went wrong. Please try again in sometime."
-                    );
-                    setLoadingResponse(false);
-                    return;
-                  }
-                }}
-              >
-                {loadingResponse ? (
-                  <>
-                    <CircularProgress
-                      size={20}
-                      sx={{
-                        color: "#29b6f6",
-                      }}
-                    />
-                  </>
-                ) : (
-                  "Continue"
-                )}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
+          <NewPortfolioDialogContent handleDialogClose={handleDialogClose} />
         </AlertDialog>
 
         <div
