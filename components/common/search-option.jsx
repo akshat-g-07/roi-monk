@@ -2,28 +2,28 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { GetAllPortfolioNames } from "@/actions/portfolio";
+import { GetAllPortfolios } from "@/actions/portfolio";
 
 export default function SearchOption() {
   const router = useRouter();
   const [value, setValue] = useState(null);
-  const [portfolioNames, setPortfolioNames] = useState(null);
+  const [portfolios, setPortfolios] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    async function PortfolioNames() {
-      const portfolioNamesData = await GetAllPortfolioNames();
+    async function getPortfolios() {
+      const portfoliosResponse = await GetAllPortfolios();
 
-      if (portfolioNamesData.data) setPortfolioNames(portfolioNamesData.data);
-      else if (portfolioNamesData.message === "empty") setPortfolioNames([]);
+      if (portfoliosResponse.data) setPortfolios(portfoliosResponse.data);
+      else if (portfoliosResponse.message === "empty") setPortfolios([]);
     }
 
-    PortfolioNames();
+    getPortfolios();
   }, []);
 
   return (
     <>
-      {portfolioNames && (
+      {portfolios && (
         <div className="mx-2">
           <Autocomplete
             value={value}
@@ -51,7 +51,7 @@ export default function SearchOption() {
               <CustomListItem key={option.id} props={props} option={option} />
             )}
             autoHighlight
-            options={portfolioNames}
+            options={portfolios}
             getOptionLabel={(option) => option.portfolioName}
             noOptionsText={
               <span style={{ color: "rgba(255,255,255,0.6)" }}>No Options</span>

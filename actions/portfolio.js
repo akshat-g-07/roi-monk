@@ -33,16 +33,16 @@ export async function CreatePortfolio(portfolioName, transactions) {
   }
 }
 
-export async function GetAllPortfolioNames() {
+export async function GetAllPortfolios() {
   const userEmail = await getUserEmail();
 
   try {
-    const portfolioNames = await db.Portfolio.findMany({
+    const portfolios = await db.Portfolio.findMany({
       where: {
         ownerEmail: userEmail,
       },
     });
-    if (portfolioNames) return { data: portfolioNames };
+    if (portfolios) return { data: portfolios };
     else return { message: "empty" };
   } catch (error) {
     console.log(error);
