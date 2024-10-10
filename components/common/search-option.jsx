@@ -53,6 +53,9 @@ export default function SearchOption() {
             autoHighlight
             options={portfolioNames}
             getOptionLabel={(option) => option.portfolioName}
+            noOptionsText={
+              <span style={{ color: "rgba(255,255,255,0.6)" }}>No Options</span>
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
