@@ -38,10 +38,17 @@ export default function Page() {
     getPortfolios();
   }, [date]);
 
-  if (portfolios.length === 0) return <CreateFirstPortfolio />;
-
   const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
     useMemo(() => {
+      if (!portfolios || portfolios.length === 0) {
+        return {
+          totalInvestment: 0,
+          netRevenue: 0,
+          netROI: 0,
+          pieChartData: [],
+          barChartData: [],
+        };
+      }
       let totalInv = 0;
       let netRev = 0;
 
@@ -77,6 +84,8 @@ export default function Page() {
         barChartData: barData,
       };
     }, [portfolios]);
+
+  if (portfolios.length === 0) return <CreateFirstPortfolio />;
 
   return (
     <>
