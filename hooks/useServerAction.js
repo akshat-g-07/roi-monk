@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export function useServerAction(actionName, ...params) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  async function executeServerAction() {
+  const executeServerAction = useCallback(async () => {
     setError(null);
     try {
       const response = await actionName(...params);
@@ -18,11 +18,11 @@ export function useServerAction(actionName, ...params) {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [actionName, ...params]);
 
   useEffect(() => {
     executeServerAction();
-  }, [actionName, JSON.stringify(params)]);
+  }, [executeServerAction]);
 
-  return { isLoading, data, error };
+  return { isLoading, data, error, refetch: executeServerAction };
 }
