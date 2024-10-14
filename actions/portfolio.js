@@ -33,6 +33,23 @@ export async function CreatePortfolio(portfolioName, transactions) {
   }
 }
 
+export async function GetAllPortfolios() {
+  const userEmail = await getUserEmail();
+
+  try {
+    const portfolios = await db.Portfolio.findMany({
+      where: {
+        ownerEmail: userEmail,
+      },
+    });
+    if (portfolios) return { data: portfolios };
+    else return { message: "empty" };
+  } catch (error) {
+    console.log(error);
+    return { message: "error" };
+  }
+}
+
 export async function GetPortfolioByName(portfolioName) {
   const userEmail = await getUserEmail();
 
@@ -45,6 +62,39 @@ export async function GetPortfolioByName(portfolioName) {
     });
     if (portfolio) return { data: portfolio };
     else return { message: "unique" };
+  } catch (error) {
+    console.log(error);
+    return { message: "error" };
+  }
+}
+
+export async function GetPortfoliosWithinDateRange(dateRange) {
+  const userEmail = await getUserEmail();
+
+  try {
+    const portfolios = await db.Portfolio.findMany({
+      include: { transactions: true },
+      where: {
+        ownerEmail: userEmail,
+        OR: [
+          {
+            createdDate: {
+              gte: new Date(dateRange.from),
+              lte: new Date(dateRange.to),
+            },
+          },
+          {
+            updatedDate: {
+              gte: new Date(dateRange.from),
+              lte: new Date(dateRange.to),
+            },
+          },
+        ],
+      },
+    });
+
+    if (portfolios.length > 0) return { data: portfolios };
+    else return { message: "null" };
   } catch (error) {
     console.log(error);
     return { message: "error" };

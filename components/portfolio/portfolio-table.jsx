@@ -19,12 +19,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import AddTransactionDialogContent from "../common/add-transaction-dialog-content";
 
 export default function PortfolioTable({
   columns,
   data,
   handleBulkDeleteOperation,
+  form,
+  handleAddTransaction,
+  handleSaveOperation,
+  hasChanges,
 }) {
+  const [open, setOpen] = React.useState(false);
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -58,13 +65,36 @@ export default function PortfolioTable({
           }
           className="max-w-sm"
         />
-        <Button
-          onClick={() => {
-            handleBulkDeleteOperation(table.getFilteredSelectedRowModel().rows);
-          }}
-        >
-          Delete
-        </Button>
+        <div className="flex gap-x-4">
+          <AlertDialog open={open} onOpenChange={setOpen} defaultOpen={true}>
+            <AlertDialogTrigger asChild>
+              <Button variant="secondary">Add</Button>
+            </AlertDialogTrigger>
+            <AddTransactionDialogContent
+              form={form}
+              handleFormSubmit={(e) => {
+                handleAddTransaction(e);
+                setOpen(false);
+              }}
+            />
+          </AlertDialog>
+
+          <Button onClick={handleSaveOperation} disabled={hasChanges}>
+            Save
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={!table.getFilteredSelectedRowModel().rows.length}
+            onClick={() => {
+              handleBulkDeleteOperation(
+                table.getFilteredSelectedRowModel().rows
+              );
+              setRowSelection({});
+            }}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

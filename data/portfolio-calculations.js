@@ -23,5 +23,5 @@ export function NetROI(transactions) {
   let totalInvestment = TotalInvestment(transactions);
   let netROI = ((netRevenue - totalInvestment) / totalInvestment) * 100 || 0;
 
-  return netROI;
+  return netROI === 0 ? 0 : parseFloat(netROI).toFixed(2);
 }

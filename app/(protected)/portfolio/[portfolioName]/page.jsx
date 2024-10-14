@@ -1,5 +1,6 @@
 "use client";
 
+import _ from "lodash";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
@@ -7,17 +8,98 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import { PortfolioColumns } from "@/components/portfolio/portfolio-cols";
 import PortfolioTable from "@/components/portfolio/portfolio-table";
-import { GetTransactionsByPortfolioName } from "@/actions/transaction";
+import {
+  DeleteTransaction,
+  GetTransactionsByPortfolioName,
+  UpdateTransactions,
+} from "@/actions/transaction";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import {
   NetRevenue,
   NetROI,
   TotalInvestment,
 } from "@/data/portfolio-calculations";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function Page({ params }) {
+  const form = useForm({
+    defaultValues: {
+      amount: "",
+      comments: "",
+      transactionDate: "",
+      transactionName: "",
+      type: "",
+    },
+    resolver: async (values) => {
+      const errors = {};
+      const { amount, comments, transactionDate, transactionName, type } =
+        values;
+
+      if (!type) {
+        errors.type = {
+          type: "required",
+          message: "Type is required.",
+        };
+      }
+
+      const nameRegex = /^[a-zA-Z0-9\s\-_]*$/;
+      if (!transactionName) {
+        errors.transactionName = {
+          type: "required",
+          message: "Name is required.",
+        };
+      } else if (!nameRegex.test(transactionName)) {
+        errors.transactionName = {
+          type: "validation",
+          message: "Name can only have a-z, A-Z, 0-9, space, -, _.",
+        };
+      }
+
+      if (!amount) {
+        errors.amount = {
+          type: "required",
+          message: "Amount is required.",
+        };
+      } else if (amount <= 0) {
+        errors.amount = {
+          type: "validation",
+          message: "Amount should be a postive number.",
+        };
+      } else if (amount.toString().split(".")[1]?.length > 2) {
+        errors.amount = {
+          type: "validation",
+          message: "Amount should have only two decimal values.",
+        };
+      }
+
+      if (!transactionDate) {
+        errors.transactionDate = {
+          type: "required",
+          message: "Date is required.",
+        };
+      }
+
+      const commentRegex = /^[a-zA-Z0-9\s.'"&,!?\-_]*$/;
+      if (!commentRegex.test(comments)) {
+        errors.comments = {
+          type: "validation",
+          message: `Comments can only have a-z, A-Z, 0-9, space, ., ', ", &, !, ?, -, _.`,
+        };
+      }
+
+      values.amount = parseFloat(values.amount);
+
+      return {
+        errors: errors,
+        values: values,
+      };
+    },
+  });
   const { portfolioName } = params;
   const [transactions, setTransactions] = useState([]);
+  const [originalTransactions, setOriginalTransactions] = useState([]);
+  const [hasChanges, setHasChanges] = useState(true);
   const totalInvestment = TotalInvestment(transactions);
   const netRevenue = NetRevenue(transactions);
   const netROI = NetROI(transactions);
@@ -25,13 +107,20 @@ export default function Page({ params }) {
   useEffect(() => {
     async function getTransactions() {
       const transactionsData = await GetTransactionsByPortfolioName(
-        portfolioName
+        decodeURI(portfolioName)
       );
-      if (transactionsData.data) setTransactions(transactionsData.data);
+      if (transactionsData.data) {
+        setTransactions(transactionsData.data);
+        setOriginalTransactions(transactionsData.data);
+      }
     }
 
     getTransactions();
   }, [portfolioName]);
+
+  useEffect(() => {
+    setHasChanges(_.isEqual(transactions, originalTransactions));
+  }, [transactions]);
 
   const handleEditOperation = useCallback(
     (transactionId, transactionValues) => {
@@ -56,9 +145,10 @@ export default function Page({ params }) {
       const newTransaction = {
         ...transactionToCopy,
         id: `${transactionId}_${Date.now()}_copy`,
+        transactionName: transactionToCopy.transactionName + " copy",
       };
 
-      return [...prevTransactions, newTransaction];
+      return [newTransaction, ...prevTransactions];
     });
   }, []);
 
@@ -69,14 +159,65 @@ export default function Page({ params }) {
   }, []);
 
   const handleBulkDeleteOperation = (transactionsToDelete) => {
-    const idsToRemove = new Set(
-      transactionsToDelete.map((item) => item.original.id)
+    const idsToRemove = transactionsToDelete.map((item) => item.original.id);
+
+    setTransactions((prevTransactions) =>
+      prevTransactions.filter((item) => !idsToRemove.includes(item.id))
     );
-    let tempTransactions = transactions.filter(
-      (item) => !idsToRemove.has(item.id)
+  };
+
+  const handleAddTransaction = (values) => {
+    let tempValues = {
+      ...values,
+      id: Date.now() + "",
+      type: values.type === "Credit" ? "CR" : "DR",
+    };
+    let tempTransactions = [tempValues, ...transactions];
+    setTransactions(tempTransactions);
+    form.reset();
+  };
+
+  const handleSaveOperation = async () => {
+    const deleteTransactions = originalTransactions.filter(
+      (originalTransaction) =>
+        !transactions
+          .map((transaction) => transaction.id)
+          .includes(originalTransaction.id)
     );
 
-    setTransactions(tempTransactions);
+    const upsertTransactions = transactions.filter(
+      (transaction) =>
+        !originalTransactions.find((originalTransaction) =>
+          _.isEqual(originalTransaction, transaction)
+        )
+    );
+
+    const deleteResult =
+      deleteTransactions.length > 0
+        ? DeleteTransaction(deleteTransactions.map((item) => item.id))
+        : Promise.resolve({ message: "success" });
+
+    const upsertResult =
+      upsertTransactions.length > 0
+        ? UpdateTransactions(portfolioName, upsertTransactions)
+        : Promise.resolve({ message: "success" });
+
+    await Promise.all([deleteResult, upsertResult]).then(async (values) => {
+      if (values[0].message === "success" && values[1].message === "success") {
+        toast.success("Successfully Updated");
+        const updatedTransactions = await GetTransactionsByPortfolioName(
+          portfolioName
+        );
+        if (updatedTransactions.data) {
+          setTransactions(updatedTransactions.data);
+          setOriginalTransactions(updatedTransactions.data);
+        }
+      } else if (values[1].message === "Portfolio Not Found") {
+        toast.error(`Portfolio doesn't exist.`);
+      } else {
+        toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
+      }
+    });
   };
 
   const PortfolioColumnsWithOperations = useMemo(
@@ -158,6 +299,10 @@ export default function Page({ params }) {
           columns={PortfolioColumnsWithOperations}
           data={transactions}
           handleBulkDeleteOperation={handleBulkDeleteOperation}
+          form={form}
+          handleAddTransaction={handleAddTransaction}
+          handleSaveOperation={handleSaveOperation}
+          hasChanges={hasChanges}
         />
       )}
     </>
