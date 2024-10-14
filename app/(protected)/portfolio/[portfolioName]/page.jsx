@@ -11,11 +11,7 @@ export default function Page({ params }) {
     data: originalTransactions,
     error,
     refetch,
-  } = useServerAction(
-    GetTransactionsByPortfolioName,
-    "GetTransactionsByPortfolioName",
-    decodeURI(portfolioName)
-  );
+  } = useServerAction(GetTransactionsByPortfolioName, decodeURI(portfolioName));
 
   if (isLoading) return <>Loading</>;
   if (error) return <>Error</>;
