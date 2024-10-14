@@ -99,28 +99,40 @@ export default function Page({ params }) {
   const { portfolioName } = params;
   const [transactions, setTransactions] = useState([]);
   const [originalTransactions, setOriginalTransactions] = useState([]);
-  const [hasChanges, setHasChanges] = useState(true);
-  const totalInvestment = TotalInvestment(transactions);
-  const netRevenue = NetRevenue(transactions);
-  const netROI = NetROI(transactions);
-
-  useEffect(() => {
-    async function getTransactions() {
-      const transactionsData = await GetTransactionsByPortfolioName(
-        decodeURI(portfolioName)
-      );
-      if (transactionsData.data) {
-        setTransactions(transactionsData.data);
-        setOriginalTransactions(transactionsData.data);
-      }
+  const hasChanges = _.isEqual(transactions, originalTransactions);
+  const { totalInvestment, netRevenue, netROI } = useMemo(() => {
+    if (!transactions || transactions.length === 0) {
+      return {
+        totalInvestment: 0,
+        netRevenue: 0,
+        netROI: 0,
+      };
     }
+    const totalInv = TotalInvestment(transactions);
+    const netRev = NetRevenue(transactions);
 
-    getTransactions();
-  }, [portfolioName]);
+    const roi = ((netRev - totalInv) / totalInv) * 100 || 0;
+
+    return {
+      totalInvestment: totalInv,
+      netRevenue: netRev,
+      netROI: roi === 0 ? 0 : parseFloat(roi).toFixed(2),
+    };
+  }, [transactions]);
+
+  async function getTransactions() {
+    const transactionsData = await GetTransactionsByPortfolioName(
+      decodeURI(portfolioName)
+    );
+    if (transactionsData.data) {
+      setTransactions(transactionsData.data);
+      setOriginalTransactions(transactionsData.data);
+    }
+  }
 
   useEffect(() => {
-    setHasChanges(_.isEqual(transactions, originalTransactions));
-  }, [transactions]);
+    getTransactions();
+  }, []);
 
   const handleEditOperation = useCallback(
     (transactionId, transactionValues) => {
@@ -169,11 +181,10 @@ export default function Page({ params }) {
   const handleAddTransaction = (values) => {
     let tempValues = {
       ...values,
-      id: Date.now() + "",
+      id: Date.now().toString(),
       type: values.type === "Credit" ? "CR" : "DR",
     };
-    let tempTransactions = [tempValues, ...transactions];
-    setTransactions(tempTransactions);
+    setTransactions((prev) => [tempValues, ...prev]);
     form.reset();
   };
 
