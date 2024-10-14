@@ -1,11 +1,6 @@
 "use client";
 
 import _ from "lodash";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PaymentsIcon from "@mui/icons-material/Payments";
-import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import { PortfolioColumns } from "@/components/portfolio/portfolio-cols";
 import PortfolioTable from "@/components/portfolio/portfolio-table";
 import { DeleteTransaction, UpdateTransactions } from "@/actions/transaction";
@@ -13,6 +8,7 @@ import { useMemo, useState, useCallback } from "react";
 import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import SummaryCards from "@/components/common/summary-cards";
 
 export default function Portfolio({
   portfolioName,
@@ -217,59 +213,11 @@ export default function Portfolio({
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
-        {/* 
-  Total Investment Card
-   */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Total Investment
-              <MonetizationOnIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ {totalInvestment}</p>
-          </CardContent>
-        </Card>
-        {/* 
-  Revenue Card
-   */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Net Revenue
-              <PaymentsIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ {netRevenue}</p>
-          </CardContent>
-        </Card>
-        {/* 
-  Net ROI Card
-   */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Net ROI
-              <CurrencyExchangeIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>{netROI} %</p>
-            <p>
-              {netROI > 0 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                netROI < 0 && (
-                  <TriangleDownIcon className="text-red-500 size-7" />
-                )
-              )}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <SummaryCards
+        totalInvestment={totalInvestment}
+        netRevenue={netRevenue}
+        netROI={netROI}
+      />
 
       <PortfolioTable
         columns={PortfolioColumnsWithOperations}

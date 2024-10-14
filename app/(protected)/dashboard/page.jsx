@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/popover";
 import CreateFirstPortfolio from "@/components/dashboard/create-first-portfolio";
 import ChartSummary from "@/components/dashboard/chart-summary";
-import SummaryCards from "@/components/dashboard/summary-cards";
+import SummaryCards from "@/components/common/summary-cards";
 import { GetPortfoliosWithinDateRange } from "@/actions/portfolio";
 import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
 import { useServerAction } from "@/hooks/useServerAction";
