@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -16,22 +16,18 @@ import ChartSummary from "@/components/dashboard/chart-summary";
 import SummaryCards from "@/components/dashboard/summary-cards";
 import { GetPortfoliosWithinDateRange } from "@/actions/portfolio";
 import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
+import { useServerAction } from "@/hooks/useServerAction";
 
 export default function Page() {
-  const [portfolios, setPortfolios] = useState([]);
   const [date, setDate] = useState({
     from: addDays(new Date(), -30),
     to: new Date(),
   });
-
-  async function getPortfolios() {
-    const portfoliosResponse = await GetPortfoliosWithinDateRange(date);
-    if (portfoliosResponse.data) setPortfolios(portfoliosResponse.data);
-  }
-
-  useEffect(() => {
-    getPortfolios();
-  }, [date]);
+  const {
+    isLoading,
+    data: portfolios,
+    error,
+  } = useServerAction(GetPortfoliosWithinDateRange, date);
 
   const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
     useMemo(() => {
@@ -79,6 +75,10 @@ export default function Page() {
         barChartData: barData,
       };
     }, [portfolios]);
+
+  if (isLoading) return <>Loading</>;
+
+  if (error) return <>Error</>;
 
   if (portfolios.length === 0) return <CreateFirstPortfolio />;
 
