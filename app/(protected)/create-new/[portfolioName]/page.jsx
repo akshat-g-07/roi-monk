@@ -88,11 +88,14 @@ export default function Page({ params }) {
   });
 
   const handleAddTransaction = (values) => {
-    if (editAction === -1) setTransactions([...transactions, values]);
-    else {
-      transactions[editAction] = values;
-      setEditAction(-1);
-    }
+    setTransactions((prevTransactions) => {
+      if (editAction === -1) return [...prevTransactions, values];
+      const newTransactions = [...prevTransactions];
+      newTransactions[editAction] = values;
+      return newTransactions;
+    });
+
+    setEditAction(-1);
     form.reset();
     setOpen(false);
   };
@@ -113,19 +116,19 @@ export default function Page({ params }) {
   };
 
   const handleEditButton = (index) => {
-    let tempTransaction = transactions[index];
-    form.setValue("amount", tempTransaction.amount);
-    form.setValue("comments", tempTransaction.comments);
-    form.setValue("transactionName", tempTransaction.transactionName);
-    form.setValue("type", tempTransaction.type);
-    form.setValue("transactionDate", tempTransaction.transactionDate);
+    const tempTransaction = transactions[index];
+    Object.entries(tempTransaction).forEach(([key, value]) => {
+      form.setValue(key, value);
+    });
+
     setEditAction(index);
     setOpen(true);
   };
 
   const handleDeleteButton = (indx) => {
-    let tempTransactions = transactions.filter((item, index) => index !== indx);
-    setTransactions(tempTransactions);
+    setTransactions((prevTransactions) =>
+      prevTransactions.filter((_, index) => index !== indx)
+    );
   };
 
   return (
