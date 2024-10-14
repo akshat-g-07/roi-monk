@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export function useServerAction(actionName, params) {
+export function useServerAction(actionName, ...params) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,8 @@ export function useServerAction(actionName, params) {
     setError(null);
     try {
       const response = await actionName(...params);
-      setData(response.data);
+      if (response.data) setData(response.data);
+      else setError(response.message);
     } catch (error) {
       setError(error.message);
     } finally {
