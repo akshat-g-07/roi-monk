@@ -89,6 +89,7 @@ export default function Portfolio({
     },
   });
   const [transactions, setTransactions] = useState(originalTransactions);
+  const [isLoading, setIsLoading] = useState(false);
   const hasChanges = _.isEqual(transactions, originalTransactions);
   const { totalInvestment, netRevenue, netROI } = useMemo(() => {
     if (!transactions || transactions.length === 0) {
@@ -189,6 +190,8 @@ export default function Portfolio({
         ? UpdateTransactions(portfolioName, upsertTransactions)
         : Promise.resolve({ message: "success" });
 
+    setIsLoading(true);
+
     await Promise.all([deleteResult, upsertResult]).then(async (values) => {
       if (values[0].message === "success" && values[1].message === "success") {
         toast.success("Successfully Updated");
@@ -198,6 +201,7 @@ export default function Portfolio({
       } else {
         toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
       }
+      setIsLoading(false);
     });
   };
 
@@ -217,6 +221,7 @@ export default function Portfolio({
         totalInvestment={totalInvestment}
         netRevenue={netRevenue}
         netROI={netROI}
+        isLoading={isLoading}
       />
 
       <PortfolioTable
@@ -227,6 +232,7 @@ export default function Portfolio({
         handleAddTransaction={handleAddTransaction}
         handleSaveOperation={handleSaveOperation}
         hasChanges={hasChanges}
+        isLoading={isLoading}
       />
     </>
   );

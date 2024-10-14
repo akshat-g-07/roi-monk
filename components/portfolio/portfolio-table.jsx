@@ -30,6 +30,7 @@ export default function PortfolioTable({
   handleAddTransaction,
   handleSaveOperation,
   hasChanges,
+  isLoading,
 }) {
   const [open, setOpen] = React.useState(false);
   const [sorting, setSorting] = React.useState([]);

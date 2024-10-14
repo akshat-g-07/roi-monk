@@ -4,7 +4,12 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 
-export default function SummaryCards({ totalInvestment, netRevenue, netROI }) {
+export default function SummaryCards({
+  totalInvestment,
+  netRevenue,
+  netROI,
+  isLoading,
+}) {
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3">
