@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -15,21 +15,78 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import PieChartSummary from "@/components/dashboard/pie-chart-summary";
 import BarChartSummary from "@/components/dashboard/bar-chart-summary";
+import { GetPortfoliosWithinDateRange } from "@/actions/portfolio";
+import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
+import CreateFirstPortfolio from "@/components/dashboard/create-first-portfolio";
 
 export default function Page() {
-  const [date, setDate] = React.useState({
-    from: new Date(),
-    to: addDays(new Date(), 20),
+  const [portfolios, setPortfolios] = useState([]);
+  const [date, setDate] = useState({
+    from: addDays(new Date(), -30),
+    to: new Date(),
   });
 
-  // Some server action to calculate these values
-  let netRevenue = 0;
-  let netROI = 0;
-  let annROI = 0;
+  useEffect(() => {
+    async function getPortfolios() {
+      const portfoliosResponse = await GetPortfoliosWithinDateRange(date);
+      if (portfoliosResponse.data) setPortfolios(portfoliosResponse.data);
+    }
+
+    getPortfolios();
+  }, [date]);
+
+  const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
+    useMemo(() => {
+      if (!portfolios || portfolios.length === 0) {
+        return {
+          totalInvestment: 0,
+          netRevenue: 0,
+          netROI: 0,
+          pieChartData: [],
+          barChartData: [],
+        };
+      }
+      let totalInv = 0;
+      let netRev = 0;
+
+      const pieData = [];
+      const barData = [];
+
+      portfolios.forEach((portfolio) => {
+        const tempTotalInv = TotalInvestment(portfolio.transactions);
+        const tempNetRev = NetRevenue(portfolio.transactions);
+
+        totalInv += tempTotalInv;
+        netRev += tempNetRev;
+
+        pieData.push({
+          name: portfolio.portfolioName,
+          value: tempTotalInv,
+        });
+
+        barData.push({
+          name: portfolio.portfolioName,
+          Investment: tempTotalInv,
+          Revenue: tempNetRev,
+        });
+      });
+
+      let roi = ((netRev - totalInv) / totalInv) * 100 || 0;
+
+      return {
+        totalInvestment: totalInv,
+        netRevenue: netRev,
+        netROI: roi === 0 ? 0 : parseFloat(roi).toFixed(2),
+        pieChartData: pieData,
+        barChartData: barData,
+      };
+    }, [portfolios]);
+
+  if (portfolios.length === 0) return <CreateFirstPortfolio />;
+
   return (
     <>
       <div className="w-full flex flex-wrap justify-between text-lg font-bold items-center mb-4">
@@ -72,6 +129,9 @@ export default function Page() {
                 onSelect={setDate}
                 numberOfMonths={2}
                 className="bg-background dark text-foreground"
+                disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+                }
               />
             </PopoverContent>
           </Popover>
@@ -80,11 +140,11 @@ export default function Page() {
       {/* 
         Summary Cards 
         */}
-      <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3">
         {/* 
         Total Investment Card
          */}
-        <Card>
+        <Card className="min-h-36">
           <CardHeader>
             <CardTitle className="flex justify-between text-base font-normal items-center">
               Total Investment
@@ -92,13 +152,13 @@ export default function Page() {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ Card Content</p>
+            <p>$ {totalInvestment}</p>
           </CardContent>
         </Card>
         {/* 
         Revenue Card
          */}
-        <Card>
+        <Card className="min-h-36">
           <CardHeader>
             <CardTitle className="flex justify-between text-base font-normal items-center">
               Net Revenue
@@ -107,19 +167,12 @@ export default function Page() {
           </CardHeader>
           <CardContent className="flex justify-between text-xl font-semibold items-center">
             <p>$ {netRevenue}</p>
-            <p>
-              {netRevenue >= 0.5 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
-              )}
-            </p>
           </CardContent>
         </Card>
         {/* 
         Net ROI Card
          */}
-        <Card>
+        <Card className="min-h-36">
           <CardHeader>
             <CardTitle className="flex justify-between text-base font-normal items-center">
               Net ROI
@@ -129,47 +182,24 @@ export default function Page() {
           <CardContent className="flex justify-between text-xl font-semibold items-center">
             <p>{netROI} %</p>
             <p>
-              {netROI >= 0.5 ? (
+              {netROI > 0 ? (
                 <TriangleUpIcon className="text-emerald-500 size-7" />
               ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
-              )}
-            </p>
-          </CardContent>
-        </Card>
-        {/* 
-        Annualized ROI Card
-         */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Annualized ROI
-              <RequestQuoteIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>{annROI} %</p>
-            <p>
-              {annROI >= 0.5 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
+                netROI < 0 && (
+                  <TriangleDownIcon className="text-red-500 size-7" />
+                )
               )}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* 
-      Tabs between graphical summary and tabular summary
-       */}
-
       <div className="w-full my-2 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
-        <Card className="h-full">
-          <PieChartSummary />
+        <Card className="h-full min-h-80">
+          <PieChartSummary data={pieChartData} />
         </Card>
-        <Card className="h-full">
-          <BarChartSummary />
+        <Card className="h-full min-h-80">
+          <BarChartSummary data={barChartData} />
         </Card>
       </div>
     </>
