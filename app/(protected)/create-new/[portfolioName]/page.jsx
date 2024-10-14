@@ -15,7 +15,8 @@ import TransactionTable from "@/components/create-new/transaction-table";
 export default function Page({ params }) {
   const { portfolioName } = params;
   const decodedPortfolioName = decodeURIComponent(portfolioName);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState([]);
   // the number saves the index of transactions[] for which edit is called, might be 0 as well, -1 indicates none.
   const [editAction, setEditAction] = useState(-1);
@@ -101,6 +102,7 @@ export default function Page({ params }) {
   };
 
   const handleSavePortfolio = async () => {
+    setIsLoading(true);
     const portfolio = await CreatePortfolio(decodedPortfolioName, transactions);
     if (portfolio.message === "error") {
       toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
@@ -110,9 +112,9 @@ export default function Page({ params }) {
       );
     } else {
       toast.success("Your portfolio is created successfully!!");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       router.push("/dashboard");
     }
+    setIsLoading(false);
   };
 
   const handleEditButton = (index) => {
