@@ -10,7 +10,7 @@ export default function Loading({
     <>
       <div
         className={cn(
-          `size-full z-10 bg-primary/40 flex items-center justify-center ${
+          `size-full bg-primary/40 flex items-center justify-center ${
             absolute && "absolute z-10"
           }`,
           className
