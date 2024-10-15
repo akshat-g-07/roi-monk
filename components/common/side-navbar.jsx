@@ -33,7 +33,7 @@ export default function SideNavBar() {
       <nav
         className={`${
           open ? "w-[230px]" : "w-[70px]"
-        } h-screen border-r-4 flex flex-col items-center duration-300 ease-in-out relative`}
+        } h-screen border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative`}
       >
         {/* 
         Top Left Logo Icon 
@@ -109,7 +109,7 @@ export default function SideNavBar() {
         Support and other buttons
          */}
 
-        <div className="absolute bottom-5 w-full flex flex-col items-center">
+        <div className="w-full pb-5 flex flex-col items-center">
           <div
             className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
               open ? "w-[92.5%] pl-3" : "w-fit"
