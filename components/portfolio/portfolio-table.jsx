@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   flexRender,
   getCoreRowModel,
@@ -12,7 +11,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -21,8 +19,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import AddTransactionDialogContent from "../common/add-transaction-dialog-content";
 
-export function DataTable({ columns, data }) {
+export default function PortfolioTable({
+  columns,
+  data,
+  handleBulkDeleteOperation,
+  form,
+  handleAddTransaction,
+  handleSaveOperation,
+  hasChanges,
+  isLoading,
+}) {
+  const [open, setOpen] = React.useState(false);
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -45,15 +55,47 @@ export function DataTable({ columns, data }) {
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
-          placeholder="Filter emails..."
-          value={table.getColumn("email")?.getFilterValue() || ""}
+          placeholder="Search Transaction Name..."
+          value={table.getColumn("transactionName")?.getFilterValue() || ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table
+              .getColumn("transactionName")
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
+        <div className="flex gap-x-4">
+          <AlertDialog open={open} onOpenChange={setOpen} defaultOpen={true}>
+            <AlertDialogTrigger asChild>
+              <Button variant="secondary">Add</Button>
+            </AlertDialogTrigger>
+            <AddTransactionDialogContent
+              form={form}
+              handleFormSubmit={(e) => {
+                handleAddTransaction(e);
+                setOpen(false);
+              }}
+            />
+          </AlertDialog>
+
+          <Button onClick={handleSaveOperation} disabled={hasChanges}>
+            Save
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={!table.getFilteredSelectedRowModel().rows.length}
+            onClick={() => {
+              handleBulkDeleteOperation(
+                table.getFilteredSelectedRowModel().rows
+              );
+              setRowSelection({});
+            }}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
