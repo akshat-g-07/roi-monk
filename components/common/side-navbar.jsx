@@ -103,7 +103,7 @@ export default function SideNavBar() {
         {/* 
         Recent Investments Sections
          */}
-        <RecentPortfolios open={open} />
+        <RecentPortfolios open={open} handleDialogClose={handleDialogClose} />
 
         {/* 
         Support and other buttons

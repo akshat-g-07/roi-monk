@@ -3,7 +3,7 @@ import { GetRecentPortfolios } from "@/actions/portfolio";
 import { useServerAction } from "@/hooks/useServerAction";
 import { useRouter } from "next/navigation";
 
-export default function RecentPortfolios({ open }) {
+export default function RecentPortfolios({ open, handleDialogClose }) {
   const router = useRouter();
   const {
     isLoading,
@@ -37,7 +37,7 @@ export default function RecentPortfolios({ open }) {
                     } w-full group cursor-pointer my-px hover:bg-accent`}
                     onClick={() => {
                       router.push(`/portfolio/${portfolio.portfolioName}`);
-                      setOpen(false);
+                      handleDialogClose();
                     }}
                   >
                     <Avatar className={`m-2 ${open && "ml-3"}`}>
