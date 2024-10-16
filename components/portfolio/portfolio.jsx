@@ -4,7 +4,7 @@ import _ from "lodash";
 import { PortfolioColumns } from "@/components/portfolio/portfolio-cols";
 import PortfolioTable from "@/components/portfolio/portfolio-table";
 import { DeleteTransaction, UpdateTransactions } from "@/actions/transaction";
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -91,6 +91,11 @@ export default function Portfolio({
   const [transactions, setTransactions] = useState(originalTransactions);
   const [isLoading, setIsLoading] = useState(false);
   const hasChanges = _.isEqual(transactions, originalTransactions);
+
+  useEffect(() => {
+    setTransactions(originalTransactions);
+  }, [originalTransactions]);
+
   const { totalInvestment, netRevenue, netROI } = useMemo(() => {
     if (!transactions || transactions.length === 0) {
       return {
