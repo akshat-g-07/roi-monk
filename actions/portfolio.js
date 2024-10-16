@@ -124,7 +124,7 @@ export async function GetRecentPortfolios(amount = 5) {
 
 export async function UpdatePortfolioNameById(portfolioId, portfolioNewName) {
   try {
-    await prisma.Portfolio.update({
+    await db.Portfolio.update({
       where: {
         id: portfolioId,
       },
@@ -150,7 +150,7 @@ export async function UpdatePortfolioNameByName(
   const userEmail = await getUserEmail();
 
   try {
-    await prisma.Portfolio.update({
+    await db.Portfolio.update({
       where: {
         ownerEmail_portfolioName: {
           ownerEmail: userEmail,
