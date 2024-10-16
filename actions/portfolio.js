@@ -93,8 +93,7 @@ export async function GetPortfoliosWithinDateRange(dateRange) {
       },
     });
 
-    if (portfolios.length > 0) return { data: portfolios };
-    else return { message: "null" };
+    return { data: portfolios };
   } catch (error) {
     console.log(error);
     return { message: "error" };
