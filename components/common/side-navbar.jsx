@@ -35,76 +35,77 @@ export default function SideNavBar() {
           open ? "w-[230px]" : "w-[70px]"
         } h-screen border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative`}
       >
-        {/* 
+        <div className="w-full flex flex-col items-center">
+          {/* 
         Top Left Logo Icon 
          */}
-        <a href="/dashboard" className="flex items-center w-full">
-          <Image
-            src="/logo.png"
-            width={40}
-            height={40}
-            alt="Logo"
-            className="py-2 px-px mx-2 border-b w-auto border-white cursor-pointer"
-          />
+          <a href="/dashboard" className="flex items-center w-full">
+            <Image
+              src="/logo.png"
+              width={40}
+              height={40}
+              alt="Logo"
+              className="py-2 px-px mx-2 border-b w-auto border-white cursor-pointer"
+            />
 
-          <span
-            className={`px-2 mx-auto h-full items-center ${
-              open ? "inline-flex" : "hidden"
-            } text-nowrap text-3xl font-bold border-b border-white`}
-          >
-            ROI Monk
-          </span>
-        </a>
+            <span
+              className={`px-2 mx-auto h-full items-center ${
+                open ? "inline-flex" : "hidden"
+              } text-nowrap text-3xl font-bold border-b border-white`}
+            >
+              ROI Monk
+            </span>
+          </a>
 
-        {/* 
+          {/* 
         Toggle Button
          */}
-        <div
-          className={`size-fit ${
-            open ? "translate-x-28" : "translate-x-10"
-          } -translate-y-[0.9rem] cursor-pointer flex items-center justify-center rounded-md border border-white bg-foreground hover:bg-muted-foreground duration-300 ease-in-out`}
-          onClick={() => {
-            setOpen((prev) => !prev);
-          }}
-        >
-          {open ? (
-            <ChevronLeftIcon className="size-7 text-black" />
-          ) : (
-            <ChevronRightIcon className="size-7 text-black" />
-          )}
-        </div>
+          <div
+            className={`size-fit ${
+              open ? "translate-x-28" : "translate-x-10"
+            } -translate-y-[0.9rem] cursor-pointer flex items-center justify-center rounded-md border border-white bg-foreground hover:bg-muted-foreground duration-300 ease-in-out`}
+            onClick={() => {
+              setOpen((prev) => !prev);
+            }}
+          >
+            {open ? (
+              <ChevronLeftIcon className="size-7 text-black" />
+            ) : (
+              <ChevronRightIcon className="size-7 text-black" />
+            )}
+          </div>
 
-        {/* 
+          {/* 
         New Portfolio Button
          */}
 
-        <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
-          <AlertDialogTrigger>
-            <div className="flex items-center w-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer">
-              <PlusIcon className="size-6 m-2" />
-              <span
-                className={`${
-                  open ? "inline-flex" : "hidden"
-                } mx-5 text-nowrap`}
-              >
-                New Portfolio
-              </span>
-            </div>
-          </AlertDialogTrigger>
-          <NewPortfolioDialogContent handleDialogClose={handleDialogClose} />
-        </AlertDialog>
+          <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+            <AlertDialogTrigger>
+              <div className="flex items-center w-fit h-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer">
+                <PlusIcon className="size-6 m-2" />
+                <span
+                  className={`${
+                    open ? "inline-flex" : "hidden"
+                  } mx-5 text-nowrap`}
+                >
+                  New Portfolio
+                </span>
+              </div>
+            </AlertDialogTrigger>
+            <NewPortfolioDialogContent handleDialogClose={handleDialogClose} />
+          </AlertDialog>
 
-        <div
-          className={`m-4 ${
-            open ? "px-24" : "px-4"
-          } border-b border-white duration-300 ease-in-out`}
-        />
+          <div
+            className={`m-4 ${
+              open ? "px-24" : "px-4"
+            } border-b border-white duration-300 ease-in-out`}
+          />
 
-        {/* 
+          {/* 
         Recent Investments Sections
          */}
-        <RecentPortfolios open={open} handleDialogClose={handleDialogClose} />
-
+          <RecentPortfolios open={open} handleDialogClose={handleDialogClose} />
+        </div>
         {/* 
         Support and other buttons
          */}
