@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/popover";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { UpdateCurrency } from "@/actions/user";
+import { toast } from "react-toastify";
 
 export default function Currency() {
   const [open, setOpen] = useState(false);
@@ -60,9 +62,20 @@ export default function Currency() {
                       <CommandItem
                         key={index}
                         value={option}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue);
+                        onSelect={async (currentValue) => {
                           setOpen(false);
+                          if (currentValue !== value) {
+                            setValue(currentValue);
+                            const response = await UpdateCurrency(currentValue);
+
+                            if (response.message === "error") {
+                              toast.error(
+                                `Uh oh! Something went wrong.\nPlease try again.`
+                              );
+                            } else {
+                              toast.success("Currency updated successfully!!");
+                            }
+                          }
                         }}
                       >
                         <CheckIcon
