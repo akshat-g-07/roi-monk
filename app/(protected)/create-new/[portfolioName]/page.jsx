@@ -143,6 +143,7 @@ export default function Page({ params }) {
               transactions={transactions}
               handleEditButton={handleEditButton}
               handleDeleteButton={handleDeleteButton}
+              isLoading={isLoading}
             />
           </Card>
           {transactions.length > 0 && (
@@ -152,16 +153,25 @@ export default function Page({ params }) {
                 onClick={() => {
                   router.push("/dashboard");
                 }}
+                disabled={isLoading}
               >
                 Cancel
               </Button>
-              <Button onClick={handleSavePortfolio}>Save</Button>
+              <Button onClick={handleSavePortfolio} disabled={isLoading}>
+                Save
+              </Button>
             </div>
           )}
         </>
         <AlertDialog open={open} onOpenChange={setOpen}>
-          <AlertDialogTrigger>
-            <div className="flex items-center w-fit bg-primary hover:bg-primary/90 dark justify-evenly rounded-full cursor-pointer fixed bottom-5 right-5 z-10">
+          <AlertDialogTrigger disabled={isLoading}>
+            <div
+              className={`flex items-center w-fit ${
+                isLoading
+                  ? "cursor-default bg-primary/70 hover:bg-primary/70"
+                  : "cursor-pointer bg-primary hover:bg-primary/90"
+              } dark justify-evenly rounded-full fixed bottom-5 right-5 z-10`}
+            >
               <PlusIcon className="size-6 m-2 text-black" />
             </div>
           </AlertDialogTrigger>

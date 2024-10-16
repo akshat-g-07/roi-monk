@@ -2,7 +2,6 @@ import { memo } from "react";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { format } from "date-fns";
-
 import {
   Table,
   TableBody,
@@ -11,12 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Loading from "@/components/common/loading";
 
 export default memo(
   function TransactionTable({
     transactions,
     handleEditButton,
     handleDeleteButton,
+    isLoading,
   }) {
     return (
       <>
@@ -32,7 +33,7 @@ export default memo(
               <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="relative">
             {transactions.length < 1 && (
               <TableRow>
                 <TableCell
@@ -89,6 +90,13 @@ export default memo(
                 </TableCell>
               </TableRow>
             ))}
+            {isLoading && (
+              <TableRow className="absolute size-full z-10 top-0 hover:bg-transparent">
+                <TableCell colSpan={7} className="absolute size-full">
+                  <Loading />
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </>
