@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -11,32 +11,25 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PaymentsIcon from "@mui/icons-material/Payments";
-import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
-import PieChartSummary from "@/components/dashboard/pie-chart-summary";
-import BarChartSummary from "@/components/dashboard/bar-chart-summary";
+import CreateFirstPortfolio from "@/components/dashboard/create-first-portfolio";
+import ChartSummary from "@/components/dashboard/chart-summary";
+import SummaryCards from "@/components/common/summary-cards";
 import { GetPortfoliosWithinDateRange } from "@/actions/portfolio";
 import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
-import CreateFirstPortfolio from "@/components/dashboard/create-first-portfolio";
+import { useServerAction } from "@/hooks/useServerAction";
+import Loading from "@/components/common/loading";
+import Error from "@/components/common/error";
 
 export default function Page() {
-  const [portfolios, setPortfolios] = useState([]);
   const [date, setDate] = useState({
     from: addDays(new Date(), -30),
     to: new Date(),
   });
-
-  useEffect(() => {
-    async function getPortfolios() {
-      const portfoliosResponse = await GetPortfoliosWithinDateRange(date);
-      if (portfoliosResponse.data) setPortfolios(portfoliosResponse.data);
-    }
-
-    getPortfolios();
-  }, [date]);
+  const {
+    isLoading,
+    data: portfolios,
+    error,
+  } = useServerAction(GetPortfoliosWithinDateRange, date);
 
   const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
     useMemo(() => {
@@ -84,6 +77,10 @@ export default function Page() {
         barChartData: barData,
       };
     }, [portfolios]);
+
+  if (isLoading) return <Loading />;
+
+  if (error) return <Error />;
 
   if (portfolios.length === 0) return <CreateFirstPortfolio />;
 
@@ -137,71 +134,14 @@ export default function Page() {
           </Popover>
         </div>
       </div>
-      {/* 
-        Summary Cards 
-        */}
-      <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3">
-        {/* 
-        Total Investment Card
-         */}
-        <Card className="min-h-36">
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Total Investment
-              <MonetizationOnIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ {totalInvestment}</p>
-          </CardContent>
-        </Card>
-        {/* 
-        Revenue Card
-         */}
-        <Card className="min-h-36">
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Net Revenue
-              <PaymentsIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ {netRevenue}</p>
-          </CardContent>
-        </Card>
-        {/* 
-        Net ROI Card
-         */}
-        <Card className="min-h-36">
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Net ROI
-              <CurrencyExchangeIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>{netROI} %</p>
-            <p>
-              {netROI > 0 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                netROI < 0 && (
-                  <TriangleDownIcon className="text-red-500 size-7" />
-                )
-              )}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
 
-      <div className="w-full my-2 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
-        <Card className="h-full min-h-80">
-          <PieChartSummary data={pieChartData} />
-        </Card>
-        <Card className="h-full min-h-80">
-          <BarChartSummary data={barChartData} />
-        </Card>
-      </div>
+      <SummaryCards
+        totalInvestment={totalInvestment}
+        netRevenue={netRevenue}
+        netROI={netROI}
+      />
+
+      <ChartSummary pieChartData={pieChartData} barChartData={barChartData} />
     </>
   );
 }
