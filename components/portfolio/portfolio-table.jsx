@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/table";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import AddTransactionDialogContent from "../common/add-transaction-dialog-content";
+import Loading from "@/components/common/loading";
 
 export default function PortfolioTable({
   columns,
@@ -65,11 +66,14 @@ export default function PortfolioTable({
               ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
+          disabled={isLoading}
         />
         <div className="flex gap-x-4">
           <AlertDialog open={open} onOpenChange={setOpen} defaultOpen={true}>
             <AlertDialogTrigger asChild>
-              <Button variant="secondary">Add</Button>
+              <Button variant="secondary" disabled={isLoading}>
+                Add
+              </Button>
             </AlertDialogTrigger>
             <AddTransactionDialogContent
               form={form}
@@ -80,12 +84,17 @@ export default function PortfolioTable({
             />
           </AlertDialog>
 
-          <Button onClick={handleSaveOperation} disabled={hasChanges}>
+          <Button
+            onClick={handleSaveOperation}
+            disabled={hasChanges || isLoading}
+          >
             Save
           </Button>
           <Button
             variant="destructive"
-            disabled={!table.getFilteredSelectedRowModel().rows.length}
+            disabled={
+              !table.getFilteredSelectedRowModel().rows.length || isLoading
+            }
             onClick={() => {
               handleBulkDeleteOperation(
                 table.getFilteredSelectedRowModel().rows
@@ -117,7 +126,7 @@ export default function PortfolioTable({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="relative">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -144,6 +153,16 @@ export default function PortfolioTable({
                 </TableCell>
               </TableRow>
             )}
+            {isLoading && (
+              <TableRow className="absolute size-full z-10 top-0 hover:bg-transparent">
+                <TableCell
+                  colSpan={columns.length}
+                  className="absolute size-full"
+                >
+                  <Loading />
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
@@ -156,7 +175,7 @@ export default function PortfolioTable({
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          disabled={!table.getCanPreviousPage() || isLoading}
         >
           Previous
         </Button>
@@ -164,7 +183,7 @@ export default function PortfolioTable({
           variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          disabled={!table.getCanNextPage() || isLoading}
         >
           Next
         </Button>

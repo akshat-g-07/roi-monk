@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { GetAllPortfolios } from "@/actions/portfolio";
 import { useServerAction } from "@/hooks/useServerAction";
+import Loading from "./loading";
 
 export default function SearchOption() {
   const router = useRouter();
@@ -15,9 +16,9 @@ export default function SearchOption() {
     error,
   } = useServerAction(GetAllPortfolios);
 
-  if (isLoading) return <>Loading</>;
+  if (isLoading) return <Loading className="bg-transparent mx-7" size="1rem" />;
 
-  if (error) return <>Error</>;
+  if (error) return <></>;
 
   return (
     <>

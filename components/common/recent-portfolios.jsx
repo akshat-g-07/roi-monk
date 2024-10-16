@@ -2,8 +2,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { GetRecentPortfolios } from "@/actions/portfolio";
 import { useServerAction } from "@/hooks/useServerAction";
 import { useRouter } from "next/navigation";
+import Loading from "./loading";
 
-export default function RecentPortfolios({ open }) {
+export default function RecentPortfolios({ open, handleDialogClose }) {
   const router = useRouter();
   const {
     isLoading,
@@ -11,9 +12,9 @@ export default function RecentPortfolios({ open }) {
     error,
   } = useServerAction(GetRecentPortfolios);
 
-  if (isLoading) return <>Loading</>;
+  if (isLoading) return <Loading size="2rem" className="bg-transparent" />;
 
-  if (error) return <>Error</>;
+  if (error) return <></>;
 
   return (
     <>
@@ -37,7 +38,7 @@ export default function RecentPortfolios({ open }) {
                     } w-full group cursor-pointer my-px hover:bg-accent`}
                     onClick={() => {
                       router.push(`/portfolio/${portfolio.portfolioName}`);
-                      setOpen(false);
+                      handleDialogClose();
                     }}
                   >
                     <Avatar className={`m-2 ${open && "ml-3"}`}>
