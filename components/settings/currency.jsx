@@ -65,7 +65,6 @@ export default function Currency() {
                         onSelect={async (currentValue) => {
                           setOpen(false);
                           if (currentValue !== value) {
-                            setValue(currentValue);
                             const response = await UpdateCurrency(currentValue);
 
                             if (response.message === "error") {
@@ -73,6 +72,7 @@ export default function Currency() {
                                 `Uh oh! Something went wrong.\nPlease try again.`
                               );
                             } else {
+                              setValue(currentValue);
                               toast.success("Currency updated successfully!!");
                             }
                           }
