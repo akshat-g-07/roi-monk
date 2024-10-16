@@ -7,6 +7,7 @@ CREATE TYPE "SupportReason" AS ENUM ('GI', 'FR', 'TS', 'IS');
 -- CreateTable
 CREATE TABLE "User" (
     "email" TEXT NOT NULL,
+    "currency" TEXT NOT NULL DEFAULT 'United States - USD',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("email")
 );
