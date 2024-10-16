@@ -22,10 +22,12 @@ import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { UpdateCurrency } from "@/actions/user";
 import { toast } from "react-toastify";
+import { useUserCurrency } from "@/contexts/user-currency";
 
 export default function Currency() {
+  const userCurrency = useUserCurrency();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(userCurrency);
   const options = currency.map((item) => `${item.name} - ${item.currency}`);
 
   return (

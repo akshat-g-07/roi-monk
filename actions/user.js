@@ -21,3 +21,19 @@ export async function UpdateCurrency(currency) {
     return { message: "error" };
   }
 }
+
+export async function GetUser() {
+  const userEmail = await getUserEmail();
+
+  try {
+    const user = await db.User.findFirst({
+      where: {
+        email: userEmail,
+      },
+    });
+    return { data: user };
+  } catch (error) {
+    console.log(error);
+    return { message: "error" };
+  }
+}
