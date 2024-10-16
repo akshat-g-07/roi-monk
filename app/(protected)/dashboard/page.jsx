@@ -18,6 +18,7 @@ import { GetPortfoliosWithinDateRange } from "@/actions/portfolio";
 import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
 import { useServerAction } from "@/hooks/useServerAction";
 import Loading from "@/components/common/loading";
+import Error from "@/components/common/error";
 
 export default function Page() {
   const [date, setDate] = useState({
@@ -79,7 +80,7 @@ export default function Page() {
 
   if (isLoading) return <Loading />;
 
-  if (error) return <>Error</>;
+  if (error) return <Error />;
 
   if (portfolios.length === 0) return <CreateFirstPortfolio />;
 

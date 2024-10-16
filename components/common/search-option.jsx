@@ -18,7 +18,7 @@ export default function SearchOption() {
 
   if (isLoading) return <Loading className="bg-transparent mx-7" size="1rem" />;
 
-  if (error) return <>Error</>;
+  if (error) return <></>;
 
   return (
     <>
