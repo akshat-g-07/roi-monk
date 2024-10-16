@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useMemo } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -11,29 +11,79 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PaymentsIcon from "@mui/icons-material/Payments";
-import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
-import TimelineIcon from "@mui/icons-material/Timeline";
-import TableChartIcon from "@mui/icons-material/TableChart";
-import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
-import PieChartSummary from "@/components/pie-chart-summary";
-import BarChartSummary from "@/components/bar-chart-summary";
-import OverviewDataTable from "@/components/overview-data-table";
+import CreateFirstPortfolio from "@/components/dashboard/create-first-portfolio";
+import ChartSummary from "@/components/dashboard/chart-summary";
+import SummaryCards from "@/components/common/summary-cards";
+import { GetPortfoliosWithinDateRange } from "@/actions/portfolio";
+import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
+import { useServerAction } from "@/hooks/useServerAction";
+import Loading from "@/components/common/loading";
+import Error from "@/components/common/error";
 
 export default function Page() {
-  const [date, setDate] = React.useState({
-    from: new Date(),
-    to: addDays(new Date(), 20),
+  const [date, setDate] = useState({
+    from: addDays(new Date(), -30),
+    to: new Date(),
   });
+  const {
+    isLoading,
+    data: portfolios,
+    error,
+  } = useServerAction(GetPortfoliosWithinDateRange, date);
 
-  // Some server action to calculate these values
-  let netRevenue = 0;
-  let netROI = 0;
-  let annROI = 0;
+  const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
+    useMemo(() => {
+      if (!portfolios || portfolios.length === 0) {
+        return {
+          totalInvestment: 0,
+          netRevenue: 0,
+          netROI: 0,
+          pieChartData: [],
+          barChartData: [],
+        };
+      }
+      let totalInv = 0;
+      let netRev = 0;
+
+      const pieData = [];
+      const barData = [];
+
+      portfolios.forEach((portfolio) => {
+        const tempTotalInv = TotalInvestment(portfolio.transactions);
+        const tempNetRev = NetRevenue(portfolio.transactions);
+
+        totalInv += tempTotalInv;
+        netRev += tempNetRev;
+
+        pieData.push({
+          name: portfolio.portfolioName,
+          value: tempTotalInv,
+        });
+
+        barData.push({
+          name: portfolio.portfolioName,
+          Investment: tempTotalInv,
+          Revenue: tempNetRev,
+        });
+      });
+
+      let roi = ((netRev - totalInv) / totalInv) * 100 || 0;
+
+      return {
+        totalInvestment: totalInv,
+        netRevenue: netRev,
+        netROI: roi === 0 ? 0 : parseFloat(roi).toFixed(2),
+        pieChartData: pieData,
+        barChartData: barData,
+      };
+    }, [portfolios]);
+
+  if (isLoading) return <Loading />;
+
+  if (error) return <Error />;
+
+  if (portfolios.length === 0) return <CreateFirstPortfolio />;
+
   return (
     <>
       <div className="w-full flex flex-wrap justify-between text-lg font-bold items-center mb-4">
@@ -76,133 +126,22 @@ export default function Page() {
                 onSelect={setDate}
                 numberOfMonths={2}
                 className="bg-background dark text-foreground"
+                disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+                }
               />
             </PopoverContent>
           </Popover>
         </div>
       </div>
-      {/* 
-        Summary Cards 
-        */}
-      <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-4">
-        {/* 
-        Total Investment Card
-         */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Total Investment
-              <MonetizationOnIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ Card Content</p>
-          </CardContent>
-        </Card>
-        {/* 
-        Revenue Card
-         */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Net Revenue
-              <PaymentsIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>$ {netRevenue}</p>
-            <p>
-              {netRevenue >= 0.5 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
-              )}
-            </p>
-          </CardContent>
-        </Card>
-        {/* 
-        Net ROI Card
-         */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Net ROI
-              <CurrencyExchangeIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>{netROI} %</p>
-            <p>
-              {netROI >= 0.5 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
-              )}
-            </p>
-          </CardContent>
-        </Card>
-        {/* 
-        Annualized ROI Card
-         */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between text-base font-normal items-center">
-              Annualized ROI
-              <RequestQuoteIcon />
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-between text-xl font-semibold items-center">
-            <p>{annROI} %</p>
-            <p>
-              {annROI >= 0.5 ? (
-                <TriangleUpIcon className="text-emerald-500 size-7" />
-              ) : (
-                <TriangleDownIcon className="text-red-500 size-7" />
-              )}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
 
-      {/* 
-      Tabs between graphical summary and tabular summary
-       */}
+      <SummaryCards
+        totalInvestment={totalInvestment}
+        netRevenue={netRevenue}
+        netROI={netROI}
+      />
 
-      <Tabs defaultValue="graphical" className="w-full mt-5">
-        <div className="w-full flex items-center justify-between">
-          <div className="w-[45%] h-px bg-white/50" />
-          <TabsList className="">
-            <TabsTrigger value="graphical">
-              <TimelineIcon />
-            </TabsTrigger>
-            <TabsTrigger value="tabular">
-              <TableChartIcon />
-            </TabsTrigger>
-          </TabsList>
-          <div className="w-[45%] h-px bg-white/50" />
-        </div>
-        <TabsContent value="graphical">
-          {/* 
-        Charts
-        */}
-          <div className="w-full my-4 grid gap-4 lg:grid-cols-2 sm:grid-cols-1 h-96">
-            <Card className="h-full">
-              <PieChartSummary />
-            </Card>
-            <Card className="h-full">
-              <BarChartSummary />
-            </Card>
-          </div>
-        </TabsContent>
-        <TabsContent value="tabular">
-          {/* 
-      Data Table Component
-       */}
-          <div className="w-full my-4 h-fit">
-            <OverviewDataTable />
-          </div>
-        </TabsContent>
-      </Tabs>
+      <ChartSummary pieChartData={pieChartData} barChartData={barChartData} />
     </>
   );
 }

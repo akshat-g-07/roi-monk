@@ -30,7 +30,7 @@ CREATE TABLE "Transaction" (
     "transactionName" TEXT NOT NULL,
     "type" "TransactionType" NOT NULL,
     "amount" INTEGER NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "transactionDate" TIMESTAMP(3) NOT NULL,
     "comments" TEXT,
     "portfolioId" TEXT NOT NULL,
 
@@ -64,7 +64,7 @@ CREATE TABLE "Feedback" (
 CREATE UNIQUE INDEX "Portfolio_ownerEmail_portfolioName_key" ON "Portfolio"("ownerEmail", "portfolioName");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Transaction_transactionName_type_date_amount_portfolioId_key" ON "Transaction"("transactionName", "type", "date", "amount", "portfolioId");
+CREATE UNIQUE INDEX "Transaction_transactionName_type_transactionDate_amount_por_key" ON "Transaction"("transactionName", "type", "transactionDate", "amount", "portfolioId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Support_ownerEmail_concern_reason_key" ON "Support"("ownerEmail", "concern", "reason");

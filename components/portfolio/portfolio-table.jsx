@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   flexRender,
   getCoreRowModel,
@@ -12,7 +11,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -21,8 +19,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import AddTransactionDialogContent from "../common/add-transaction-dialog-content";
+import Loading from "@/components/common/loading";
 
-export function DataTable({ columns, data }) {
+export default function PortfolioTable({
+  columns,
+  data,
+  handleBulkDeleteOperation,
+  form,
+  handleAddTransaction,
+  handleSaveOperation,
+  hasChanges,
+  isLoading,
+}) {
+  const [open, setOpen] = React.useState(false);
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -45,15 +56,55 @@ export function DataTable({ columns, data }) {
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
-          placeholder="Filter emails..."
-          value={table.getColumn("email")?.getFilterValue() || ""}
+          placeholder="Search Transaction Name..."
+          value={table.getColumn("transactionName")?.getFilterValue() || ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table
+              .getColumn("transactionName")
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
+          disabled={isLoading}
         />
+        <div className="flex gap-x-4">
+          <AlertDialog open={open} onOpenChange={setOpen} defaultOpen={true}>
+            <AlertDialogTrigger asChild>
+              <Button variant="secondary" disabled={isLoading}>
+                Add
+              </Button>
+            </AlertDialogTrigger>
+            <AddTransactionDialogContent
+              form={form}
+              handleFormSubmit={(e) => {
+                handleAddTransaction(e);
+                setOpen(false);
+              }}
+            />
+          </AlertDialog>
+
+          <Button
+            onClick={handleSaveOperation}
+            disabled={hasChanges || isLoading}
+          >
+            Save
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={
+              !table.getFilteredSelectedRowModel().rows.length || isLoading
+            }
+            onClick={() => {
+              handleBulkDeleteOperation(
+                table.getFilteredSelectedRowModel().rows
+              );
+              setRowSelection({});
+            }}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -75,7 +126,7 @@ export function DataTable({ columns, data }) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="relative">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -102,6 +153,16 @@ export function DataTable({ columns, data }) {
                 </TableCell>
               </TableRow>
             )}
+            {isLoading && (
+              <TableRow className="absolute size-full z-10 top-0 hover:bg-transparent">
+                <TableCell
+                  colSpan={columns.length}
+                  className="absolute size-full"
+                >
+                  <Loading />
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
@@ -114,7 +175,7 @@ export function DataTable({ columns, data }) {
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          disabled={!table.getCanPreviousPage() || isLoading}
         >
           Previous
         </Button>
@@ -122,7 +183,7 @@ export function DataTable({ columns, data }) {
           variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          disabled={!table.getCanNextPage() || isLoading}
         >
           Next
         </Button>
