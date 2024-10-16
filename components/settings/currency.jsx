@@ -24,12 +24,7 @@ import { CheckIcon } from "@radix-ui/react-icons";
 export default function Currency() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const options = currency.map((item) => {
-    return {
-      value: item.currency,
-      label: `${item.name} - ${item.currency}`,
-    };
-  });
+  const options = currency.map((item) => `${item.name} - ${item.currency}`);
 
   return (
     <>
@@ -44,9 +39,7 @@ export default function Currency() {
                 aria-expanded={open}
                 className="w-[400px] justify-between"
               >
-                {value
-                  ? options.find((option) => option.value === value)?.label
-                  : "Select Currency..."}
+                {value ? value : "Select Currency..."}
                 <UnfoldMoreIcon
                   sx={{
                     marginLeft: "0.5rem",
@@ -66,7 +59,7 @@ export default function Currency() {
                     {options.map((option, index) => (
                       <CommandItem
                         key={index}
-                        value={option.label}
+                        value={option}
                         onSelect={(currentValue) => {
                           setValue(currentValue === value ? "" : currentValue);
                           setOpen(false);
@@ -75,10 +68,10 @@ export default function Currency() {
                         <CheckIcon
                           className={cn(
                             "mr-2 h-4 w-4",
-                            value === option.value ? "opacity-100" : "opacity-0"
+                            value === option ? "opacity-100" : "opacity-0"
                           )}
                         />
-                        {option.label}
+                        {option}
                       </CommandItem>
                     ))}
                   </CommandGroup>
