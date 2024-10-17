@@ -9,6 +9,7 @@ datasource db {
 
 model User {
   email      String      @id
+  currency   String      @default("United States - USD")
   portfolios Portfolio[]
   supports   Support[]
   feedbacks  Feedback[]

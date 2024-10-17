@@ -35,11 +35,14 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
+import { useUserCurrency } from "@/contexts/user-currency";
 
 export default function AddTransactionDialogContent({
   form,
   handleFormSubmit,
 }) {
+  const userCurrency = useUserCurrency().split("- ")[1];
+
   return (
     <>
       <AlertDialogContent className="dark">
@@ -111,7 +114,7 @@ export default function AddTransactionDialogContent({
                     <FormControl>
                       <Input
                         className="text-white"
-                        placeholder="$200"
+                        placeholder={`${userCurrency} 200`}
                         {...field}
                         type="number"
                       />
