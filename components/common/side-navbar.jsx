@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SignOutButton } from "@clerk/nextjs";
-import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,6 +15,7 @@ import {
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import NewPortfolioDialogContent from "./new-portfolio-dialog-content";
 import RecentPortfolios from "./recent-portfolios";
+import UserProfileButton from "./user-profile-button";
 
 export default function SideNavBar() {
   const router = useRouter();
@@ -143,22 +142,7 @@ export default function SideNavBar() {
               Settings
             </span>
           </div>
-          <SignOutButton redirectUrl="/">
-            <div
-              className={`flex items-center hover:bg-accent dark justify-start rounded-full cursor-pointer p-2 ${
-                open ? "w-[92.5%] pl-4" : "w-fit pl-3"
-              }`}
-            >
-              <LogoutIcon sx={{ fontSize: 25 }} />
-              <span
-                className={`${
-                  open ? "inline-flex" : "hidden"
-                } mx-4 text-nowrap`}
-              >
-                Logout
-              </span>
-            </div>
-          </SignOutButton>
+          <UserProfileButton open={open} />
 
           {/* 
         Developer's Corner
