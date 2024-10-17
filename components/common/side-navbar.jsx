@@ -31,8 +31,8 @@ export default function SideNavBar() {
     <>
       <nav
         className={`${
-          open ? "w-[230px]" : "w-[70px]"
-        } h-screen border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative`}
+          open ? "w-[230px] left-0" : "w-[70px]"
+        } h-screen border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative -left-16 lg:left-0`}
       >
         <div className="w-full flex flex-col items-center">
           {/* 
