@@ -10,8 +10,8 @@ export default function AppHeader() {
 
   return (
     <header
-      className="h-[76.8px] w-full py-2 px-6 border-b
-    border-white text-3xl font-bold flex items-center justify-between"
+      className="md:h-[76.8px] h-fit w-full py-2 px-6 border-b
+    border-white text-3xl font-bold flex md:items-center justify-between items-baseline"
     >
       <div className="size-fit">
         {pathname === "/dashboard" ? (
@@ -32,7 +32,7 @@ export default function AppHeader() {
           "Something"
         )}
       </div>
-      <div className="flex items-center">
+      <div className="flex md:items-center size-fit items-end justify-center md:flex-wrap flex-wrap-reverse">
         <SearchOption />
         <FeedbackButton />
       </div>

@@ -62,7 +62,7 @@ export default function SideNavBar() {
           <div
             className={`size-fit ${
               open ? "translate-x-28" : "translate-x-10"
-            } -translate-y-[0.9rem] cursor-pointer flex items-center justify-center rounded-md border border-white bg-foreground hover:bg-muted-foreground duration-300 ease-in-out`}
+            } md:-translate-y-[0.9rem] translate-y-[1.9rem] cursor-pointer flex items-center justify-center rounded-md border border-white bg-foreground hover:bg-muted-foreground duration-300 ease-in-out`}
             onClick={() => {
               setOpen((prev) => !prev);
             }}

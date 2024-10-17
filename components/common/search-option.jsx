@@ -16,13 +16,19 @@ export default function SearchOption() {
     error,
   } = useServerAction(GetAllPortfolios);
 
-  if (isLoading) return <Loading className="bg-transparent mx-7" size="1rem" />;
+  if (isLoading)
+    return (
+      <Loading
+        className="bg-transparent lg:mx-7 min-h-14 w-96 -ml-36 mt-2 md:ml-0 md:mt-0"
+        size="1rem"
+      />
+    );
 
   if (error) return <></>;
 
   return (
     <>
-      <div className="mx-2">
+      <div className="lg:mx-2 -ml-36 md:ml-0 mt-2 md:mt-0 lg:mt-0 w-96">
         <Autocomplete
           value={value}
           onChange={(event, newValue) => {
@@ -36,7 +42,7 @@ export default function SearchOption() {
           }}
           blurOnSelect
           sx={{
-            width: "300px",
+            width: "100%",
             "& .MuiFormLabel-root": {
               color: "rgba(255,255,255,0.6)",
             },
