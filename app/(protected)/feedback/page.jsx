@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import Rating from "@mui/material/Rating";
 import { CreateFeedback } from "@/actions/feedback";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const [rating, setRating] = useState(0);
   const [comments, setComments] = useState("");
 
@@ -76,6 +78,7 @@ export default function Page() {
                 toast.error(`Feedback already exists.`);
               } else {
                 toast.success("Your feedback is reached me successfully!!");
+                router.push("/dashboard");
               }
             }}
           >

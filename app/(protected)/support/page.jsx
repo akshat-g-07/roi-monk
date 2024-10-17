@@ -7,8 +7,10 @@ import TextField from "@mui/material/TextField";
 import { Button } from "@/components/ui/button";
 import { CreateSupportTicket } from "@/actions/support";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const [reason, setReason] = useState("");
   const [concern, setConcern] = useState("");
 
@@ -80,6 +82,7 @@ export default function Page() {
                 toast.error(`Ticket already exists.`);
               } else {
                 toast.success("Your support ticket is created successfully!!");
+                router.push("/dashboard");
               }
             }}
           >
