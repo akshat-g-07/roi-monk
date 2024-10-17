@@ -4,6 +4,7 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import Loading from "./loading";
+import { useUserCurrency } from "@/contexts/user-currency";
 
 export default function SummaryCards({
   totalInvestment,
@@ -11,6 +12,8 @@ export default function SummaryCards({
   netROI,
   isLoading,
 }) {
+  const userCurrency = useUserCurrency().split("- ")[1];
+
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3">
@@ -28,7 +31,9 @@ export default function SummaryCards({
             {isLoading ? (
               <Loading className="bg-transparent w-fit" size="2rem" />
             ) : (
-              <p>$ {totalInvestment}</p>
+              <p>
+                {userCurrency} {totalInvestment}
+              </p>
             )}
           </CardContent>
         </Card>
@@ -47,7 +52,9 @@ export default function SummaryCards({
             {isLoading ? (
               <Loading className="bg-transparent w-fit" size="2rem" />
             ) : (
-              <p>$ {netRevenue}</p>
+              <p>
+                {userCurrency} {netRevenue}
+              </p>
             )}
           </CardContent>
         </Card>
