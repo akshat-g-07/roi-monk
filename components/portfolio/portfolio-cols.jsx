@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import TransactionForm from "@/components/portfolio/transaction-form";
 import { useState } from "react";
+import { useUserCurrency } from "@/contexts/user-currency";
 
 export const PortfolioColumns = (
   handleEditOperation,
@@ -120,13 +121,15 @@ export const PortfolioColumns = (
       );
     },
     cell: ({ row }) => {
+      const userCurrency = useUserCurrency().split("- ")[1];
+
       return (
         <div
           style={{
             paddingLeft: "17.5px",
           }}
         >
-          $ {row.getValue("amount")}
+          {userCurrency} {row.getValue("amount")}
         </div>
       );
     },

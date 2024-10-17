@@ -31,12 +31,15 @@ import { Input } from "@/components/ui/input";
 
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { useUserCurrency } from "@/contexts/user-currency";
 
 export default function TransactionForm({
   transactionValues,
   handleCloseDialog,
   handleEditOperation,
 }) {
+  const userCurrency = useUserCurrency().split("- ")[1];
+
   const form = useForm({
     defaultValues: {
       amount: transactionValues.amount,
@@ -170,7 +173,7 @@ export default function TransactionForm({
                   <FormControl>
                     <Input
                       className="text-white"
-                      placeholder="$200"
+                      placeholder={`${userCurrency} 200`}
                       {...field}
                       type="number"
                     />
