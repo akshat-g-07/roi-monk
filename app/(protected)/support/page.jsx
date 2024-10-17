@@ -72,9 +72,7 @@ export default function Page() {
         <div className="w-[90%] flex justify-end mt-5">
           <Button
             onClick={async () => {
-              console.log(reason, concern);
               const response = await CreateSupportTicket(reason, concern);
-              console.log(response);
 
               if (response.message === "error") {
                 toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
