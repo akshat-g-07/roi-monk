@@ -5,9 +5,11 @@ import { useState } from "react";
 import { GetAllPortfolios } from "@/actions/portfolio";
 import { useServerAction } from "@/hooks/useServerAction";
 import Loading from "./loading";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function SearchOption() {
   const router = useRouter();
+  const deviceSize = useMediaQuery("(max-width:600px)") ? "small" : "medium";
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const {
@@ -30,6 +32,7 @@ export default function SearchOption() {
     <>
       <div className="lg:mx-2 -ml-36 md:ml-0 mt-2 md:mt-0 lg:mt-0 w-96">
         <Autocomplete
+          size={deviceSize}
           value={value}
           onChange={(event, newValue) => {
             setValue(null);
