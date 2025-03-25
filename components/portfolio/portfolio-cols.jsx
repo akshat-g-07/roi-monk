@@ -229,7 +229,7 @@ export const PortfolioColumns = (
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <AlertDialogContent className="dark">
+          <AlertDialogContent className="w-[90%] max-w-[600px]">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-foreground">
                 Enter transaction details

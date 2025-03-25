@@ -13,7 +13,7 @@ export default function AppHeader() {
       className="mt-2 md:mt-0 md:h-[76.8px] h-fit w-full py-2 px-6 border-b
     border-white text-3xl font-bold flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
     >
-      <div className="size-fit">
+      <div className="size-fit text-nowrap">
         {pathname === "/dashboard" ? (
           "Overview"
         ) : pathname.includes("/create-new/") ? (
@@ -29,7 +29,7 @@ export default function AppHeader() {
         ) : pathname === "/feedback" ? (
           "Feedback"
         ) : (
-          "Something"
+          pathname === "/settings" && "Settings"
         )}
       </div>
       <div className="flex flex-col-reverse md:flex-row items-center h-fit w-full justify-center lg:justify-end">

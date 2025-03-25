@@ -23,7 +23,7 @@ export default function NewPortfolioDialogContent({ handleDialogClose }) {
 
   return (
     <>
-      <AlertDialogContent className="dark w-[500px]">
+      <AlertDialogContent className="w-[90%] max-w-[600px]">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-foreground">
             Name of Portfolio.
@@ -54,7 +54,9 @@ export default function NewPortfolioDialogContent({ handleDialogClose }) {
           </AlertDialogCancel>
           <Button
             disabled={loadingResponse}
-            className={`${loadingResponse && "bg-slate-700"} w-[90px]`}
+            className={`${
+              loadingResponse && "bg-slate-700"
+            } w-full md:w-[90px]`}
             onClick={async () => {
               setLoadingResponse(true);
               if (!portfolioName) {

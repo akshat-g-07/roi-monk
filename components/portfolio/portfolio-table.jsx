@@ -56,7 +56,7 @@ export default function PortfolioTable({
 
   return (
     <div>
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-between py-4">
         <Input
           placeholder="Search Transaction Name..."
           value={table.getColumn("transactionName")?.getFilterValue() || ""}
