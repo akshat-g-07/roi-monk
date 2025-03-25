@@ -5,7 +5,7 @@ export default function Error({ className }) {
     <>
       <div
         className={cn(
-          "size-full bg-primary/40 flex items-center justify-center",
+          "md:size-full size-[90%] bg-primary/40 flex items-center justify-center",
           className
         )}
       >

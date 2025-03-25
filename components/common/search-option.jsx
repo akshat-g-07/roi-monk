@@ -21,7 +21,7 @@ export default function SearchOption() {
   if (isLoading)
     return (
       <Loading
-        className="bg-transparent lg:mx-7 min-h-14 w-96 -ml-36 mt-2 md:ml-0 md:mt-0"
+        className="bg-transparent lg:mx-7 min-h-14 w-full mt-2 md:mt-0 max-w-96"
         size="1rem"
       />
     );
@@ -30,7 +30,7 @@ export default function SearchOption() {
 
   return (
     <>
-      <div className="lg:mx-2 -ml-36 md:ml-0 mt-2 md:mt-0 lg:mt-0 w-96">
+      <div className="mx-2 max-w-96 mt-4 md:mt-0 w-full">
         <Autocomplete
           size={deviceSize}
           value={value}

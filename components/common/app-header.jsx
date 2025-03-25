@@ -11,7 +11,7 @@ export default function AppHeader() {
   return (
     <header
       className="mt-2 md:mt-0 md:h-[76.8px] h-fit w-full py-2 px-6 border-b
-    border-white text-3xl font-bold flex md:items-center justify-between items-baseline"
+    border-white text-3xl font-bold flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
     >
       <div className="size-fit">
         {pathname === "/dashboard" ? (
@@ -32,7 +32,7 @@ export default function AppHeader() {
           "Something"
         )}
       </div>
-      <div className="flex md:items-center size-fit items-end justify-center md:flex-wrap flex-wrap-reverse">
+      <div className="flex flex-col-reverse md:flex-row items-center h-fit w-full justify-center lg:justify-end">
         <SearchOption />
         <FeedbackButton />
       </div>
