@@ -1,4 +1,5 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
+import GetStartedButton from "./get-started";
 
 export default function Pricing() {
   const pricingFeatures = [
@@ -10,7 +11,7 @@ export default function Pricing() {
   ];
   return (
     <>
-      <div className="w-full">
+      <div className="w-full pb-8">
         <h2 className="text-3xl text-white leading-[1.15] font-bold">
           Pricing
         </h2>
@@ -32,6 +33,8 @@ export default function Pricing() {
               </div>
             );
           })}
+          <div className="my-3 w-full h-1 opacity-0" />
+          <GetStartedButton />
         </div>
       </div>
     </>

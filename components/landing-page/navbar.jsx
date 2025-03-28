@@ -4,7 +4,7 @@ import GetStartedButton from "./get-started";
 export default function NavBar() {
   return (
     <>
-      <div className="w-full flex items-center justify-between md:px-8 py-4">
+      <div className="w-full !flex-row justify-between md:px-8 py-4">
         <a href="/" className="flex items-center w-fit">
           <Image
             src="/logo.png"

@@ -20,7 +20,7 @@ export default function Footer() {
         © 2025 ROI Monk. <br />
         All rights reserved.
       </p>
-      <div className="grid gap-x-8 gap-y-8 text-center md:gap-y-24 lg:grid-cols-3 grid-cols-1">
+      <div className="grid gap-x-8 gap-y-2 text-center md:gap-y-24 lg:grid-cols-3 grid-cols-1">
         <a href="/privacy-policy">Privacy Policy</a>
         <a href="/refund-policy">Refund Policy</a>
         <a href="/terms-and-conditions">Terms and Condition</a>

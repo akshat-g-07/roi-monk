@@ -40,7 +40,7 @@ export default function Features() {
   ];
 
   return (
-    <div className="w-full flex flex-col items-center py-10 text-center">
+    <div className="w-fit py-10 text-center">
       <h2 className="text-3xl text-white leading-[1.15] font-bold">
         Why ROI Monk just makes sense for you!
       </h2>
