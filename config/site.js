@@ -5,5 +5,5 @@ export const SITE_CONFIG = {
   TWITTER_URL: "https://x.com/akku_g__",
   TWITTER_USERNAME: "@akku_g__",
   DESCRIPTION: "One Dashboard for All Your Investments",
-  OG_IMAGE: "https://pixelventurers.com/opengraph-image.png",
+  OG_IMAGE: "https://roi-monk.akshat-garg.com/opengraph-image.png",
 };
