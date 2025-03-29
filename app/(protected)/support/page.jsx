@@ -30,7 +30,7 @@ export default function Page() {
           borderRadius: "10px",
         }}
       >
-        <div className="flex items-center">
+        <div className="flex flex-col md:flex-row items-center">
           <p className="text-lg mr-5">I am here for:</p>
           <Select
             value={reason}
@@ -39,7 +39,7 @@ export default function Page() {
             inputProps={{ "aria-label": "Without label" }}
             sx={{
               m: 1,
-              width: 200,
+              width: "80%",
               "& .MuiSelect-select": {
                 color: "white",
               },
@@ -54,7 +54,7 @@ export default function Page() {
             <MenuItem value={"IS"}>issue</MenuItem>
           </Select>
         </div>
-        <div className="flex items-start">
+        <div className="flex flex-col md:flex-row items-center md:items-start">
           <p className="text-lg mr-5 pt-4">My concern is:</p>
           <TextField
             value={concern}

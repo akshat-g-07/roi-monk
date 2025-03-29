@@ -95,7 +95,7 @@ export default function Page() {
                 id="date"
                 variant={"outline"}
                 className={cn(
-                  "w-[300px] justify-start text-left font-normal",
+                  "w-[300px] justify-start text-left font-normal my-2 md:my-0",
                   !date && "text-muted-foreground"
                 )}
               >

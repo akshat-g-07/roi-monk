@@ -41,7 +41,7 @@ export default function Currency() {
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="w-[400px] justify-between"
+                className="w-[200px] md:w-[400px] justify-between"
               >
                 {value ? value : "Select Currency..."}
                 <UnfoldMoreIcon
@@ -54,7 +54,7 @@ export default function Currency() {
                 />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[400px] p-0">
+            <PopoverContent className="w-[200px] md:w-[400px] p-0">
               <Command>
                 <CommandInput placeholder="Search Currency..." />
                 <CommandList>

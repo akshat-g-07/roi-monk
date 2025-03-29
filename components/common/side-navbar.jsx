@@ -31,8 +31,8 @@ export default function SideNavBar() {
     <>
       <nav
         className={`${
-          open ? "w-[230px]" : "w-[70px]"
-        } h-screen border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative`}
+          open ? "w-[230px] ml-0" : "w-[70px]"
+        } h-screen border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative -ml-16 lg:ml-0`}
       >
         <div className="w-full flex flex-col items-center">
           {/* 
@@ -62,7 +62,7 @@ export default function SideNavBar() {
           <div
             className={`size-fit ${
               open ? "translate-x-28" : "translate-x-10"
-            } -translate-y-[0.9rem] cursor-pointer flex items-center justify-center rounded-md border border-white bg-foreground hover:bg-muted-foreground duration-300 ease-in-out`}
+            } md:-translate-y-[0.9rem] translate-y-[5.5rem] cursor-pointer flex items-center justify-center rounded-md border border-white bg-foreground hover:bg-muted-foreground duration-300 ease-in-out`}
             onClick={() => {
               setOpen((prev) => !prev);
             }}
@@ -80,7 +80,7 @@ export default function SideNavBar() {
 
           <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
             <AlertDialogTrigger>
-              <div className="flex items-center w-fit h-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer">
+              <div className="flex items-center w-fit h-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer mb-4 md:mb-0">
                 <PlusIcon className="size-6 m-2" />
                 <span
                   className={`${

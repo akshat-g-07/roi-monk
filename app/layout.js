@@ -20,8 +20,9 @@ export default function RootLayout({ children }) {
     >
       <html lang="en">
         <body className={`${inter.className} dark`}>
-          {children}
-
+          <section className="w-full min-h-svh flex justify-center">
+            {children}
+          </section>
           <ToastContainerComp />
         </body>
       </html>

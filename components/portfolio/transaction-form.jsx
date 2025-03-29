@@ -118,9 +118,9 @@ export default function TransactionForm({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(editTransaction)}
-          className="space-y-8"
+          className="w-full space-y-8"
         >
-          <div className="flex items-start h-fit w-[500px] justify-between">
+          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px] justify-between">
             <FormField
               control={form.control}
               name="type"
@@ -163,7 +163,7 @@ export default function TransactionForm({
               )}
             />
           </div>
-          <div className="flex items-start h-fit w-[500px] justify-between">
+          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px] justify-between">
             <FormField
               control={form.control}
               name="amount"
@@ -196,7 +196,7 @@ export default function TransactionForm({
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-[300px] pl-3 text-left font-normal",
+                            "w-full md:w-[300px] pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -209,7 +209,10 @@ export default function TransactionForm({
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 dark" align="start">
+                    <PopoverContent
+                      className="w-auto md:w-[300px] p-0 dark"
+                      align="start"
+                    >
                       <Calendar
                         mode="single"
                         selected={field.value}
@@ -226,7 +229,7 @@ export default function TransactionForm({
               )}
             />
           </div>
-          <div className="h-fit w-[500px]">
+          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px] justify-between">
             <FormField
               control={form.control}
               name="comments"
