@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+Disallow: /protected
+
+Sitemap: https://roi-monk.akshat-garg.com/sitemap.xml
