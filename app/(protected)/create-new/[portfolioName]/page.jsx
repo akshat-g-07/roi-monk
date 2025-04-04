@@ -138,7 +138,7 @@ export default function Page({ params }) {
       <div className="w-full min-h-full">
         <p className="text-2xl font-semibold">{decodedPortfolioName}</p>
         <>
-          <Card className="mt-10 p-4">
+          <Card className="mt-10 p-4 min-w-[1000px]">
             <TransactionTable
               transactions={transactions}
               handleEditButton={handleEditButton}

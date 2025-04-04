@@ -7,7 +7,9 @@ CREATE TYPE "SupportReason" AS ENUM ('GI', 'FR', 'TS', 'IS');
 -- CreateTable
 CREATE TABLE "User" (
     "email" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "currency" TEXT NOT NULL DEFAULT 'United States - USD',
+    "subscribed" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("email")
 );
@@ -59,6 +61,14 @@ CREATE TABLE "Feedback" (
     "ownerEmail" TEXT NOT NULL,
 
     CONSTRAINT "Feedback_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Ref" (
+    "id" TEXT NOT NULL,
+    "visited" TIMESTAMP(3)[] DEFAULT ARRAY[]::TIMESTAMP(3)[],
+
+    CONSTRAINT "Ref_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

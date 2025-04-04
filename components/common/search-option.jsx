@@ -5,9 +5,11 @@ import { useState } from "react";
 import { GetAllPortfolios } from "@/actions/portfolio";
 import { useServerAction } from "@/hooks/useServerAction";
 import Loading from "./loading";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function SearchOption() {
   const router = useRouter();
+  const deviceSize = useMediaQuery("(max-width:600px)") ? "small" : "medium";
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const {
@@ -16,14 +18,21 @@ export default function SearchOption() {
     error,
   } = useServerAction(GetAllPortfolios);
 
-  if (isLoading) return <Loading className="bg-transparent mx-7" size="1rem" />;
+  if (isLoading)
+    return (
+      <Loading
+        className="bg-transparent lg:mx-7 min-h-14 w-full mt-2 md:mt-0 max-w-96"
+        size="1rem"
+      />
+    );
 
   if (error) return <></>;
 
   return (
     <>
-      <div className="mx-2">
+      <div className="mx-2 max-w-96 mt-4 md:mt-0 w-full">
         <Autocomplete
+          size={deviceSize}
           value={value}
           onChange={(event, newValue) => {
             setValue(null);
@@ -36,7 +45,7 @@ export default function SearchOption() {
           }}
           blurOnSelect
           sx={{
-            width: "300px",
+            width: "100%",
             "& .MuiFormLabel-root": {
               color: "rgba(255,255,255,0.6)",
             },
