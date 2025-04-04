@@ -12,7 +12,7 @@ export default async function Page() {
 
   const status = await GetPaymentStatus();
   if (status.message) redirect("/sign-in");
-  if (!status.data) redirect("/dashboard");
+  if (status.data) redirect("/dashboard");
 
   return (
     <>

@@ -73,42 +73,8 @@ export async function GetPaymentStatus() {
       },
     });
 
-    const subscribedUpto = new Date(user.subscribedUpto);
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    const isDefaultDate =
-      subscribedUpto.toISOString() === "2000-01-01T00:00:00.000Z";
-
-    const sevenDaysFromNow = new Date();
-    sevenDaysFromNow.setDate(today.getDate() + 7);
-    const isExpiredOrExpiringSoon = subscribedUpto <= sevenDaysFromNow;
-
     return {
-      data: isDefaultDate || isExpiredOrExpiringSoon,
-    };
-  } catch (error) {
-    return { message: "error" };
-  }
-}
-
-export async function GetSubscriptionDate() {
-  const userEmail = await getUserEmail();
-  try {
-    const user = await db.User.findUnique({
-      where: {
-        email: userEmail,
-      },
-    });
-
-    return {
-      data: user.subscribedUpto
-        .toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
-        .replace(/ /g, "-"),
+      data: user.subscribed,
     };
   } catch (error) {
     return { message: "error" };
@@ -118,40 +84,12 @@ export async function GetSubscriptionDate() {
 export async function UpdateSubscription() {
   const userEmail = await getUserEmail();
   try {
-    const user = await db.User.findUnique({
-      where: {
-        email: userEmail,
-      },
-    });
-
-    const isDefaultDate =
-      user.subscribedUpto.toISOString() === "2000-01-01T00:00:00.000Z";
-    let newSubscribedUpto;
-
-    if (isDefaultDate) {
-      newSubscribedUpto = new Date();
-      newSubscribedUpto.setMonth(newSubscribedUpto.getMonth() + 1);
-      newSubscribedUpto.setUTCHours(0, 0, 0, 0);
-    } else {
-      newSubscribedUpto = new Date(user.subscribedUpto);
-      newSubscribedUpto.setMonth(newSubscribedUpto.getMonth() + 1);
-    }
-
     await db.User.update({
       where: { email: userEmail },
-      data: { subscribedUpto: newSubscribedUpto },
+      data: { subscribedUpto: true },
     });
 
-    return {
-      success: true,
-      newDate: newSubscribedUpto
-        .toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
-        .replace(/ /g, "-"),
-    };
+    return { data: "success" };
   } catch (error) {
     return { message: "error" };
   }
