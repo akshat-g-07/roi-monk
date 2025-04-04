@@ -24,8 +24,8 @@ export default function Payment() {
   };
 
   const onApprove = async (data) => {
-    const response = await UpdateSubscription();
-    alert(`You have been subscribed upto ${response.newDate}`);
+    await UpdateSubscription();
+    alert(`You have been subscribed to ROI Monk!`);
     router.push("/dashboard");
   };
 

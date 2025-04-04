@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import ToastContainerComp from "@/components/common/toast-container-comp";
 import { SITE_CONFIG } from "@/config/site";
+import { UserTypeProvider } from "@/contexts/user-type";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -77,10 +78,12 @@ export default function RootLayout({ children }) {
     >
       <html lang="en">
         <body className={`${inter.className} dark`}>
-          <section className="w-full min-h-svh flex justify-center">
-            {children}
-          </section>
-          <ToastContainerComp />
+          <UserTypeProvider>
+            <section className="w-full min-h-svh flex justify-center">
+              {children}
+            </section>
+            <ToastContainerComp />
+          </UserTypeProvider>
         </body>
       </html>
     </ClerkProvider>

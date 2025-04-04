@@ -8,13 +8,13 @@ datasource db {
 }
 
 model User {
-  email          String      @id
-  name           String
-  currency       String      @default("United States - USD")
-  subscribedUpto DateTime    @default("2000-01-01T00:00:00Z")
-  portfolios     Portfolio[]
-  supports       Support[]
-  feedbacks      Feedback[]
+  email      String      @id
+  name       String
+  currency   String      @default("United States - USD")
+  subscribed Boolean     @default(false)
+  portfolios Portfolio[]
+  supports   Support[]
+  feedbacks  Feedback[]
 }
 
 model Portfolio {
@@ -65,6 +65,11 @@ model Feedback {
   owner       User     @relation(fields: [ownerEmail], references: [email])
 
   @@unique([ownerEmail, rating, comments])
+}
+
+model Ref {
+  id      String     @id
+  visited DateTime[] @default([])
 }
 
 enum TransactionType {
