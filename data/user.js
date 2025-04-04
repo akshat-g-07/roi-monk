@@ -6,3 +6,8 @@ export async function getUserEmail() {
   const userEmail = user.emailAddresses[0].emailAddress;
   return userEmail;
 }
+
+export async function getUserName() {
+  const user = await currentUser();
+  return user?.firstName + " " + user?.lastName;
+}
