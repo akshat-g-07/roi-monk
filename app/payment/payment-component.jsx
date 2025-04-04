@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { UpdateSubscription } from "@/actions/user";
 import { useUserType } from "@/contexts/user-type";
+import { SendWelcomeMail } from "@/actions/mail";
 
 export default function Payment() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function Payment() {
 
   const onApprove = async (data) => {
     await UpdateSubscription();
+    await SendWelcomeMail();
     alert(`You have been subscribed to ROI Monk!`);
     router.push("/dashboard");
   };

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CreateSupportTicket } from "@/actions/support";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { SendSupportMail } from "@/actions/mail";
 
 export default function Page() {
   const router = useRouter();
@@ -81,6 +82,7 @@ export default function Page() {
               } else if (response.message === "exists") {
                 toast.error(`Ticket already exists.`);
               } else {
+                await SendSupportMail(response.data.id);
                 toast.success("Your support ticket is created successfully!!");
                 router.push("/dashboard");
               }
