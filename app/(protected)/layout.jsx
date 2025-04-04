@@ -1,19 +1,8 @@
-import { getUserEmail } from "@/data/user";
-import { GetPaymentStatus } from "@/actions/user";
 import AppHeader from "@/components/common/app-header";
 import SideNavBar from "@/components/common/side-navbar";
 import { UserCurrencyProvider } from "@/contexts/user-currency";
-import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({ children }) {
-  const userEmail = await getUserEmail();
-
-  if (!userEmail) redirect("/sign-in");
-
-  const response = await GetPaymentStatus();
-
-  if (!response.data) redirect("/");
-
   return (
     <UserCurrencyProvider>
       <main className="min-w-screen min-h-screen overflow-hidden bg-background dark text-foreground flex">

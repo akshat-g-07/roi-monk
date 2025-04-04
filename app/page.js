@@ -17,7 +17,7 @@ export default function Page() {
         <NavBar />
         <HeroSection />
         <Features />
-        <Pricing />
+        {userType && <Pricing />}
         <OpenSource />
         <Footer />
       </div>

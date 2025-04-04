@@ -1,13 +1,20 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
-export default function GetStartedButton() {
+export default function GetStartedButton({ className }) {
+  const router = useRouter();
   return (
-    <a
-      href="/sign-in"
-      className="w-fit flex items-center text-lg font-semibold bg-white text-black p-2 rounded-md hover:bg-white/90 cursor-pointer space-x-2"
+    <Button
+      variant="secondary"
+      className={cn("h-12 space-x-2 text-lg", className)}
+      onClick={() => {
+        router.push("sign-in");
+      }}
     >
-      <p>Get Started</p>
+      <span>Get Started</span>
       <ArrowRightIcon />
-    </a>
+    </Button>
   );
 }
