@@ -67,6 +67,11 @@ model Feedback {
   @@unique([ownerEmail, rating, comments])
 }
 
+model Ref {
+  id      String     @id
+  visited DateTime[] @default([])
+}
+
 enum TransactionType {
   DR
   CR
