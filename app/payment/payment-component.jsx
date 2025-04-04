@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { UpdateSubscription } from "@/actions/user";
+import { useUserType } from "@/contexts/user-type";
 
 export default function Payment() {
   const router = useRouter();
+  const userType = useUserType();
   const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
   const PAYPAL_PLAN_ID = process.env.NEXT_PUBLIC_PAYPAL_PLAN_ID;
 
@@ -28,6 +30,8 @@ export default function Payment() {
     alert(`You have been subscribed to ROI Monk!`);
     router.push("/dashboard");
   };
+
+  if (!userType) router.push("/dashboard");
 
   return (
     <div className="bg-stone-700 text-white h-screen w-screen lg:flex overflow-y-scroll">
