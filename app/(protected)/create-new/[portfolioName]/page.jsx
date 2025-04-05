@@ -112,7 +112,7 @@ export default function Page({ params }) {
       );
     } else {
       toast.success("Your portfolio is created successfully!!");
-      router.push("/dashboard");
+      router.push("/dashboard?refresh=true");
     }
     setIsLoading(false);
   };

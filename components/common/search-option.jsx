@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { GetAllPortfolios } from "@/actions/portfolio";
 import { useServerAction } from "@/hooks/useServerAction";
 import Loading from "./loading";
@@ -9,6 +9,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function SearchOption() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const refresh = searchParams.get("refresh");
   const deviceSize = useMediaQuery("(max-width:600px)") ? "small" : "medium";
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
@@ -16,7 +18,14 @@ export default function SearchOption() {
     isLoading,
     data: portfolios,
     error,
+    refetch,
   } = useServerAction(GetAllPortfolios);
+
+  useEffect(() => {
+    if (refresh) {
+      refetch();
+    }
+  }, [refresh]);
 
   if (isLoading)
     return (

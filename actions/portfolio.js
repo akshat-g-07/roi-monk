@@ -2,6 +2,7 @@
 
 import { getUserEmail } from "@/data/user";
 import { db } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export async function CreatePortfolio(portfolioName, transactions) {
   const userEmail = await getUserEmail();
@@ -23,6 +24,7 @@ export async function CreatePortfolio(portfolioName, transactions) {
       },
     });
 
+    revalidatePath("/", "layout");
     if (portfolio.id) return { message: portfolio.id };
   } catch (error) {
     console.log(error);
