@@ -5,6 +5,7 @@ import SecurityIcon from "@mui/icons-material/Security";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import EnhancedEncryptionIcon from "@mui/icons-material/EnhancedEncryption";
+import Image from "next/image";
 
 export default function Features() {
   const [selectedFeature, setSelectedFeature] = useState(0);
@@ -14,28 +15,28 @@ export default function Features() {
       label: "Data Privacy",
       detail:
         "Your data is securely encrypted, ensuring complete safety and confidentiality.",
-      image: "hey4",
+      image: "privacy",
     },
     {
       icon: <BarChartIcon sx={{ fontSize: "14px" }} />,
       label: "Detailed Reports",
       detail:
         "Understand and track how your investments are performing by looking at reports on dashboard.",
-      image: "hey4",
+      image: "reports",
     },
     {
       icon: <PhoneAndroidIcon sx={{ fontSize: "14px" }} />,
       label: "Multi Device Support",
       detail:
         "Track and manage your investments effortlessly across smartphones, tablets, and laptops.",
-      image: "hey4",
+      image: "responsive",
     },
     {
       icon: <EnhancedEncryptionIcon sx={{ fontSize: "14px" }} />,
       label: "Secure & Fast Sign-In",
       detail:
         "Sign in securely using your Google account for a seamless experience.",
-      image: "hey4",
+      image: "signon",
     },
   ];
 
@@ -44,7 +45,7 @@ export default function Features() {
       <h2 className="text-3xl text-white leading-[1.15] font-bold">
         Why ROI Monk just makes sense for you!
       </h2>
-      <div className="rounded mx-4 w-[250px] md:w-[750px] h-[450px] md:h-[340px] overflow-hidden border border-gray-400 mt-6">
+      <div className="rounded mx-4 w-[250px] md:w-[750px] h-[330px] md:h-[390px] overflow-hidden border border-gray-400 mt-6">
         <div className="w-full h-fit flex justify-between items-center border-b border-gray-400">
           {features.map((feature, index) => {
             return (
@@ -65,12 +66,17 @@ export default function Features() {
             );
           })}
         </div>
-        <div className="w-full h-full flex flex-col md:flex-row justify-center items-center">
-          <div className="w-full md:w-1/3 h-fit md:h-full p-2 md:p-4">
+        <div className="w-full h-[280px] md:h-[340px] flex flex-col md:flex-row justify-between items-center">
+          <div className="w-full md:w-1/3 h-fit md:h-full p-2 md:p-4 md:leading-relaxed">
             {features[selectedFeature].detail}
           </div>
-          <div className="w-full md:w-2/3 h-full">
-            {features[selectedFeature].image}
+          <div className="w-full md:w-2/3 h-fit border-t md:border-l md:border-t-0 border-gray-200">
+            <Image
+              src={`/${features[selectedFeature].image}.png`}
+              width={498}
+              height={338}
+              alt="Feature Image"
+            />
           </div>
         </div>
       </div>
