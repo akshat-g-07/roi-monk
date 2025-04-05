@@ -40,6 +40,7 @@
     "next": "14.2.3",
     "nodemailer": "^6.10.0",
     "nookies": "^2.5.2",
+    "prisma-field-encryption": "^1.6.0",
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",

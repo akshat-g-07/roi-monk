@@ -18,13 +18,14 @@ model User {
 }
 
 model Portfolio {
-  id            String        @id @default(uuid())
-  createdDate   DateTime      @default(now())
-  updatedDate   DateTime      @updatedAt
-  portfolioName String
-  transactions  Transaction[]
-  ownerEmail    String
-  owner         User          @relation(fields: [ownerEmail], references: [email])
+  id                String        @id @default(uuid())
+  createdDate       DateTime      @default(now())
+  updatedDate       DateTime      @updatedAt
+  portfolioName     String        @unique /// @encrypted
+  portfolioNameHash String?       @unique /// @encryption:hash(portfolioName)
+  transactions      Transaction[]
+  ownerEmail        String
+  owner             User          @relation(fields: [ownerEmail], references: [email])
 
   @@unique([ownerEmail, portfolioName])
 }
@@ -33,11 +34,11 @@ model Transaction {
   id              String          @id @default(uuid())
   createdDate     DateTime        @default(now())
   updatedDate     DateTime        @updatedAt
-  transactionName String
+  transactionName String /// @encrypted
   type            TransactionType
   amount          Int
   transactionDate DateTime
-  comments        String?
+  comments        String? /// @encrypted
   portfolioId     String
   portfolio       Portfolio       @relation(fields: [portfolioId], references: [id])
 

@@ -20,6 +20,7 @@ CREATE TABLE "Portfolio" (
     "createdDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedDate" TIMESTAMP(3) NOT NULL,
     "portfolioName" TEXT NOT NULL,
+    "portfolioNameHash" TEXT,
     "ownerEmail" TEXT NOT NULL,
 
     CONSTRAINT "Portfolio_pkey" PRIMARY KEY ("id")
@@ -70,6 +71,12 @@ CREATE TABLE "Ref" (
 
     CONSTRAINT "Ref_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Portfolio_portfolioName_key" ON "Portfolio"("portfolioName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Portfolio_portfolioNameHash_key" ON "Portfolio"("portfolioNameHash");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Portfolio_ownerEmail_portfolioName_key" ON "Portfolio"("ownerEmail", "portfolioName");
