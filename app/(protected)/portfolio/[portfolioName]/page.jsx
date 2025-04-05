@@ -27,7 +27,7 @@ export default function Page({ params }) {
     return (
       <div className="grid size-full items-center justify-center">
         <p className="w-fit">
-          Portfolio with {decodeURI(portfolioName)} name doesn't exist.
+          Portfolio with {decodeURI(portfolioName)} name doesn&apos;t exist.
         </p>
       </div>
     );

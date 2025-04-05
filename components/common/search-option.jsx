@@ -25,7 +25,7 @@ export default function SearchOption() {
     if (refresh) {
       refetch();
     }
-  }, [refresh]);
+  }, [refresh, refetch]);
 
   if (isLoading)
     return (

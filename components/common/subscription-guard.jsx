@@ -16,7 +16,7 @@ export default function SubscriptionGuard({ children }) {
     if (!isLoading && !data && userType) {
       router.replace("/");
     }
-  }, [data, isLoading, router]);
+  }, [data, isLoading, router, userType]);
 
   if (isLoading) {
     return <Loading className={"min-h-screen"} />;

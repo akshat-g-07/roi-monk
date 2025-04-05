@@ -22,7 +22,7 @@ export default function RecentPortfolios({ open, handleDialogClose }) {
       refetch();
       router.push("/dashboard");
     }
-  }, [refresh]);
+  }, [refresh, refetch, router]);
 
   if (isLoading) return <Loading size="2rem" className="bg-transparent" />;
 
