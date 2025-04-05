@@ -27,6 +27,85 @@ import TransactionForm from "@/components/portfolio/transaction-form";
 import { useState } from "react";
 import { useUserCurrency } from "@/contexts/user-currency";
 
+const AmountCell = ({ row }) => {
+  const userCurrency = useUserCurrency().split("- ")[1];
+  return (
+    <div
+      style={{
+        paddingLeft: "17.5px",
+      }}
+    >
+      {userCurrency} {row.getValue("amount")}
+    </div>
+  );
+};
+
+const ActionsCell = ({
+  row,
+  handleEditOperation,
+  handleCopyOperation,
+  handleDeleteOperation,
+}) => {
+  const [open, setOpen] = useState(false);
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
+  return (
+    <AlertDialog open={open}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <MoreHorizIcon sx={{ fontSize: "20px" }} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="dark">
+          <AlertDialogTrigger asChild>
+            <DropdownMenuItem
+              className="cursor-pointer hover:bg-primary/90"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              <EditIcon className="mr-2 size-3.5" />
+              Edit
+            </DropdownMenuItem>
+          </AlertDialogTrigger>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => handleCopyOperation(row.original.id)}
+          >
+            <ContentCopyIcon className="mr-2 size-3.5" />
+            Make a copy
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => handleDeleteOperation(row.original.id)}
+          >
+            <DeleteOutlineIcon className="mr-2 size-3.5" />
+            Move to trash
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AlertDialogContent className="w-[90%] max-w-[600px]">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-foreground">
+            Enter transaction details
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-foreground/50">
+            Please enter the transaction details for this portfolio.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <TransactionForm
+          transactionValues={row.original}
+          handleCloseDialog={handleCloseDialog}
+          handleEditOperation={handleEditOperation}
+        />
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
 export const PortfolioColumns = (
   handleEditOperation,
   handleCopyOperation,
@@ -120,19 +199,7 @@ export const PortfolioColumns = (
         </Button>
       );
     },
-    cell: ({ row }) => {
-      const userCurrency = useUserCurrency().split("- ")[1];
-
-      return (
-        <div
-          style={{
-            paddingLeft: "17.5px",
-          }}
-        >
-          {userCurrency} {row.getValue("amount")}
-        </div>
-      );
-    },
+    cell: ({ row }) => <AmountCell row={row} />,
   },
   {
     accessorKey: "transactionDate",
@@ -187,65 +254,13 @@ export const PortfolioColumns = (
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => {
-      const [open, setOpen] = useState(false);
-      const handleCloseDialog = () => {
-        setOpen(false);
-      };
-
-      return (
-        <AlertDialog open={open}>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizIcon sx={{ fontSize: "20px" }} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="dark">
-              <AlertDialogTrigger asChild>
-                <DropdownMenuItem
-                  className="cursor-pointer hover:bg-primary/90"
-                  onClick={() => {
-                    setOpen(true);
-                  }}
-                >
-                  <EditIcon className="mr-2 size-3.5" />
-                  Edit
-                </DropdownMenuItem>
-              </AlertDialogTrigger>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleCopyOperation(row.original.id)}
-              >
-                <ContentCopyIcon className="mr-2 size-3.5" />
-                Make a copy
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleDeleteOperation(row.original.id)}
-              >
-                <DeleteOutlineIcon className="mr-2 size-3.5" />
-                Move to trash
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <AlertDialogContent className="w-[90%] max-w-[600px]">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-foreground">
-                Enter transaction details
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-foreground/50">
-                Please enter the transaction details for this portfolio.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <TransactionForm
-              transactionValues={row.original}
-              handleCloseDialog={handleCloseDialog}
-              handleEditOperation={handleEditOperation}
-            />
-          </AlertDialogContent>
-        </AlertDialog>
-      );
-    },
+    cell: ({ row }) => (
+      <ActionsCell
+        row={row}
+        handleEditOperation={handleEditOperation}
+        handleCopyOperation={handleCopyOperation}
+        handleDeleteOperation={handleDeleteOperation}
+      />
+    ),
   },
 ];
