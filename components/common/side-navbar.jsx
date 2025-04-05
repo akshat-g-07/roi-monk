@@ -34,7 +34,7 @@ export default function SideNavBar() {
           open ? "w-[230px] ml-0" : "w-[70px]"
         } h-screen border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative -ml-16 lg:ml-0`}
       >
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center justify-start grow">
           {/* 
         Top Left Logo Icon 
          */}
@@ -80,7 +80,7 @@ export default function SideNavBar() {
 
           <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
             <AlertDialogTrigger>
-              <div className="flex items-center w-fit h-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer mb-4 md:mb-0">
+              <div className="flex items-center w-fit h-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer mb-4 md:mb-0 -mt-4">
                 <PlusIcon className="size-6 m-2" />
                 <span
                   className={`${
@@ -150,7 +150,7 @@ export default function SideNavBar() {
           <div
             className={`flex items-center  ${
               open ? "w-[95%]" : "w-fit"
-            } bg-accent mt-3 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
+            } bg-accent mt-2 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
             onClick={() => {
               window.open("https://akshat-garg.com");
             }}

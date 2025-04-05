@@ -14,14 +14,6 @@ export default function Page({ params }) {
     decodeURI(portfolioName)
   );
 
-  if (!portfolio)
-    return (
-      <div className="grid size-full items-center justify-center">
-        <p className="w-fit">
-          Portfolio with {decodeURI(portfolioName)} name doesn't exist.
-        </p>
-      </div>
-    );
   const {
     isLoading,
     data: originalTransactions,
@@ -31,6 +23,14 @@ export default function Page({ params }) {
 
   if (isLoading) return <Loading />;
   if (error) return <Error />;
+  if (!portfolio)
+    return (
+      <div className="grid size-full items-center justify-center">
+        <p className="w-fit">
+          Portfolio with {decodeURI(portfolioName)} name doesn't exist.
+        </p>
+      </div>
+    );
 
   return (
     <>
