@@ -1,16 +1,28 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { GetRecentPortfolios } from "@/actions/portfolio";
 import { useServerAction } from "@/hooks/useServerAction";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Loading from "./loading";
+import { useEffect } from "react";
 
 export default function RecentPortfolios({ open, handleDialogClose }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const refresh = searchParams.get("refresh");
+
   const {
     isLoading,
     data: recentPortfolios,
     error,
+    refetch,
   } = useServerAction(GetRecentPortfolios);
+
+  useEffect(() => {
+    if (refresh) {
+      refetch();
+      router.push("/dashboard");
+    }
+  }, [refresh, refetch, router]);
 
   if (isLoading) return <Loading size="2rem" className="bg-transparent" />;
 
@@ -27,7 +39,9 @@ export default function RecentPortfolios({ open, handleDialogClose }) {
               Recents:
             </span>
             <div
-              className={`${open ? "mt-1" : "mt-7"} flex flex-col items-center`}
+              className={`${
+                open ? "mt-1" : "mt-7"
+              } flex flex-col items-center grow justify-center`}
             >
               {recentPortfolios.map((portfolio, index) => {
                 return (
@@ -35,7 +49,7 @@ export default function RecentPortfolios({ open, handleDialogClose }) {
                     key={index}
                     className={`flex items-center ${
                       open ? "justify-start" : "justify-evenly"
-                    } w-full group cursor-pointer my-px hover:bg-accent`}
+                    } w-full group cursor-pointer hover:bg-accent`}
                     onClick={() => {
                       router.push(`/portfolio/${portfolio.portfolioName}`);
                       handleDialogClose();

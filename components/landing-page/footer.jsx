@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useUserType } from "@/contexts/user-type";
 import { cn } from "@/lib/utils";
+import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 
 export default function Footer() {
   const userType = useUserType();
@@ -41,9 +42,10 @@ export default function Footer() {
             <a
               href="https://pixelventurers.com"
               target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
+              className="font-semibold text-blue-500 hover:underline flex items-start"
             >
-              Pixel Venturers
+              <span>Pixel Venturers</span>
+              <ArrowTopRightIcon className="size-3" />
             </a>
           </div>
           <div className="w-full mt-2 text-center flex items-center justify-center gap-x-1 text-base">
@@ -51,9 +53,10 @@ export default function Footer() {
             <a
               href="https://initiatejs.dev/"
               target="_blank"
-              className="font-semibold text-yellow-500 hover:underline"
+              className="font-semibold text-yellow-500 hover:underline flex items-start"
             >
-              InitiateJS
+              <span>InitiateJS</span>
+              <ArrowTopRightIcon className="size-3" />
             </a>
           </div>
         </div>
@@ -63,9 +66,10 @@ export default function Footer() {
           <a
             href="https://akshat-garg.com"
             target="_blank"
-            className="font-semibold text-yellow-500 hover:underline"
+            className="font-semibold text-yellow-500 hover:underline flex items-start"
           >
-            Akshat Garg
+            <span>Akshat Garg</span>
+            <ArrowTopRightIcon className="size-3" />
           </a>
         </div>
       )}

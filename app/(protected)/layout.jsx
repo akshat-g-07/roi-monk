@@ -7,7 +7,7 @@ export default async function DashboardLayout({ children }) {
   return (
     <SubscriptionGuard>
       <UserCurrencyProvider>
-        <main className="min-w-screen min-h-screen overflow-hidden bg-background dark text-foreground flex">
+        <main className="min-w-screen min-h-screen overflow-hidden bg-background dark text-foreground flex w-full">
           <SideNavBar />
           <section className="flex flex-col h-screen grow w-full">
             <AppHeader />
