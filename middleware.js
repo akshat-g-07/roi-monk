@@ -31,11 +31,18 @@ export default clerkMiddleware(async (auth, req) => {
   if (refVal) {
     url.searchParams.delete("ref");
     const response = NextResponse.redirect(url);
-    response.cookies.set("refVal", refVal, {
-      httpOnly: false,
-      sameSite: "lax",
-      maxAge: 15 * 60 * 1000,
+    const refCookie = refVal === "rec" ? "rec" : "oth";
+    response.cookies.set("ref", refCookie, {
+      expires: new Date("9999-12-31T23:59:59.000Z"),
     });
+
+    if (refVal !== "rec") {
+      const REF_SERVICE = process.env.REF_SERVICE;
+      const refUrl = new URL(REF_SERVICE);
+      refUrl.searchParams.set("ref", refVal);
+      fetch(refUrl);
+    }
+
     return response;
   }
 
