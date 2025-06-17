@@ -93,11 +93,11 @@ export default function Page({ params }) {
       if (editAction === -1) return [...prevTransactions, values];
       const newTransactions = [...prevTransactions];
       newTransactions[editAction] = values;
+      form.reset();
       return newTransactions;
     });
 
     setEditAction(-1);
-    form.reset();
     setOpen(false);
   };
 
