@@ -13,18 +13,9 @@ const isProtectedRoute = createRouteMatcher([
   "/data(.*)",
   "/lib(.*)",
 ]);
-const isAdminRoute = createRouteMatcher(["/code(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const url = req.nextUrl.clone();
-
-  if (
-    isAdminRoute(req) &&
-    (await auth()).sessionClaims?.metadata?.role !== "admin"
-  ) {
-    const url = new URL("/", req.url);
-    return NextResponse.redirect(url);
-  }
 
   const refVal = url.searchParams?.get("ref");
 
