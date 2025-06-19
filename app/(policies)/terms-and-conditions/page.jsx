@@ -9,8 +9,7 @@ export default function Page() {
       <p>Welcome to ROI Monk!</p>
       <p>
         These terms and conditions outline the rules and regulations for the use
-        of ROI Monk&apos;s Website, located at
-        {SITE_CONFIG.URL}.
+        of ROI Monk&apos;s Website, located at {SITE_CONFIG.URL}.
       </p>
       <p>
         By accessing this website we assume you accept these terms and

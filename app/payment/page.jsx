@@ -8,7 +8,7 @@ export default async function Page() {
 
   if (!userEmail) redirect("/sign-in");
 
-  UserRegistration();
+  await UserRegistration();
 
   const status = await GetPaymentStatus();
   if (status.message) redirect("/sign-in");

@@ -1,6 +1,7 @@
 import { SITE_CONFIG } from "@/config/site";
 
 export default function Page() {
+  const CONTACT_EMAIL = process.env.CONTACT_EMAIL;
   return (
     <>
       <h1>Privacy Policy</h1>
@@ -488,10 +489,18 @@ export default function Page() {
       <p>
         If you have any questions about this Privacy Policy, You can contact us:
       </p>
-      {/* MARK: update this: site.config EMAIL */}
       <ul>
         <li>
-          <p>By email: </p>
+          <p>
+            By email:{" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              rel="external nofollow noopener"
+              target="_blank"
+            >
+              {CONTACT_EMAIL}
+            </a>
+          </p>
         </li>
         <li>
           <p>

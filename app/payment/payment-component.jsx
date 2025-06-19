@@ -17,6 +17,8 @@ export default function Payment() {
 
   useEffect(() => {
     if (!userType) {
+      SendWelcomeMail();
+      UpdateSubscription();
       router.push("/dashboard");
     }
   }, [userType, router]);

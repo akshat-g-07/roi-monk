@@ -7,6 +7,7 @@ import Rating from "@mui/material/Rating";
 import { CreateFeedback } from "@/actions/feedback";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { SendFeedbackMail } from "@/actions/mail";
 
 export default function Page() {
   const router = useRouter();
@@ -71,6 +72,7 @@ export default function Page() {
           <Button
             onClick={async () => {
               const response = await CreateFeedback(rating, comments);
+              await SendFeedbackMail();
 
               if (response.message === "error") {
                 toast.error(`Uh oh! Something went wrong.\nPlease try again.`);

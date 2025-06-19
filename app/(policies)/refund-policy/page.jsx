@@ -1,4 +1,5 @@
 export default function Page() {
+  const CONTACT_EMAIL = process.env.CONTACT_EMAIL;
   return (
     <>
       <h1>Refund Policy</h1>
@@ -24,8 +25,16 @@ export default function Page() {
         contact us:
       </p>
       <ul>
-        {/* MARK: site.config */}
-        <li>Email: </li>
+        <li>
+          Email:{" "}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            rel="external nofollow noopener"
+            target="_blank"
+          >
+            {CONTACT_EMAIL}
+          </a>
+        </li>
       </ul>
     </>
   );
