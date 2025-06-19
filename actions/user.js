@@ -86,7 +86,7 @@ export async function UpdateSubscription() {
   try {
     await db.User.update({
       where: { email: userEmail },
-      data: { subscribedUpto: true },
+      data: { subscribed: true },
     });
 
     return { data: "success" };
