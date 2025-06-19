@@ -5,6 +5,7 @@ import { dark } from "@clerk/themes";
 import ToastContainerComp from "@/components/common/toast-container-comp";
 import { SITE_CONFIG } from "@/config/site";
 import { UserTypeProvider } from "@/contexts/user-type";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -70,6 +71,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const GA_ID = process.env.GA_ID;
   return (
     <ClerkProvider
       appearance={{
@@ -85,6 +87,7 @@ export default function RootLayout({ children }) {
             <ToastContainerComp />
           </UserTypeProvider>
         </body>
+        <GoogleAnalytics gaId={GA_ID} />
       </html>
     </ClerkProvider>
   );

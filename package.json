@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^3.4.0",
     "@mui/icons-material": "^5.15.16",
     "@mui/material": "^5.15.16",
+    "@next/third-parties": "^14.2.30",
     "@paypal/react-paypal-js": "^8.8.2",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
