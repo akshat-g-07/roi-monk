@@ -64,14 +64,6 @@ CREATE TABLE "Feedback" (
     CONSTRAINT "Feedback_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "Ref" (
-    "id" TEXT NOT NULL,
-    "visited" TIMESTAMP(3)[] DEFAULT ARRAY[]::TIMESTAMP(3)[],
-
-    CONSTRAINT "Ref_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "Portfolio_portfolioName_key" ON "Portfolio"("portfolioName");
 
