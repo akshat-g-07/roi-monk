@@ -6,6 +6,10 @@ import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 export default function Footer() {
   const userType = useUserType();
 
+  const AG_URL = process.env.AG_URL || "https://akshat-garg.com";
+  const PV_URL = process.env.PV_URL || "https://pixelventurers.com";
+  const IJ_URL = process.env.IJ_URL || "https://initiatejs.dev";
+
   return (
     <footer className="w-full h-fit border-y border-grid px-8 sm:px-6 md:px-12 py-5 text-muted-foreground justify-center">
       <a href="/" className="flex items-center w-fit">
@@ -40,7 +44,7 @@ export default function Footer() {
           <div className="w-full mt-5 text-center flex items-center justify-center gap-x-1 text-base">
             <p>Made by</p>
             <a
-              href="https://pixelventurers.com"
+              href={PV_URL}
               target="_blank"
               className="font-semibold text-blue-500 hover:underline flex items-start"
             >
@@ -51,7 +55,7 @@ export default function Footer() {
           <div className="w-full mt-2 text-center flex items-center justify-center gap-x-1 text-base">
             <p>Powered by</p>
             <a
-              href="https://initiatejs.dev/"
+              href={IJ_URL}
               target="_blank"
               className="font-semibold text-yellow-500 hover:underline flex items-start"
             >
@@ -64,7 +68,7 @@ export default function Footer() {
         <div className="w-full mt-5 text-center flex items-center justify-center gap-x-1 text-base">
           <p>Developed by</p>
           <a
-            href="https://akshat-garg.com"
+            href={AG_URL}
             target="_blank"
             className="font-semibold text-yellow-500 hover:underline flex items-start"
           >
