@@ -99,7 +99,7 @@ export default function Page() {
         </li>
         <li>
           <p>
-            <strong>Website</strong> refers to Pixel Venturers, accessible from{" "}
+            <strong>Website</strong> refers to ROI Monk, accessible from{" "}
             <a
               href={SITE_CONFIG.URL}
               rel="external nofollow noopener"
