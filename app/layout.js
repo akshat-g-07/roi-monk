@@ -16,7 +16,7 @@ export const metadata = {
   },
   description: SITE_CONFIG.DESCRIPTION,
   metadataBase: new URL(SITE_CONFIG.URL),
-  creator: SITE_CONFIG.NAME,
+  creator: SITE_CONFIG.CREATOR_NAME,
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -48,8 +48,8 @@ export const metadata = {
   manifest: `${SITE_CONFIG.URL}/site.webmanifest`,
   authors: [
     {
-      name: SITE_CONFIG.NAME,
-      url: new URL(SITE_CONFIG.URL),
+      name: SITE_CONFIG.CREATOR_NAME,
+      url: new URL("https://akshat-garg.com"),
     },
   ],
   keywords: [
