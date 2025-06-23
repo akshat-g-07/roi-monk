@@ -45,7 +45,7 @@ export const metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
-  manifest: `${SITE_CONFIG.URL}/site.webmanifest`,
+  manifest: "/site.webmanifest",
   authors: [
     {
       name: SITE_CONFIG.CREATOR_NAME,
