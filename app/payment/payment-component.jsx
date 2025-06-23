@@ -8,6 +8,7 @@ import { UpdateSubscription } from "@/actions/user";
 import { useUserType } from "@/contexts/user-type";
 import { SendWelcomeMail } from "@/actions/mail";
 import { useEffect } from "react";
+import Loading from "@/components/common/loading";
 
 export default function Payment() {
   const router = useRouter();
@@ -41,6 +42,8 @@ export default function Payment() {
     alert(`You have been subscribed to ROI Monk!`);
     router.push("/dashboard");
   };
+
+  if (!userType) return <Loading />;
 
   return (
     <div className="bg-stone-700 text-white h-screen w-screen lg:flex overflow-y-scroll">
