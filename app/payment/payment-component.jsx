@@ -16,10 +16,15 @@ export default function Payment() {
   const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
   const PAYPAL_PLAN_ID = process.env.NEXT_PUBLIC_PAYPAL_PLAN_ID;
 
+  const initAfterPayment = async () => {
+    await UpdateSubscription();
+    await SendWelcomeMail();
+  };
+
   useEffect(() => {
     if (!userType) {
-      SendWelcomeMail();
-      UpdateSubscription();
+      initAfterPayment();
+
       router.push("/dashboard");
     }
   }, [userType, router]);
@@ -37,8 +42,8 @@ export default function Payment() {
   };
 
   const onApprove = async (data) => {
-    await UpdateSubscription();
-    await SendWelcomeMail();
+    await initAfterPayment();
+
     alert(`You have been subscribed to ROI Monk!`);
     router.push("/dashboard");
   };
