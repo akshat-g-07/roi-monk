@@ -17,7 +17,7 @@ export default function Page() {
   return (
     <>
       <div
-        className="w-full h-full p-4"
+        className="w-full min-h-full p-4"
         style={{
           background: "rgba( 255, 255, 255, 0.3 )",
           boxShadow: "0 8px 32px 0 rgba( 31, 38, 135, 0.37 )",

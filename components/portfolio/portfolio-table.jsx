@@ -5,11 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  useTable,
+  tableFeatures,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  rowSortingFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  columnVisibilityFeature,
+  filterFn_includesString,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -22,6 +28,20 @@ import {
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import AddTransactionDialogContent from "../common/add-transaction-dialog-content";
 import Loading from "@/components/common/loading";
+
+// Features + row models are composed once; the core row model is applied automatically.
+const features = tableFeatures({
+  rowSortingFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  columnVisibilityFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  // v9 no longer auto-registers built-in filterFns; "auto" needs this to resolve includesString.
+  filterFns: { includesString: filterFn_includesString },
+});
 
 export default function PortfolioTable({
   columns,
@@ -37,15 +57,12 @@ export default function PortfolioTable({
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
@@ -97,7 +114,7 @@ export default function PortfolioTable({
             }
             onClick={() => {
               handleBulkDeleteOperation(
-                table.getFilteredSelectedRowModel().rows
+                table.getFilteredSelectedRowModel().rows,
               );
               setRowSelection({});
             }}
@@ -110,7 +127,7 @@ export default function PortfolioTable({
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="h-14">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -118,7 +135,7 @@ export default function PortfolioTable({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -134,10 +151,17 @@ export default function PortfolioTable({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={`${
+                        cell.column.id === "transactionName"
+                          ? "max-lg:max-w-50 max-lg:min-w-50"
+                          : ""
+                      }`}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

@@ -5,6 +5,7 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { TriangleUpIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import Loading from "./loading";
 import { useUserCurrency } from "@/contexts/user-currency";
+import { formatAmount } from "@/lib/format-currency";
 
 export default function SummaryCards({
   totalInvestment,
@@ -32,7 +33,7 @@ export default function SummaryCards({
               <Loading className="bg-transparent w-fit" size="2rem" />
             ) : (
               <p>
-                {userCurrency} {totalInvestment}
+                {userCurrency} {formatAmount(totalInvestment, userCurrency)}
               </p>
             )}
           </CardContent>
@@ -53,7 +54,7 @@ export default function SummaryCards({
               <Loading className="bg-transparent w-fit" size="2rem" />
             ) : (
               <p>
-                {userCurrency} {netRevenue}
+                {userCurrency} {formatAmount(netRevenue, userCurrency)}
               </p>
             )}
           </CardContent>

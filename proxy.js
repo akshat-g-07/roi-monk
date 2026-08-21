@@ -1,18 +1,5 @@
 import { NextResponse } from "next/server";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/create-new(.*)",
-  "/feedback(.*)",
-  "/portfolio(.*)",
-  "/settings(.*)",
-  "/support(.*)",
-  "/payment(.*)",
-  "/actions(.*)",
-  "/data(.*)",
-  "/lib(.*)",
-]);
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
 export default clerkMiddleware(async (auth, req) => {
   const url = req.nextUrl.clone();
@@ -36,8 +23,6 @@ export default clerkMiddleware(async (auth, req) => {
 
     return response;
   }
-
-  if (isProtectedRoute(req)) auth().protect();
 });
 
 export const config = {

@@ -1,9 +1,11 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import { getUserEmail, getUserName } from "@/data/user";
 import { db } from "@/lib/db";
 
 export async function UpdateCurrency(currency) {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
@@ -23,6 +25,7 @@ export async function UpdateCurrency(currency) {
 }
 
 export async function GetUser() {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
@@ -39,6 +42,7 @@ export async function GetUser() {
 }
 
 export async function UserRegistration() {
+  await auth.protect();
   const userName = await getUserName();
   const userEmail = await getUserEmail();
 
@@ -65,6 +69,7 @@ export async function UserRegistration() {
 }
 
 export async function GetPaymentStatus() {
+  await auth.protect();
   const userEmail = await getUserEmail();
   try {
     const user = await db.User.findUnique({
@@ -82,6 +87,7 @@ export async function GetPaymentStatus() {
 }
 
 export async function UpdateSubscription() {
+  await auth.protect();
   const userEmail = await getUserEmail();
   try {
     await db.User.update({

@@ -1,10 +1,12 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import { getUserEmail } from "@/data/user";
 import { db } from "@/lib/db";
 import { GetPortfolioByName } from "./portfolio";
 
 export async function GetTransactionsByPortfolioName(portfolioName) {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
@@ -26,6 +28,7 @@ export async function GetTransactionsByPortfolioName(portfolioName) {
 }
 
 export async function DeleteTransaction(transactionIds) {
+  await auth.protect();
   try {
     await db.Transaction.deleteMany({
       where: {
@@ -41,6 +44,7 @@ export async function DeleteTransaction(transactionIds) {
 }
 
 export async function UpdateTransactions(portfolioName, transactions) {
+  await auth.protect();
   try {
     const portfolio = await GetPortfolioByName(portfolioName);
 
@@ -70,7 +74,7 @@ export async function UpdateTransactions(portfolioName, transactions) {
             },
           },
         },
-      })
+      }),
     );
 
     await Promise.all(upsertTransactions);

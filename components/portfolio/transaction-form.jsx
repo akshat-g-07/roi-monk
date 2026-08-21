@@ -100,6 +100,8 @@ export default function TransactionForm({
         };
       }
 
+      values.amount = parseFloat(values.amount);
+
       return {
         errors: errors,
         values: values,
@@ -120,7 +122,7 @@ export default function TransactionForm({
           onSubmit={form.handleSubmit(editTransaction)}
           className="w-full space-y-8"
         >
-          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px] justify-between">
+          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full max-md:*:w-full md:w-[500px] justify-between">
             <FormField
               control={form.control}
               name="type"
@@ -163,7 +165,7 @@ export default function TransactionForm({
               )}
             />
           </div>
-          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px] justify-between">
+          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full max-md:*:w-full md:w-[500px] justify-between">
             <FormField
               control={form.control}
               name="amount"
@@ -197,7 +199,7 @@ export default function TransactionForm({
                           variant={"outline"}
                           className={cn(
                             "w-full md:w-[300px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            !field.value && "text-muted-foreground",
                           )}
                         >
                           {field.value ? (
@@ -229,17 +231,17 @@ export default function TransactionForm({
               )}
             />
           </div>
-          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px] justify-between">
+          <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full max-md:*:w-full md:w-[500px] justify-between">
             <FormField
               control={form.control}
               name="comments"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full">
                   <FormLabel className="text-white">Comments</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Comments about transaction"
-                      className="resize-none text-white"
+                      className="resize-none text-white w-full"
                       {...field}
                     />
                   </FormControl>

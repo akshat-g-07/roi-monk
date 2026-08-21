@@ -2,19 +2,28 @@ import { UpdatePortfolioNameByName } from "@/actions/portfolio";
 import TextField from "@mui/material/TextField";
 import { CheckIcon, Pencil1Icon, SymbolIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 
 export default function PortfolioHeader({ portfolioName }) {
   const router = useRouter();
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState(decodeURI(portfolioName));
+  const decodedName = decodeURI(portfolioName);
+  const [value, setValue] = useState(decodedName);
+  const inputRef = useRef(null);
+
+  // Focus the input once it becomes editable so the caret is ready to type.
+  useEffect(() => {
+    if (edit) inputRef.current?.focus();
+  }, [edit]);
+
   return (
     <>
       <div className="flex items-end">
         <TextField
           variant="standard"
+          inputRef={inputRef}
           disabled={loading}
           sx={{
             margin: "0 0.5rem",
@@ -28,15 +37,17 @@ export default function PortfolioHeader({ portfolioName }) {
             "& .MuiInputBase-input": {
               color: "white",
               cursor: edit ? "text" : "default",
-              fontSize: "1.875rem",
+              fontSize: { xs: "1.25rem", sm: "1.875rem" },
               fontWeight: "700",
-              lineHeight: " 2.25rem",
+              lineHeight: { xs: "0rem", sm: "2.25rem" },
             },
           }}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          InputProps={{
-            readOnly: !edit,
+          slotProps={{
+            input: {
+              readOnly: !edit,
+            },
           }}
         />
         {loading ? (
@@ -47,25 +58,30 @@ export default function PortfolioHeader({ portfolioName }) {
               <CheckIcon
                 className="size-7 text-muted-foreground hover:text-foreground cursor-pointer"
                 onClick={async () => {
+                  // Nothing changed: revert to the pencil without hitting the API.
+                  if (value === decodedName) {
+                    setEdit(false);
+                    return;
+                  }
                   setLoading(true);
                   const response = await UpdatePortfolioNameByName(
-                    portfolioName,
-                    value
+                    decodedName,
+                    value,
                   );
                   setLoading(false);
                   if (response.message === "error") {
                     toast.error(
-                      `Uh oh! Something went wrong.\nPlease try again.`
+                      `Uh oh! Something went wrong.\nPlease try again.`,
                     );
-                    setValue(portfolioName);
+                    setValue(decodedName);
                   } else if (response.message === "exists") {
                     toast.error(
-                      `Portfolio name already exists.\nPlease choose unique name.`
+                      `Portfolio name already exists.\nPlease choose unique name.`,
                     );
-                    setValue(portfolioName);
+                    setValue(decodedName);
                   } else {
                     toast.success(
-                      "Your portfolio name is updated successfully!!"
+                      "Your portfolio name is updated successfully!!",
                     );
                     router.push(`/portfolio/${value}`);
                   }

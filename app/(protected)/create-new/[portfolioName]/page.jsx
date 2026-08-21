@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -12,7 +12,8 @@ import { CreatePortfolio } from "@/actions/portfolio";
 import AddTransactionDialogContent from "@/components/common/add-transaction-dialog-content";
 import TransactionTable from "@/components/create-new/transaction-table";
 
-export default function Page({ params }) {
+export default function Page(props) {
+  const params = use(props.params);
   const { portfolioName } = params;
   const decodedPortfolioName = decodeURIComponent(portfolioName);
   const [open, setOpen] = useState(false);
@@ -93,10 +94,10 @@ export default function Page({ params }) {
       if (editAction === -1) return [...prevTransactions, values];
       const newTransactions = [...prevTransactions];
       newTransactions[editAction] = values;
-      form.reset();
       return newTransactions;
     });
 
+    form.reset();
     setEditAction(-1);
     setOpen(false);
   };
@@ -108,7 +109,7 @@ export default function Page({ params }) {
       toast.error(`Uh oh! Something went wrong.\nPlease try again.`);
     } else if (portfolio.message === "unique error") {
       toast.error(
-        `Transaction duplicate found.\nPlease try changing the transaction details.`
+        `Transaction duplicate found.\nPlease try changing the transaction details.`,
       );
     } else {
       toast.success("Your portfolio is created successfully!!");
@@ -129,7 +130,7 @@ export default function Page({ params }) {
 
   const handleDeleteButton = (indx) => {
     setTransactions((prevTransactions) =>
-      prevTransactions.filter((_, index) => index !== indx)
+      prevTransactions.filter((_, index) => index !== indx),
     );
   };
 
@@ -138,7 +139,7 @@ export default function Page({ params }) {
       <div className="w-full min-h-full">
         <p className="text-2xl font-semibold">{decodedPortfolioName}</p>
         <>
-          <Card className="mt-10 p-4 min-w-[1000px]">
+          <Card className="mt-10 p-4 lg:min-w-[1000px]">
             <TransactionTable
               transactions={transactions}
               handleEditButton={handleEditButton}
@@ -178,6 +179,7 @@ export default function Page({ params }) {
           <AddTransactionDialogContent
             form={form}
             handleFormSubmit={handleAddTransaction}
+            isEditing={editAction !== -1}
           />
         </AlertDialog>
       </div>

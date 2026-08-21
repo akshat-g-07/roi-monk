@@ -1,10 +1,9 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
+import { dark } from "@clerk/ui/themes";
 import ToastContainerComp from "@/components/common/toast-container-comp";
 import { SITE_CONFIG } from "@/config/site";
-import { UserTypeProvider } from "@/contexts/user-type";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -43,7 +42,7 @@ export const metadata = {
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    // apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
   authors: [
@@ -73,22 +72,20 @@ export const metadata = {
 export default function RootLayout({ children }) {
   const GA_ID = process.env.GA_ID;
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: dark,
-      }}
-    >
-      <html lang="en">
-        <body className={`${inter.className} dark`}>
-          <UserTypeProvider>
-            <section className="w-full min-h-svh flex justify-center">
-              {children}
-            </section>
-            <ToastContainerComp />
-          </UserTypeProvider>
-        </body>
-        <GoogleAnalytics gaId={GA_ID} />
-      </html>
-    </ClerkProvider>
+    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
+      <body className={`${inter.className}`}>
+        <ClerkProvider
+          appearance={{
+            theme: dark,
+          }}
+        >
+          <section className="w-full min-h-svh max-lg:h-svh flex justify-center">
+            {children}
+          </section>
+          <ToastContainerComp />
+        </ClerkProvider>
+      </body>
+      <GoogleAnalytics gaId={GA_ID} />
+    </html>
   );
 }

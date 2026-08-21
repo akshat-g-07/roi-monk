@@ -10,12 +10,12 @@ export default function AppHeader() {
 
   return (
     <header
-      className="mt-2 md:mt-0 md:h-[76.8px] h-fit w-full py-2 px-6 border-b
-    border-white text-3xl font-bold flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
+      className="mt-2 md:mt-0 lg:h-[76.8px] w-full py-2 px-6 border-b
+    border-white text-3xl font-bold flex flex-col md:flex-row justify-between items-center space-y-4.5 md:space-y-0"
     >
       <div className="size-fit text-nowrap">
         {pathname === "/dashboard" ? (
-          "Overview"
+          "Dashboard"
         ) : pathname.includes("/create-new/") ? (
           "Create New"
         ) : pathname.includes("/portfolio/") ? (

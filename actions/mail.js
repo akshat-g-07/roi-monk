@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 import { getUserEmail } from "@/data/user";
 import GetMailConfig from "@/lib/mail-config";
@@ -8,7 +9,7 @@ const BCC_EMAIL = process.env.BCC_EMAIL;
 const mailContent = {
   welcome: (refVal) => ({
     subject: "Welcome to ROI Monk",
-    text: `Hi, I am Akshat Garg (https://akshat-garg.com${refVal}), creator of ROI Monk.\nThank you for joining ROI Monk. I am excited to have you on board.`,
+    text: `Hi, I am Akshat Garg <a href="https://akshat-garg.com${refVal}">https://akshat-garg.com</a>, creator of ROI Monk.\nThank you for joining ROI Monk. I am excited to have you on board.`,
   }),
   support: (supportId) => ({
     subject: "Support- ROI Monk",
@@ -21,7 +22,8 @@ const mailContent = {
 };
 
 export async function SendWelcomeMail() {
-  const cookieStore = cookies();
+  await auth.protect();
+  const cookieStore = await cookies();
   const refVal = cookieStore.get("ref").value === "rec" ? "/?ref=rec" : "";
   const mail = mailContent["welcome"](refVal);
   const email = await getUserEmail();
@@ -45,6 +47,7 @@ export async function SendWelcomeMail() {
 }
 
 export async function SendSupportMail(supportId) {
+  await auth.protect();
   const mail = mailContent["support"](supportId);
   const email = await getUserEmail();
   const { name, transport } = GetMailConfig("support");
@@ -67,6 +70,7 @@ export async function SendSupportMail(supportId) {
 }
 
 export async function SendFeedbackMail() {
+  await auth.protect();
   const mail = mailContent["feedback"];
   const email = await getUserEmail();
   const { name, transport } = GetMailConfig("feedback");

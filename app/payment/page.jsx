@@ -1,23 +1,26 @@
 import { getUserEmail } from "@/data/user";
-import Payment from "./payment-component";
+// import Payment from "./payment-component";
 import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { GetPaymentStatus, UserRegistration } from "@/actions/user";
 
 export default async function Page() {
-  const userEmail = await getUserEmail();
+  await auth.protect();
 
-  if (!userEmail) redirect("/sign-in");
+  // const userEmail = await getUserEmail();
 
-  await UserRegistration();
+  // if (!userEmail) redirect("/sign-in");
 
-  const status = await GetPaymentStatus();
-  if (status.message) redirect("/sign-in");
-  if (status.data) redirect("/dashboard");
+  // await UserRegistration();
+
+  // const status = await GetPaymentStatus();
+  // if (status.message) redirect("/sign-in");
+  // if (status.data) redirect("/dashboard");
 
   return (
     <>
       <div className="w-screen h-screen overflow-y-auto">
-        <Payment />
+        {/* <Payment /> */}
       </div>
     </>
   );

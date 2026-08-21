@@ -3,6 +3,7 @@ export default function Page() {
   return (
     <>
       <h1>Refund Policy</h1>
+      <p>Last updated: August 11, 2026</p>
       <p>
         Thank you for choosing ROI Monk for your digital needs. We strive to
         provide the best service possible, but we understand that sometimes

@@ -1,4 +1,4 @@
-import { ClerkLoaded, ClerkLoading, SignedIn, UserButton } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, Show, UserButton } from "@clerk/nextjs";
 import { SymbolIcon } from "@radix-ui/react-icons";
 
 export default function UserProfileButton({ open }) {
@@ -9,7 +9,7 @@ export default function UserProfileButton({ open }) {
           <SymbolIcon className="size-5 text-muted-foreground animate-spin" />
         </ClerkLoading>
         <ClerkLoaded>
-          <SignedIn>
+          <Show when="signed-in">
             <UserButton
               showName={open}
               appearance={{
@@ -24,7 +24,7 @@ export default function UserProfileButton({ open }) {
                 },
               }}
             />
-          </SignedIn>
+          </Show>
         </ClerkLoaded>
       </div>
     </>

@@ -1,5 +1,13 @@
 User-Agent: *
 Allow: /
-Disallow: /protected
+Disallow: /dashboard
+Disallow: /portfolio
+Disallow: /create-new
+Disallow: /settings
+Disallow: /feedback
+Disallow: /support
+Disallow: /payment
+Disallow: /sign-in
+Disallow: /sign-up
 
 Sitemap: https://roi-monk.com/sitemap.xml

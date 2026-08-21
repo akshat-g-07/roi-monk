@@ -5,7 +5,7 @@ export default function OpenSource() {
     <div className="space-y-6 mt-4 mb-8">
       <h2 className="text-3xl text-white text-center leading-[1.15] font-bold">
         Proudly{" "}
-        <span className="bg-gradient-to-br from-orange-400 to-amber-600 bg-clip-text text-transparent">
+        <span className="bg-linear-to-br from-orange-400 to-amber-600 bg-clip-text text-transparent">
           Open Source!
         </span>
       </h2>

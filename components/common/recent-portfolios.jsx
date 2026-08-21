@@ -24,7 +24,10 @@ export default function RecentPortfolios({ open, handleDialogClose }) {
     }
   }, [refresh, refetch, router]);
 
-  if (isLoading) return <Loading size="2rem" className="bg-transparent" />;
+  if (isLoading)
+    return (
+      <Loading size="2rem" className="bg-transparent max-h-70 lg:max-h-150" />
+    );
 
   if (error) return <></>;
 

@@ -6,6 +6,8 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import EnhancedEncryptionIcon from "@mui/icons-material/EnhancedEncryption";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Features() {
   const [selectedFeature, setSelectedFeature] = useState(0);
@@ -79,6 +81,17 @@ export default function Features() {
             />
           </div>
         </div>
+      </div>
+
+      <div className="mt-24 mb-18">
+        <Link href="/examples">
+          <Button
+            size="lg"
+            className="text-xl text-white py-8 px-4 cursor-pointer bg-blue-500"
+          >
+            Example Portfolios
+          </Button>
+        </Link>
       </div>
     </div>
   );

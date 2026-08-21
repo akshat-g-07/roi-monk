@@ -7,7 +7,7 @@ export default function HeroSection() {
       <div className="w-fit py-4 text-center">
         <h1 className="text-4xl text-white leading-[1.15] font-extrabold">
           ROI Monk – Your{" "}
-          <span className="bg-gradient-to-br from-blue-400 to-sky-600 bg-clip-text text-transparent">
+          <span className="bg-linear-to-br from-blue-400 to-sky-600 bg-clip-text text-transparent">
             Investment
           </span>{" "}
           Dashboard, Simplified.

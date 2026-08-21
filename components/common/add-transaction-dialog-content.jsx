@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,12 +41,14 @@ import { useUserCurrency } from "@/contexts/user-currency";
 export default function AddTransactionDialogContent({
   form,
   handleFormSubmit,
+  isEditing,
 }) {
   const userCurrency = useUserCurrency().split("- ")[1];
+  const [dateOpen, setDateOpen] = useState(false);
 
   return (
     <>
-      <AlertDialogContent className="w-[90%] max-w-[600px]">
+      <AlertDialogContent className="w-[90%] max-w-[525px]">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-foreground">
             Enter transaction details
@@ -59,7 +62,7 @@ export default function AddTransactionDialogContent({
             onSubmit={form.handleSubmit(handleFormSubmit)}
             className="w-full space-y-8"
           >
-            <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px] justify-between">
+            <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full max-md:*:w-full md:w-[500px] justify-between">
               <FormField
                 control={form.control}
                 name="type"
@@ -104,7 +107,7 @@ export default function AddTransactionDialogContent({
                 )}
               />
             </div>
-            <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px] justify-between">
+            <div className="flex flex-col md:flex-row items-start h-fit space-y-4 md:space-y-0 w-full max-md:*:w-full md:w-[500px] justify-between">
               <FormField
                 control={form.control}
                 name="amount"
@@ -131,14 +134,14 @@ export default function AddTransactionDialogContent({
                     <FormLabel className="text-white my-[5px]">
                       Transaction Date
                     </FormLabel>
-                    <Popover>
+                    <Popover open={dateOpen} onOpenChange={setDateOpen}>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant={"outline"}
                             className={cn(
                               "w-full md:w-[300px] pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value ? (
@@ -151,17 +154,21 @@ export default function AddTransactionDialogContent({
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent
-                        className="w-auto md:w-[300px] p-0 dark"
+                        className="w-auto md:w-[300px]! p-0 dark"
                         align="start"
                       >
                         <Calendar
                           mode="single"
                           selected={field.value}
-                          onSelect={field.onChange}
+                          onSelect={(date) => {
+                            field.onChange(date);
+                            setDateOpen(false);
+                          }}
                           disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                           }
                           initialFocus
+                          className={"w-full"}
                         />
                       </PopoverContent>
                     </Popover>
@@ -170,7 +177,7 @@ export default function AddTransactionDialogContent({
                 )}
               />
             </div>
-            <div className="h-fit space-y-4 md:space-y-0 w-full *:max-md:w-full md:w-[500px]">
+            <div className="h-fit space-y-4 md:space-y-0 w-full max-md:*:w-full md:w-[500px]">
               <FormField
                 control={form.control}
                 name="comments"
@@ -198,7 +205,7 @@ export default function AddTransactionDialogContent({
               >
                 Cancel
               </AlertDialogCancel>
-              <Button type="submit">Add</Button>
+              <Button type="submit">{isEditing ? "Update" : "Add"}</Button>
             </AlertDialogFooter>
           </form>
         </Form>
