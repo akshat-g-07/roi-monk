@@ -7,7 +7,6 @@ import NavBar from "@/components/landing-page/navbar";
 import OpenSource from "@/components/landing-page/open-source";
 import Pricing from "@/components/landing-page/pricing";
 
-import {Footer as FooterComponent} from "components";
 
 export default function Page() {
   return (
@@ -19,7 +18,6 @@ export default function Page() {
         <Pricing />
         <OpenSource />
         <Footer />
-        <FooterComponent/>
       </div>
     </>
   );
