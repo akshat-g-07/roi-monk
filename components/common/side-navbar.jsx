@@ -1,13 +1,12 @@
 "use client";
 
+import {DeveloperCorner} from "components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  ArrowTopRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   PlusIcon,
@@ -17,7 +16,7 @@ import NewPortfolioDialogContent from "./new-portfolio-dialog-content";
 import RecentPortfolios from "./recent-portfolios";
 import UserProfileButton from "./user-profile-button";
 import Logo from "@/app/logo.png";
-import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function SideNavBar() {
   const router = useRouter();
@@ -152,23 +151,12 @@ export default function SideNavBar() {
           {/* 
         Developer's Corner
          */}
-          <Link href="https://pixelventurers.com/" target="_blank">
-            <div
-              className={`flex items-center  ${
-                open ? "w-full px-1" : "w-fit px-0"
-              } duration-200 transition-all bg-accent mt-2 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
-            >
-              <Avatar className="m-2 size-7">
-                <AvatarImage src="/pv.png" />
-                <AvatarFallback>PV</AvatarFallback>
-              </Avatar>
-              <span
-                className={`${open ? "inline-flex" : "hidden"} text-nowrap`}
-              >
-                Developer&apos;s Corner <ArrowTopRightIcon className="size-3" />
-              </span>
-            </div>
-          </Link>
+          <DeveloperCorner 
+            imgSrc="/pv.png"
+            fallback="PV"
+            url= "https://webdesignagencylab.com"
+            titleClassName={cn(open? "inline-flex text-nowrap overflow-hidden" :"hidden")}
+            />
         </div>
       </nav>
     </>
