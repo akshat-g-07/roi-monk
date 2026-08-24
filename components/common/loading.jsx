@@ -6,8 +6,8 @@ export default function Loading({ className, size = "3rem" }) {
     <>
       <div
         className={cn(
-          "size-full bg-primary/40 flex items-center justify-center",
-          className
+          "size-full overflow-hidden bg-primary/40 flex items-center justify-center",
+          className,
         )}
       >
         <CircularProgress size={size} />

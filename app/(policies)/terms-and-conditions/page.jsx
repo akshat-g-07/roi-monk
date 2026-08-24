@@ -6,6 +6,7 @@ export default function Page() {
       <h2>
         <strong>Terms and Conditions</strong>
       </h2>
+      <p>Last updated: August 11, 2026</p>
       <p>Welcome to ROI Monk!</p>
       <p>
         These terms and conditions outline the rules and regulations for the use

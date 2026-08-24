@@ -1,13 +1,12 @@
 "use client";
 
+import {DeveloperCorner} from "components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  ArrowTopRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   PlusIcon,
@@ -16,6 +15,8 @@ import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import NewPortfolioDialogContent from "./new-portfolio-dialog-content";
 import RecentPortfolios from "./recent-portfolios";
 import UserProfileButton from "./user-profile-button";
+import Logo from "@/app/logo.png";
+import { cn } from "@/lib/utils";
 
 export default function SideNavBar() {
   const router = useRouter();
@@ -32,25 +33,28 @@ export default function SideNavBar() {
       <nav
         className={`${
           open ? "w-[230px] ml-0" : "w-[70px]"
-        } h-screen border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative -ml-16 lg:ml-0`}
+        } h-screen max-lg:h-svh border-r-4 flex flex-col items-center justify-between duration-300 ease-in-out relative -ml-16 lg:ml-0`}
       >
-        <div className="w-full flex flex-col items-center justify-start grow">
+        <div className="w-full flex flex-col items-center justify-star grow">
           {/* 
         Top Left Logo Icon 
          */}
-          <a href="/dashboard" className="flex items-center w-full">
+          <a
+            href="/dashboard"
+            className="flex items-center w-full h-[76.8px] border-b border-white"
+          >
             <Image
-              src="/logo.png"
+              src={Logo}
               width={40}
               height={40}
               alt="Logo"
-              className="py-2 px-px mx-2 border-b w-auto border-white cursor-pointer"
+              className="py-2 px-px mx-2 w-auto cursor-pointer"
             />
 
             <span
               className={`px-2 mx-auto h-full items-center ${
                 open ? "inline-flex" : "hidden"
-              } text-nowrap text-3xl font-bold border-b border-white`}
+              } text-nowrap text-3xl font-bold`}
             >
               ROI Monk
             </span>
@@ -62,7 +66,7 @@ export default function SideNavBar() {
           <div
             className={`size-fit ${
               open ? "translate-x-28" : "translate-x-10"
-            } md:-translate-y-[0.9rem] translate-y-[5.5rem] cursor-pointer flex items-center justify-center rounded-md border border-white bg-foreground hover:bg-muted-foreground duration-300 ease-in-out`}
+            } md:translate-y-[-0.9rem] translate-y-23 cursor-pointer flex items-center justify-center rounded-md border border-white bg-foreground hover:bg-muted-foreground duration-300 ease-in-out`}
             onClick={() => {
               setOpen((prev) => !prev);
             }}
@@ -80,7 +84,7 @@ export default function SideNavBar() {
 
           <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
             <AlertDialogTrigger>
-              <div className="flex items-center w-fit h-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer mb-4 md:mb-0 -mt-4">
+              <div className="flex items-center w-fit h-fit bg-accent hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer mb-4 md:mb-0 -mt-4 max-lg:mt-1">
                 <PlusIcon className="size-6 m-2" />
                 <span
                   className={`${
@@ -147,22 +151,12 @@ export default function SideNavBar() {
           {/* 
         Developer's Corner
          */}
-          <div
-            className={`flex items-center  ${
-              open ? "w-[95%]" : "w-fit"
-            } bg-accent mt-2 hover:bg-primary-foreground dark justify-evenly rounded-full cursor-pointer`}
-            onClick={() => {
-              window.open("https://akshat-garg.com");
-            }}
-          >
-            <Avatar className={`m-2 size-7`}>
-              <AvatarImage src="/akshat-garg.png" />
-              <AvatarFallback>AG</AvatarFallback>
-            </Avatar>
-            <span className={`${open ? "inline-flex" : "hidden"} text-nowrap`}>
-              Developer&apos;s Corner <ArrowTopRightIcon className="size-3" />
-            </span>
-          </div>
+          <DeveloperCorner 
+            imgSrc="/pv.png"
+            fallback="PV"
+            url= "https://webdesignagencylab.com"
+            titleClassName={cn(open? "inline-flex text-nowrap overflow-hidden" :"hidden")}
+            />
         </div>
       </nav>
     </>

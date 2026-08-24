@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <>
       <h1>Privacy Policy</h1>
-      <p>Last updated: April 01, 2025</p>
+      <p>Last updated: August 11, 2026</p>
       <p>
         This Privacy Policy describes Our policies and procedures on the
         collection, use and disclosure of Your information when You use the

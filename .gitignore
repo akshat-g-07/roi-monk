@@ -36,7 +36,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# prisma
+/lib/generated
+
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
+# next-agents-md
+.next-docs/

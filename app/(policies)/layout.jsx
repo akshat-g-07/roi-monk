@@ -1,7 +1,7 @@
-export default function PoliciesLayout({ children }) {
+export default function Layout({ children }) {
   return (
-    <section className="prose dark:prose-invert prose-sm mx-auto my-10 max-w-7xl w-full flex justify-center">
-      <div className="w-[90%]">{children}</div>
-    </section>
+    <div className="prose prose-sm mx-auto dark:*:text-white dark:[&_strong]:text-white my-10">
+      {children}
+    </div>
   );
 }

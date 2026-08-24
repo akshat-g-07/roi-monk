@@ -46,6 +46,7 @@ export default function SearchOption() {
           onChange={(event, newValue) => {
             setValue(null);
             setInputValue("");
+            if (!newValue?.portfolioName) return;
             router.push(`/portfolio/${newValue.portfolioName}`);
           }}
           inputValue={inputValue}
@@ -61,8 +62,11 @@ export default function SearchOption() {
             "& .MuiInputBase-input": {
               color: "rgba(255,255,255,1)",
             },
+            "& .MuiSvgIcon-root": {
+              color: "white",
+            },
           }}
-          PaperComponent={PaperComp}
+          slots={{ paper: PaperComp }}
           renderOption={(props, option) => (
             <CustomListItem key={option.id} props={props} option={option} />
           )}

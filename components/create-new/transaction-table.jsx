@@ -11,6 +11,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Loading from "@/components/common/loading";
+import { useUserCurrency } from "@/contexts/user-currency";
+import { formatAmount } from "@/lib/format-currency";
 
 export default memo(
   function TransactionTable({
@@ -19,6 +21,7 @@ export default memo(
     handleDeleteButton,
     isLoading,
   }) {
+    const userCurrency = useUserCurrency().split("- ")[1];
     return (
       <>
         <Table>
@@ -26,7 +29,9 @@ export default memo(
             <TableRow>
               <TableHead className="w-[10px]"></TableHead>
               <TableHead className="w-[100px]">Type</TableHead>
-              <TableHead className="w-[200px]">Transaction Name</TableHead>
+              <TableHead className="w-[200px] text-nowrap">
+                Transaction Name
+              </TableHead>
               <TableHead className="w-[200px]">Amount</TableHead>
               <TableHead className="w-[200px]">Date</TableHead>
               <TableHead className="w-fit">Comments</TableHead>
@@ -64,7 +69,7 @@ export default memo(
                   {transaction.transactionName}
                 </TableCell>
                 <TableCell className="w-[200px]">
-                  {transaction.amount}
+                  {formatAmount(transaction.amount, userCurrency)}
                 </TableCell>
                 <TableCell className="w-[200px]">
                   {format(transaction.transactionDate, "LLL dd, y")}
@@ -103,5 +108,5 @@ export default memo(
     );
   },
   (prevProps, nextProps) =>
-    JSON.stringify(prevProps) === JSON.stringify(nextProps)
+    JSON.stringify(prevProps) === JSON.stringify(nextProps),
 );

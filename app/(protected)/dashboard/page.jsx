@@ -19,17 +19,45 @@ import { NetRevenue, TotalInvestment } from "@/data/portfolio-calculations";
 import { useServerAction } from "@/hooks/useServerAction";
 import Loading from "@/components/common/loading";
 import Error from "@/components/common/error";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function Page() {
   const [date, setDate] = useState({
     from: addDays(new Date(), -30),
     to: new Date(),
   });
+  // Calendar selection is only committed to the query when "Apply" is clicked.
+  const [appliedDate, setAppliedDate] = useState(date);
+  const [open, setOpen] = useState(false);
+  const [rangeError, setRangeError] = useState(false);
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   const {
     isLoading,
     data: portfolios,
     error,
-  } = useServerAction(GetPortfoliosWithinDateRange, date);
+  } = useServerAction(GetPortfoliosWithinDateRange, appliedDate);
+
+  const handleSelect = (range) => {
+    setDate(range);
+    if (range?.from && range?.to) setRangeError(false);
+  };
+
+  const handleOpenChange = (next) => {
+    setOpen(next);
+    // Reset error on open; discard an uncommitted selection on close.
+    if (next) setRangeError(false);
+    else setDate(appliedDate);
+  };
+
+  const handleApply = () => {
+    if (!date?.from || !date?.to) {
+      setRangeError(true);
+      return;
+    }
+    setAppliedDate(date);
+    setOpen(false);
+  };
 
   const { totalInvestment, netRevenue, netROI, pieChartData, barChartData } =
     useMemo(() => {
@@ -89,14 +117,14 @@ export default function Page() {
       <div className="w-full flex flex-wrap justify-between text-lg font-bold items-center mb-4">
         Summary
         <div className={cn("grid gap-2")}>
-          <Popover>
+          <Popover open={open} onOpenChange={handleOpenChange}>
             <PopoverTrigger asChild>
               <Button
                 id="date"
                 variant={"outline"}
                 className={cn(
                   "w-[300px] justify-start text-left font-normal my-2 md:my-0",
-                  !date && "text-muted-foreground"
+                  !date && "text-muted-foreground",
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
@@ -114,22 +142,30 @@ export default function Page() {
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent
-              className="w-auto p-0 bg-background text-foreground"
-              align="end"
-            >
+            <PopoverContent className="w-auto p-0" align="end">
               <Calendar
                 initialFocus
                 mode="range"
+                resetOnSelect
                 defaultMonth={date?.from}
                 selected={date}
-                onSelect={setDate}
-                numberOfMonths={2}
-                className="bg-background dark text-foreground"
+                onSelect={handleSelect}
+                numberOfMonths={isMobile ? 1 : 2}
+                className="bg-background text-foreground"
                 disabled={(date) =>
                   date > new Date() || date < new Date("1900-01-01")
                 }
               />
+              <div className="flex flex-col items-center justify-center gap-3 border-t p-3">
+                {rangeError && (
+                  <p className="text-sm font-medium text-red-500">
+                    Select two dates Please!
+                  </p>
+                )}
+                <Button className="cursor-pointer" onClick={handleApply}>
+                  Apply
+                </Button>
+              </div>
             </PopoverContent>
           </Popover>
         </div>

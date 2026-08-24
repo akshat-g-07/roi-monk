@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -8,7 +10,7 @@ export default function GetStartedButton({ className }) {
   return (
     <Button
       variant="secondary"
-      className={cn("h-12 space-x-2 text-lg", className)}
+      className={cn("h-12 space-x-2 text-lg cursor-pointer", className)}
       onClick={() => {
         router.push("sign-in");
       }}

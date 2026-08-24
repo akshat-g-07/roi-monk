@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { GetTransactionsByPortfolioName } from "@/actions/transaction";
 import { useServerAction } from "@/hooks/useServerAction";
 import Portfolio from "@/components/portfolio/portfolio";
@@ -7,11 +8,12 @@ import Loading from "@/components/common/loading";
 import Error from "@/components/common/error";
 import { GetPortfolioByName } from "@/actions/portfolio";
 
-export default function Page({ params }) {
+export default function Page(props) {
+  const params = use(props.params);
   const { portfolioName } = params;
   const { data: portfolio } = useServerAction(
     GetPortfolioByName,
-    decodeURI(portfolioName)
+    decodeURI(portfolioName),
   );
 
   const {

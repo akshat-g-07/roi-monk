@@ -1,13 +1,14 @@
 import Image from "next/image";
 import GetStartedButton from "./get-started";
+import Logo from "@/app/logo.png";
 
 export default function NavBar() {
   return (
     <>
-      <div className="w-full !flex-row justify-between md:px-8 py-4">
+      <div className="w-full flex-row! justify-between md:px-8 py-4">
         <a href="/" className="flex items-center w-fit">
           <Image
-            src="/logo.png"
+            src={Logo}
             width={40}
             height={40}
             alt="Logo"

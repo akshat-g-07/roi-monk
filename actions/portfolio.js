@@ -1,10 +1,12 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import { getUserEmail } from "@/data/user";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export async function CreatePortfolio(portfolioName, transactions) {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
@@ -36,6 +38,7 @@ export async function CreatePortfolio(portfolioName, transactions) {
 }
 
 export async function GetAllPortfolios() {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
@@ -53,6 +56,7 @@ export async function GetAllPortfolios() {
 }
 
 export async function GetPortfolioByName(portfolioName) {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
@@ -71,6 +75,7 @@ export async function GetPortfolioByName(portfolioName) {
 }
 
 export async function GetPortfoliosWithinDateRange(dateRange) {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
@@ -103,6 +108,7 @@ export async function GetPortfoliosWithinDateRange(dateRange) {
 }
 
 export async function GetRecentPortfolios(amount = 5) {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
@@ -124,6 +130,7 @@ export async function GetRecentPortfolios(amount = 5) {
 }
 
 export async function UpdatePortfolioNameById(portfolioId, portfolioNewName) {
+  await auth.protect();
   try {
     await db.Portfolio.update({
       where: {
@@ -146,17 +153,26 @@ export async function UpdatePortfolioNameById(portfolioId, portfolioNewName) {
 
 export async function UpdatePortfolioNameByName(
   portfolioOldName,
-  portfolioNewName
+  portfolioNewName,
 ) {
+  await auth.protect();
   const userEmail = await getUserEmail();
 
   try {
+    // The encrypted portfolioName can't resolve inside the compound unique key,
+    // so find the owner-scoped record first, then update it by id.
+    const portfolio = await db.Portfolio.findFirst({
+      where: {
+        ownerEmail: userEmail,
+        portfolioName: portfolioOldName,
+      },
+    });
+
+    if (!portfolio) return { message: "error" };
+
     await db.Portfolio.update({
       where: {
-        ownerEmail_portfolioName: {
-          ownerEmail: userEmail,
-          portfolioName: portfolioOldName,
-        },
+        id: portfolio.id,
       },
       data: {
         portfolioName: portfolioNewName,

@@ -16,8 +16,8 @@ export default function Pricing() {
           Pricing
         </h2>
         <div className="rounded w-64 md:w-3/4 h-fit border border-gray-400 mt-6 flex flex-col items-center p-4">
-          <h3 className="text-xl font-semibold text-white mb-2">
-            $ 9
+          <h3 className="text-4xl font-semibold text-white mb-2">
+            $ 19
             <span className="text-base text-white/75 font-normal"> /month</span>
           </h3>
           {pricingFeatures.map((feature) => {

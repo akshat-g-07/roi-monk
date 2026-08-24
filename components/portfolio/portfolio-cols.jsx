@@ -1,13 +1,14 @@
 "use client";
 
 import { format } from "date-fns";
+import { ArrowUpIcon, ArrowDownIcon, ChevronsUpDownIcon } from "lucide-react";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import EditIcon from "@mui/icons-material/Edit";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +27,7 @@ import {
 import TransactionForm from "@/components/portfolio/transaction-form";
 import { useState } from "react";
 import { useUserCurrency } from "@/contexts/user-currency";
+import { formatAmount } from "@/lib/format-currency";
 
 const AmountCell = ({ row }) => {
   const userCurrency = useUserCurrency().split("- ")[1];
@@ -35,7 +37,7 @@ const AmountCell = ({ row }) => {
         paddingLeft: "17.5px",
       }}
     >
-      {userCurrency} {row.getValue("amount")}
+      {formatAmount(row.getValue("amount"), userCurrency)}
     </div>
   );
 };
@@ -82,7 +84,7 @@ const ActionsCell = ({
             className="cursor-pointer"
             onClick={() => handleDeleteOperation(row.original.id)}
           >
-            <DeleteOutlineIcon className="mr-2 size-3.5" />
+            <DeleteOutlineOutlinedIcon className="mr-2 size-3.5" />
             Move to trash
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -106,10 +108,30 @@ const ActionsCell = ({
   );
 };
 
+const SortableHeader = ({ column, label }) => {
+  const sorted = column.getIsSorted();
+  return (
+    <Button
+      variant="ghost"
+      onClick={() => column.toggleSorting(sorted === "asc")}
+      className={cn(sorted && "py-0 bg-accent font-semibold text-foreground")}
+    >
+      {label}
+      {sorted === "asc" ? (
+        <ArrowUpIcon className="ml-1 size-4" />
+      ) : sorted === "desc" ? (
+        <ArrowDownIcon className="ml-1 size-4" />
+      ) : (
+        <ChevronsUpDownIcon className="ml-1 size-4 opacity-50" />
+      )}
+    </Button>
+  );
+};
+
 export const PortfolioColumns = (
   handleEditOperation,
   handleCopyOperation,
-  handleDeleteOperation
+  handleDeleteOperation,
 ) => [
   {
     id: "select",
@@ -139,27 +161,7 @@ export const PortfolioColumns = (
   },
   {
     accessorKey: "type",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Type
-          {column.getIsSorted() && (
-            <>
-              {column.getIsSorted() === "asc" ? (
-                <ArrowUpwardIcon sx={{ marginLeft: "4px", fontSize: "16px" }} />
-              ) : (
-                <ArrowDownwardIcon
-                  sx={{ marginLeft: "4px", fontSize: "16px" }}
-                />
-              )}
-            </>
-          )}
-        </Button>
-      );
-    },
+    header: ({ column }) => <SortableHeader column={column} label="Type" />,
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
@@ -178,52 +180,14 @@ export const PortfolioColumns = (
   },
   {
     accessorKey: "amount",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Amount
-          {column.getIsSorted() && (
-            <>
-              {column.getIsSorted() === "asc" ? (
-                <ArrowUpwardIcon sx={{ marginLeft: "4px", fontSize: "16px" }} />
-              ) : (
-                <ArrowDownwardIcon
-                  sx={{ marginLeft: "4px", fontSize: "16px" }}
-                />
-              )}
-            </>
-          )}
-        </Button>
-      );
-    },
+    header: ({ column }) => <SortableHeader column={column} label="Amount" />,
     cell: ({ row }) => <AmountCell row={row} />,
   },
   {
     accessorKey: "transactionDate",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Transaction Date
-          {column.getIsSorted() && (
-            <>
-              {column.getIsSorted() === "asc" ? (
-                <ArrowUpwardIcon sx={{ marginLeft: "4px", fontSize: "16px" }} />
-              ) : (
-                <ArrowDownwardIcon
-                  sx={{ marginLeft: "4px", fontSize: "16px" }}
-                />
-              )}
-            </>
-          )}
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <SortableHeader column={column} label="Transaction Date" />
+    ),
     cell: ({ row }) => {
       return (
         <div
@@ -246,7 +210,9 @@ export const PortfolioColumns = (
             maxWidth: "500px",
           }}
         >
-          {row.getValue("comments").length > 0 ? row.getValue("comments") : "-"}
+          {row.getValue("comments")?.length > 0
+            ? row.getValue("comments")
+            : "-"}
         </div>
       );
     },
