@@ -85,18 +85,3 @@ export async function GetPaymentStatus() {
     return { message: "error" };
   }
 }
-
-export async function UpdateSubscription() {
-  await auth.protect();
-  const userEmail = await getUserEmail();
-  try {
-    await db.User.update({
-      where: { email: userEmail },
-      data: { subscribed: true },
-    });
-
-    return { data: "success" };
-  } catch (error) {
-    return { message: "error" };
-  }
-}

@@ -30,9 +30,9 @@ export default function Page() {
         assistance to the Client in the most appropriate manner for the express
         purpose of meeting the Client&apos;s needs in respect of provision of
         the Company&apos;s stated services, in accordance with and subject to,
-        prevailing law of Netherlands. Any use of the above terminology or other
-        words in the singular, plural, capitalization and/or he/she or they, are
-        taken as interchangeable and therefore as referring to same.
+        prevailing law of India. Any use of the above terminology or other words
+        in the singular, plural, capitalization and/or he/she or they, are taken
+        as interchangeable and therefore as referring to same.
       </p>
       <h3>
         <strong>Cookies</strong>
