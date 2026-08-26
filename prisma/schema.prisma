@@ -8,13 +8,36 @@ datasource db {
 }
 
 model User {
-  email      String      @id
-  name       String
-  currency   String      @default("United States - USD")
-  subscribed Boolean     @default(false)
-  portfolios Portfolio[]
-  supports   Support[]
-  feedbacks  Feedback[]
+  email        String        @id
+  name         String
+  phone        String?
+  currency     String        @default("United States - USD")
+  subscribed   Boolean       @default(false)
+  portfolios   Portfolio[]
+  supports     Support[]
+  feedbacks    Feedback[]
+  subscription Subscription?
+}
+
+model Subscription {
+  id                     String    @id @default(uuid())
+  createdDate            DateTime  @default(now())
+  updatedDate            DateTime  @updatedAt
+  provider               String    @default("DODO")
+  status                 String    @default("PENDING") // PENDING | ACTIVE | PAST_DUE | CANCELLED | EXPIRED | FAILED
+  providerSubscriptionId String?   @unique
+  currentPeriodEnd       DateTime?
+  amount                 Int?
+  currency               String?
+  ownerEmail             String    @unique
+  owner                  User      @relation(fields: [ownerEmail], references: [email])
+}
+
+// Idempotency ledger: every webhook id we've already handled.
+model ProcessedWebhook {
+  webhookId  String   @id
+  type       String?
+  receivedAt DateTime @default(now())
 }
 
 model Portfolio {

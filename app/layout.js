@@ -1,11 +1,11 @@
-import {Footer as FooterComponent} from "components";
+import { Footer as FooterComponent } from "components";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/ui/themes";
 import ToastContainerComp from "@/components/common/toast-container-comp";
+import PostHogUserIdentifier from "@/components/common/posthog-user-identifier";
 import { SITE_CONFIG } from "@/config/site";
-import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -71,7 +71,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const GA_ID = process.env.GA_ID;
   return (
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <body className={`${inter.className}`}>
@@ -80,16 +79,16 @@ export default function RootLayout({ children }) {
             theme: dark,
           }}
         >
+          <PostHogUserIdentifier />
           <section className="w-full min-h-svh max-lg:h-svh flex justify-center">
             {children}
           </section>
-          
-          <FooterComponent/>
+
+          <FooterComponent />
 
           <ToastContainerComp />
         </ClerkProvider>
       </body>
-      <GoogleAnalytics gaId={GA_ID} />
     </html>
   );
 }
