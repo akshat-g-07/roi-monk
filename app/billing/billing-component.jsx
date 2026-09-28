@@ -25,7 +25,7 @@ const COPY = {
     heading: "Your subscription was cancelled",
     blurb:
       "Your ROI Monk subscription is no longer active. Re-subscribe to pick up right where you left off.",
-    cta: "Re-subscribe · $9/month",
+    cta: "Re-subscribe · $19/month",
     rightTitle: "Continue with ROI Monk",
     rightBlurb: "You'll be taken back to the subscription page.",
   },
@@ -34,7 +34,7 @@ const COPY = {
     heading: "Your subscription has expired",
     blurb:
       "Your ROI Monk subscription reached the end of its term. Subscribe again to keep tracking your ROI.",
-    cta: "Subscribe · $9/month",
+    cta: "Subscribe · $19/month",
     rightTitle: "Continue with ROI Monk",
     rightBlurb: "You'll be taken back to the subscription page.",
   },
@@ -43,7 +43,7 @@ const COPY = {
     heading: "We couldn't set up your subscription",
     blurb:
       "Your subscription couldn't be created with the payment method you used. Start again with a working payment method to get access.",
-    cta: "Try again · $9/month",
+    cta: "Try again · $19/month",
     rightTitle: "Continue with ROI Monk",
     rightBlurb: "You'll be taken back to the subscription page.",
   },

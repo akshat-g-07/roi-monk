@@ -100,7 +100,7 @@ export default function Payment({ email, name }) {
             Subscribe to ROI Monk
           </p>
           <p className="text-4xl font-bold ml-5 my-3">
-            $9
+            $19
             <span className="text-base text-white/75 font-normal"> /month</span>
           </p>
 
@@ -152,7 +152,7 @@ export default function Payment({ email, name }) {
                 ? "Opening checkout…"
                 : finalizing
                   ? "Finalizing your subscription…"
-                  : "Subscribe · $9/month"}
+                  : "Subscribe · $19/month"}
             </Button>
 
             <p className="text-neutral-400 text-xs mt-3 text-center">
